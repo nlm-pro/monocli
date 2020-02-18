@@ -1,0 +1,60 @@
+{
+  "name": "monorepo-pm",
+  "version": "1.0.0-alpha.0",
+  "description": "a cli to manage your projects in a monorepo",
+  "main": "index.js",
+  "scripts": {
+    "start": "$npm_package_bin_monopm",
+    "release": "standard-version",
+    "release:test": "standard-version --dry-run",
+    "postrelease": "npm publish && git push --follow-tags",
+    "build": "tsc",
+    "watch": "tsc -w",
+    "lint:prettier": "prettier --write ./src/**/*.{md,js,ts}",
+    "lint:eslint": "eslint \"src/**/*.{js,ts}\" --quiet --fix",
+    "lint:check": "prettier --check ./src/**/*.{md,js,ts}; eslint \"src/**/*.{js,ts}\"",
+    "lint": "tsc --noEmit && prettier --write ./src/**/*.{md,js,ts} && eslint \"src/**/*.{js,ts}\" --quiet --fix",
+    "eslint-check": "eslint --print-config ./src/index.ts | eslint-config-prettier-check"
+  },
+  "author": "Noël Macé",
+  "license": "MIT",
+  "bin": {
+    "monopm": "./monopm"
+  },
+  "dependencies": {
+    "chalk": "^3.0.0",
+    "commander": "^4.1.1",
+    "conventional-commits-parser": "^3.0.8",
+    "fs-extra": "^8.1.0",
+    "inquirer": "^7.0.4",
+    "lodash.merge": "^4.6.2",
+    "log-symbols": "^3.0.0",
+    "simple-git": "^1.131.0"
+  },
+  "devDependencies": {
+    "@types/conventional-commits-parser": "^3.0.0",
+    "@types/fs-extra": "^8.1.0",
+    "@types/inquirer": "^6.5.0",
+    "@types/node": "^13.7.2",
+    "@typescript-eslint/eslint-plugin": "^2.20.0",
+    "@typescript-eslint/parser": "^2.20.0",
+    "eslint": "^6.8.0",
+    "eslint-config-prettier": "^6.10.0",
+    "eslint-import-resolver-typescript": "^2.0.0",
+    "eslint-plugin-import": "^2.20.1",
+    "husky": "^4.2.3",
+    "lint-staged": "^10.0.7",
+    "prettier": "^1.19.1",
+    "standard-version": "^7.1.0",
+    "typescript": "^3.7.5"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  },
+  "lint-staged": {
+    "src/**/*.{md,js,ts}": "prettier --write",
+    "src/**/*.{js,ts}": "eslint --fix"
+  }
+}

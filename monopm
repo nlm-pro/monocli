@@ -1,0 +1,10 @@
+#!/usr/bin/env node
+'use strict';
+
+try {
+  process.title = 'monopm ' + Array.from(process.argv).slice(2).join(' ');
+} catch(_) {
+  process.title = 'monopm';
+}
+
+require('./dist/index');
