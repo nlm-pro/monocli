@@ -9,7 +9,7 @@
     "release:test": "standard-version --dry-run",
     "postrelease": "npm publish && git push --follow-tags",
     "build": "rimraf ./dist && tsc",
-    "watch": "rimraf ./dist && concurrently -n tsc,eslint \"tsc -w\" \"esw --fix -w ./src/**/*.ts\"",
+    "watch": "rimraf ./dist && concurrently --raw -n tsc,eslint \"tsc -w\" \"esw --fix -w ./src/**/*.ts\"",
     "lint:prettier": "prettier --write ./src/**/*.{md,js,ts}",
     "lint:eslint": "eslint \"src/**/*.{js,ts}\" --fix",
     "lint:check": "prettier --check ./src/**/*.{md,js,ts}; eslint \"src/**/*.{js,ts}\"",
@@ -22,6 +22,7 @@
     "monocli": "./bin/monocli"
   },
   "dependencies": {
+    "minimist2": "^1.0.2",
     "npmlog": "^4.1.2",
     "promisify-child-process": "^3.1.3"
   },

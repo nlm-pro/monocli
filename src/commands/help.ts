@@ -1,0 +1,31 @@
+import * as log from "npmlog";
+import { Command } from "../models/command";
+import { output } from "../utils/output";
+import { CommandDocumentation } from "../models/documentation";
+import { buildCommand } from "../utils/build-command";
+import { MainCommand } from "../models/main-command";
+import { commandName, commandsMap } from ".";
+
+export class HelpCommand extends Command {
+  protected readonly doc: CommandDocumentation = {
+    name: `help`,
+    usage: `[command name]`,
+    description: `Get help on monocli`,
+    details: `
+If supplied a command name, then show the associated documentation.
+    
+If the command name is not provided, or does not exist, then show the main documentation.`,
+    options: new Map()
+  };
+
+  async run([cmdName]: [commandName]): Promise<void> {
+    let message = `no help available for this`;
+    log.silly(`help`, cmdName || `none`);
+    if (cmdName && [...commandsMap.keys()].includes(cmdName)) {
+      message = buildCommand(cmdName).help;
+    } else {
+      message = new MainCommand().help;
+    }
+    output(message);
+  }
+}

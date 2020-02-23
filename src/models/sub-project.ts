@@ -1,4 +1,4 @@
-import { SubProjectConfig } from "./Config";
+import { SubProjectConfig } from "./config";
 
 export abstract class SubProject {
   constructor(private config: SubProjectConfig) {}

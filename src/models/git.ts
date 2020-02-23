@@ -1,7 +1,7 @@
 import { resolve } from "path";
 import { spawn } from "promisify-child-process";
 import * as log from "npmlog";
-import { output } from "./output";
+import { output } from "../utils/output";
 
 export class GitError extends Error {
   constructor(message?: string, public code?: number) {

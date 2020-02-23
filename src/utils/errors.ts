@@ -1,7 +1,7 @@
 import * as log from "npmlog";
-import { MonorepoError } from "../models/Monorepo";
-import { GitError } from "./git";
-import { BuildCommandError } from "./command";
+import { MonorepoError } from "../models/monorepo";
+import { GitError } from "../models/git";
+import { CommandOptionError } from "../models/options";
 import { debugOutput, lineBreak } from "./output";
 
 export function errorsGlobalHandler(e: Error): void {
@@ -11,9 +11,13 @@ export function errorsGlobalHandler(e: Error): void {
     log.error(`git (${e.code})`, e.message);
   } else if (e instanceof MonorepoError) {
     log.error(`monorepo`, e.message);
-  } else if (e instanceof BuildCommandError) {
-    log.error(e.cmdName, e.message);
-    // TODO: output global help
+  } else if (e instanceof CommandOptionError) {
+    if (typeof e.optionName === `string`) {
+      log.error(e.optionName, e.message);
+    } else {
+      log.error(``, e.message);
+      log.error(`options`, e.optionName.join(`, `));
+    }
   } else {
     log.error(``, e.message);
   }

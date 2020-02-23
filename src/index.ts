@@ -1,24 +1,21 @@
+// TODO: remove minimist
 import * as log from "npmlog";
-import * as Logging from "./utils/log";
-import { buildCommand } from "./utils/command";
 import { errorsGlobalHandler } from "./utils/errors";
+import { MainCommand } from "./models/main-command";
+import { parse } from "./utils/parse";
+import * as Logging from "./utils/log";
 
 log.pause();
 
 // eslint-disable-next-line @typescript-eslint/no-floating-promises
 (async (): Promise<void> => {
   try {
-    const options = process.argv.slice(2);
-
-    // TODO: parse options
-    const debug = options.includes(`--debug`);
-
-    Logging.init(debug ? `silly` : `notice`);
+    const args = parse(process.argv.slice(2));
+    Logging.init(args[1].get(`debug`) ? `silly` : `notice`);
     log.resume();
 
-    const command = buildCommand(options[0]);
-
-    await command.run();
+    const main = new MainCommand();
+    await main.run(...args);
   } catch (e) {
     errorsGlobalHandler(e);
   }

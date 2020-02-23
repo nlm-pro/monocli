@@ -1,8 +1,8 @@
 import { dirname, join } from "path";
 import * as fs from "fs-extra";
 import { findUp } from "../utils/path";
-import { Repository } from "../utils/git";
-import { Config } from "./Config";
+import { Repository } from "./git";
+import { Config } from "./config";
 
 export class MonorepoError extends Error {}
 

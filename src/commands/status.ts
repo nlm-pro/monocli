@@ -1,11 +1,14 @@
-import { Command, CommandOptionConfig } from "../models/Command";
+import { MonorepoCommand } from "../models/monorepo-command";
+import { CommandDocumentation } from "../models/documentation";
 
-export class StatusCommand extends Command {
-  protected readonly name = `status`;
-  protected readonly usage = ``;
-  protected readonly description = `show the monorepo status`;
-  protected readonly details = `include git status and details about the monorepo state and config`;
-  protected readonly options: Map<string, CommandOptionConfig> = new Map([]);
+export class StatusCommand extends MonorepoCommand {
+  protected readonly doc: CommandDocumentation = {
+    name: `status`,
+    usage: ``,
+    description: `show the monorepo status`,
+    details: `include git status and details about the monorepo state and config`,
+    options: new Map()
+  };
 
   async run(): Promise<string | void> {
     // TODO: group by subproject

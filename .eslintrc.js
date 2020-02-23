@@ -23,7 +23,7 @@ module.exports = {
   ],
   "rules": {
     "no-console": "error",
-    "no-warning-comments": "warn",
+    "no-warning-comments": "off",
     "import/no-unresolved": "error", 
     "import/default": "error",
     "import/export": "error",

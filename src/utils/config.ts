@@ -1,5 +1,5 @@
-import { SubProjectConfig, Config } from "../models/Config";
-import { MonorepoError } from "../models/Monorepo";
+import { SubProjectConfig, Config } from "../models/config";
+import { MonorepoError } from "../models/monorepo";
 
 export function getProject(
   config: Config,
