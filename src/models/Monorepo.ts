@@ -1,12 +1,22 @@
-import { dirname, resolve, join } from "path";
+import { dirname, join } from "path";
 import * as fs from "fs-extra";
 import { findUp } from "../utils/path";
+import { Repository } from "../utils/git";
 import { Config } from "./Config";
 
 export class MonorepoError extends Error {}
 
 export class Monorepo {
   static CONFIG_FILE_NAME = `monocli.json`;
+
+  readonly repository: Repository;
+
+  private readonly root: { path: string; configExist: boolean };
+
+  constructor() {
+    this.root = this.getRoot();
+    this.repository = new Repository(this.root.path);
+  }
 
   getConfig(): Config {
     const filePath = this.getOrInitConfigFilePath();
@@ -15,8 +25,9 @@ export class Monorepo {
     return JSON.parse(configContent);
   }
 
-  private getOrInitConfigFilePath(): string {
+  getRoot(): { path: string; configExist: boolean } {
     let configFilePath: string;
+    let configExist = false;
     const possibleConfigFilePath = findUp(
       Monorepo.CONFIG_FILE_NAME,
       process.cwd()
@@ -32,17 +43,22 @@ export class Monorepo {
         dirname(possibleGitRoot),
         Monorepo.CONFIG_FILE_NAME
       );
+    } else {
+      configFilePath = possibleConfigFilePath;
+      configExist = true;
+    }
+
+    return { path: dirname(configFilePath), configExist };
+  }
+
+  private getOrInitConfigFilePath(): string {
+    const configFilePath = join(this.root.path, Monorepo.CONFIG_FILE_NAME);
+    if (!this.root.configExist) {
       fs.writeFileSync(
         configFilePath,
         JSON.stringify({ projects: [] }, null, `  `),
         { encoding: `utf-8` }
       );
-      configFilePath = join(
-        dirname(possibleGitRoot),
-        Monorepo.CONFIG_FILE_NAME
-      );
-    } else {
-      configFilePath = possibleConfigFilePath;
     }
 
     return configFilePath;

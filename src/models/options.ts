@@ -1,2 +1,2 @@
-export type optionType = `boolean` | `string` | `number`;
-export type option = boolean | string | number;
+export type cmdOptionType = `boolean` | `string` | `number`;
+export type cmdOption = boolean | string | number;
