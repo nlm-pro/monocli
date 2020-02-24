@@ -1,5 +1,7 @@
-import { cmdOption, CommandOptionConfig, CommandOptionError } from "./options";
+import { resolve } from "path";
+import { cmdOption, CommandOptionConfig } from "./options";
 import { CommandDocumentation } from "./documentation";
+import { CommandOptionError } from "./errors";
 
 const optionToString = (
   name: string,
@@ -15,6 +17,7 @@ const optionToString = (
 };
 
 export abstract class Command {
+  protected readonly tmpDir = resolve(`/tmp`, `monorepo`);
   private singleMandatoryOptions: Map<string, CommandOptionConfig>;
 
   protected abstract readonly doc: CommandDocumentation;

@@ -1,3 +1,4 @@
+import { remove, ensureDir } from "fs-extra";
 import { buildCommand } from "../utils/build-command";
 import { commandName, commandsMap } from "../commands";
 import { CommandDocumentation } from "./documentation";
@@ -37,6 +38,9 @@ Use monocli help <command name> for more information about one of these commands
     for (const [optionName] of this.doc.options) {
       subCommandOptions.delete(optionName);
     }
+
+    await remove(this.tmpDir);
+    await ensureDir(this.tmpDir);
 
     return command.run(subCommandParams, subCommandOptions);
   }

@@ -1,7 +1,5 @@
 import * as log from "npmlog";
-import { MonorepoError } from "../models/monorepo";
-import { GitError } from "../models/git";
-import { CommandOptionError } from "../models/options";
+import { GitError, MonorepoError, CommandOptionError } from "../models/errors";
 import { debugOutput, lineBreak } from "./output";
 
 export function errorsGlobalHandler(e: Error): void {

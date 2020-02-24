@@ -1,5 +1,6 @@
 import { MonorepoCommand } from "../models/monorepo-command";
 import { CommandDocumentation } from "../models/documentation";
+import { output } from "../utils/output";
 
 export class StatusCommand extends MonorepoCommand {
   protected readonly doc: CommandDocumentation = {
@@ -12,7 +13,8 @@ export class StatusCommand extends MonorepoCommand {
 
   async run(): Promise<string | void> {
     // TODO: group by subproject
-    await this.monorepo.repository.status();
+    const gitStatus = await this.monorepo.repository.git(`status`);
+    output(gitStatus);
     // TODO: show status of each project compared to its released subtree
   }
 }

@@ -1,13 +1,12 @@
 import { resolve } from "path";
 import { spawn } from "promisify-child-process";
 import * as log from "npmlog";
-import { output } from "../utils/output";
+import { GitError } from "./errors";
 
-export class GitError extends Error {
-  constructor(message?: string, public code?: number) {
-    super(message);
-  }
-}
+export const GitCommands: { [s: string]: (...args: string[]) => string } = {
+  goToNewBranch: branchName => `checkout -b ${branchName}`,
+  status: () => `status`
+};
 
 export class Repository {
   private absolutePath: string;
@@ -21,7 +20,8 @@ export class Repository {
     log.git(`run`, cmdString);
     try {
       const { stdout } = await spawn(`git`, [command, ...args], {
-        encoding: `utf8`
+        encoding: `utf8`,
+        cwd: this.absolutePath
       });
       if (typeof stdout === `string` && stdout) {
         return stdout.trim();
@@ -37,10 +37,5 @@ export class Repository {
           : `Error: git command failed`;
       throw new GitError(msg, code);
     }
-  }
-
-  async status(): Promise<void> {
-    const gitOutput = await this.git(`status`);
-    output(gitOutput);
   }
 }
