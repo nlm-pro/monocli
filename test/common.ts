@@ -8,6 +8,8 @@ import { spawn, ChildProcessPromise } from "promisify-child-process";
 import { commandName } from "../src/commands";
 import { Repository } from "../src/models/git";
 import { run as runCommand } from "../src/index";
+import { chdir } from "../src/utils/path";
+import * as Logger from "../src/utils/log";
 
 if (typeof require.main === `undefined`) {
   throw new Error(`not a tap test`);
@@ -19,6 +21,10 @@ export const testDir = path.resolve(path.dirname(main), testName);
 
 rimraf.sync(testDir);
 mkdirp.sync(testDir);
+
+// TODO: refactor global settings
+chdir(testDir);
+Logger.init(`silly`);
 
 const returnCwd = path.dirname(__dirname);
 
@@ -65,12 +71,12 @@ export async function run(args: string[]): Promise<string> {
 }
 
 export async function makeGitRepo({
-  root = process.cwd(),
+  root = testDir,
   user = `TestFaker`,
   email = `nope@not.real`,
   added = [],
   message = `stub repo`
-}): Promise<Repository> {
+} = {}): Promise<Repository> {
   const repo = new Repository(root);
   await repo.git(`init`);
   await repo.git(`config`, [`user.name`, user]);

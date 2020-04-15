@@ -17,9 +17,9 @@
     "eslint-check": "eslint --print-config ./src/index.ts | eslint-config-prettier-check",
     "tap": "tap -J --timeout 300",
     "tap-coverage": "tap -J --coverage --timeout 600",
-    "test-tap": "npm run tap -- \"test/units/**/*.ts\"",
-    "test-snapshot": "npm run test-tap -- --snapshot",
-    "test-coverage": "npm run tap-coverage -- \"test/units/**/*.ts\"",
+    "test-tap": "npm run tap -- \"test/units/**/*.ts\" \"test/e2e/**/*.ts\"",
+    "tap-snapshot": "npm run tap -- --snapshot",
+    "test-coverage": "npm run tap-coverage -- \"test/units/**/*.ts\" \"test/e2e/**/*.ts\"",
     "test": "npm run test-tap --",
     "test:watch": "npm run test-coverage -- --watch",
     "postinstall": "patch-package"

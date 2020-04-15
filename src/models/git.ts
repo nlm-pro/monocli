@@ -1,7 +1,6 @@
-import { resolve } from "path";
 import { spawn } from "promisify-child-process";
 import * as log from "npmlog";
-import { cwd } from "../utils/path";
+import { absolute } from "../utils/path";
 import { GitError } from "./errors";
 
 export const GitCommands: { [s: string]: (...args: string[]) => string } = {
@@ -13,7 +12,7 @@ export class Repository {
   private absolutePath: string;
 
   constructor(pathFromCwd: string) {
-    this.absolutePath = resolve(cwd(), pathFromCwd);
+    this.absolutePath = absolute(pathFromCwd);
   }
 
   async git(command: string, args: string[] = []): Promise<string> {
