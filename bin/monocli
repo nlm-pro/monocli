@@ -7,4 +7,5 @@ try {
   process.title = 'monocli';
 }
 
-require('../dist/index');
+const monocli = require('../dist/index');
+monocli.run(process.argv.slice(2))

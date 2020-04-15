@@ -1,6 +1,6 @@
 import * as log from "npmlog";
 import { GitError, MonorepoError, CommandOptionError } from "../models/errors";
-import { debugOutput, lineBreak } from "./output";
+import { debugOutput, lineBreak } from "./log";
 
 export function errorsGlobalHandler(e: Error): void {
   lineBreak();

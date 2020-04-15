@@ -1,7 +1,7 @@
 import { dirname, join, resolve } from "path";
 import * as fs from "fs-extra";
 import { silly } from "npmlog";
-import { findUp } from "../utils/path";
+import { findUp, cwd } from "../utils/path";
 import { Repository } from "./git";
 import { Config, SubProjectConfig } from "./config";
 import { MonorepoError } from "./errors";
@@ -28,12 +28,9 @@ export class Monorepo {
   getRoot(): { path: string; configExist: boolean } {
     let configFilePath: string;
     let configExist = false;
-    const possibleConfigFilePath = findUp(
-      Monorepo.CONFIG_FILE_NAME,
-      process.cwd()
-    );
+    const possibleConfigFilePath = findUp(Monorepo.CONFIG_FILE_NAME, cwd());
     if (possibleConfigFilePath === null) {
-      const possibleGitRoot = findUp(`.git`, process.cwd());
+      const possibleGitRoot = findUp(`.git`, cwd());
       if (possibleGitRoot === null) {
         throw new MonorepoError(
           `not a monocli nor a git repository (or any parent up to mount point /)`

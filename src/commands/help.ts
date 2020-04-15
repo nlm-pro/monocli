@@ -1,6 +1,6 @@
 import * as log from "npmlog";
 import { Command } from "../models/command";
-import { output } from "../utils/output";
+import { output } from "../utils/log";
 import { CommandDocumentation } from "../models/documentation";
 import { buildCommand } from "../utils/build-command";
 import { MainCommand } from "../models/main-command";

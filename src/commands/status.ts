@@ -1,6 +1,6 @@
 import { MonorepoCommand } from "../models/monorepo-command";
 import { CommandDocumentation } from "../models/documentation";
-import { output } from "../utils/output";
+import { output } from "../utils/log";
 
 export class StatusCommand extends MonorepoCommand {
   protected readonly doc: CommandDocumentation = {
