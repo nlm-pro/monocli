@@ -4,7 +4,7 @@ import { notice, silly } from "npmlog";
 import { MonorepoCommand } from "../models/monorepo-command";
 import { cmdOption } from "../models/options";
 import { CommandDocumentation } from "../models/documentation";
-import { relativeTo, absolute, isEmpty } from "../models/path";
+import { relativeTo, absolute, isEmpty } from "../utils/path";
 import {
   RunConditionError,
   CommandOptionError,

@@ -11,7 +11,7 @@ module.exports = {
   "parser": "@typescript-eslint/parser",
   "parserOptions": {
     "ecmaVersion": 2018,
-    "project": "tsconfig.json",
+    "project": ["tsconfig.json", "test/tsconfig.json"],
     "sourceType": "module"
   },
   "extends": [
@@ -21,8 +21,10 @@ module.exports = {
     "plugin:@typescript-eslint/recommended",
     "prettier"
   ],
+  "ignorePatterns": ["coverage-map.js", "node_modules/"],
   "rules": {
     "no-console": "error",
+    "no-process-env": "error",
     "no-warning-comments": "off",
     "import/no-unresolved": "error", 
     "import/default": "error",
