@@ -1,11 +1,9 @@
-import { resolve } from "path";
-import { stat } from "fs";
-import { ensureDir, existsSync, pathExists, statSync } from "fs-extra";
+import { existsSync, pathExists } from "fs-extra";
 import { notice, silly } from "npmlog";
 import { MonorepoCommand } from "../models/monorepo-command";
 import { cmdOption } from "../models/options";
 import { CommandDocumentation } from "../models/documentation";
-import { relativeTo, absolute, isEmpty } from "../utils/path";
+import { relativeTo, absolute } from "../utils/path";
 import {
   RunConditionError,
   CommandOptionError,
@@ -13,15 +11,16 @@ import {
 } from "../models/errors";
 import { getProject } from "../utils/config";
 import { SubProjectConfig } from "../models/config";
-import { Repository } from "../models/git";
-import { Monorepo } from '../models/monorepo';
+import { Monorepo } from "../models/monorepo";
+import { UpdateCommand } from "./update";
 
 export class MvCommand extends MonorepoCommand {
   protected doc: CommandDocumentation = {
     name: `mv`,
     usage: `<path> <new-path>`,
     description: `change a subtree prefix`,
-    details: `This command requires that <path> is associated with a existing project with an url.
+    details: `This command requires that <path> is associated with a existing project.
+
 ⚠️  Experimental command  ⚠️
   `,
     // TODO
@@ -73,29 +72,25 @@ export class MvCommand extends MonorepoCommand {
 
     // Move files in monorepo
 
-    // TODO: better branch name
-    const branchName = `monocli-mv`;
-    await this.monorepo.repository.git(`checkout`, [`-b`, branchName]);
+    const mvBranch = `monocli-mv-${projectConfig.scope}`;
+    await this.monorepo.repository.git(`checkout`, [`-b`, mvBranch]);
 
     await this.monorepo.repository.git(`mv`, [oldDir, newDir]);
     notice(``, `files moved`);
-    await this.monorepo.repository.git(`commit`, [
-      `-m`,
-      `chore: mv ${oldDir} to ${newDir}`
-    ]);
-    notice(``, `commit files renaming`);
 
     // Update config
     await this.monorepo.updateProjectConfig(`directory`, oldDir, newDir);
+    await this.monorepo.repository.git(`add`, [Monorepo.CONFIG_FILE_NAME]);
 
     await this.monorepo.repository.git(`commit`, [
       `-m`,
       `build: mv ${projectConfig.scope} via monocli
     
 update project directory in monocli config after mv
-from ${oldDir} to ${newDir}`,
-      Monorepo.CONFIG_FILE_NAME
+from ${oldDir} to ${newDir}`
     ]);
+
+    notice(``, `commit files renaming`);
     notice(``, `commit config update`);
 
     if (!projectConfig?.url) {
@@ -105,7 +100,6 @@ from ${oldDir} to ${newDir}`,
     }
 
     // Update subtree
-
     await this.monorepo.repository.git(`subtree`, [
       `split`,
       `--prefix=${newDir}`,
@@ -124,31 +118,9 @@ from ${oldDir} to ${newDir}`,
 
     // Update subtree remote repository
 
-    if (!projectConfig.scope) {
-      throw new ConfigError(`no scope found for project ${oldDir}`);
-    }
-
-    const splitBranch = `monocli-mv-${projectConfig.scope}`;
-
-    await this.monorepo.repository.git(`subtree`, [
-      `split`,
-      `--prefix=${newDir}`,
-      `-b`,
-      splitBranch
-    ]);
-
-    const clonePath = resolve(`/tmp`, `monocli`, projectConfig.scope);
-    await ensureDir(clonePath);
-    const cloneRepo = new Repository(clonePath);
-    await cloneRepo.git(`clone`, [`--bare`, projectConfig.url, `.`]);
-
-    await this.monorepo.repository.git(`push`, [
-      clonePath,
-      `${splitBranch}:master`
-    ]);
-
-    // TODO: ask for confirmation
-    // TODO: permit to push to another branch and create a PR
-    await cloneRepo.git(`push`, [`origin`, `master`]);
+    // TODO: better DX
+    const update = new UpdateCommand();
+    update.setMonorepo(this.monorepo);
+    await update.run([newDir, projectConfig.url]);
   }
 }

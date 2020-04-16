@@ -72,5 +72,5 @@ export function debugOutput(...args: any[]): void {
 }
 
 export function lineBreak(): void {
-  outConsole.log(`\n\r`);
+  outConsole.log();
 }

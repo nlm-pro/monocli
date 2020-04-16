@@ -70,7 +70,7 @@ export function runBin(
   return spawn(nodeBin, [bin, cmd, ...args], { encoding: `utf8` });
 }
 
-export async function run(args: string[]): Promise<string> {
+export async function run(args: string[], root = testDir): Promise<string> {
   const result: string[] = [];
   const wStream = new stream.Writable({
     write: (chunk, encoding, next): void => {
@@ -79,7 +79,7 @@ export async function run(args: string[]): Promise<string> {
     }
   });
 
-  await runCommand(args, testDir, wStream);
+  await runCommand(args, root, wStream);
 
   return result.join(``).trim();
 }
@@ -89,10 +89,11 @@ export async function makeGitRepo({
   user = `TestFaker`,
   email = `nope@not.real`,
   added = [] as string[],
-  message = `stub repo`
+  message = `stub repo`,
+  bare = false
 } = {}): Promise<Repository> {
   const repo = new Repository(root);
-  await repo.git(`init`);
+  await repo.git(`init`, bare ? [`--bare`] : []);
   await repo.git(`config`, [`user.name`, user]);
   await repo.git(`config`, [`user.email`, email]);
   // don't time out tests waiting for a gpg passphrase or 2fa
@@ -104,4 +105,9 @@ export async function makeGitRepo({
   }
 
   return repo;
+}
+
+export interface TestRepo {
+  repo: Repository;
+  path: string;
 }

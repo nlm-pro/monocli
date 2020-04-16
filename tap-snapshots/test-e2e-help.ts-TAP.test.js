@@ -10,7 +10,7 @@ Usage: monocli <command> [options]
 
 Monorepo (Sub)Projects Manager
 
-Commands: status, mv, help
+Commands: status, mv, help, update
 
 Use monocli help <command name> for more information about one of these commands.
 
@@ -32,7 +32,8 @@ exports[`test/e2e/help.ts TAP > mv 1`] = `
 Usage: monocli mv <path> <new-path> 
 
 change a subtree prefix
-This command requires that <path> is associated with a existing project with an url.
+This command requires that <path> is associated with a existing project.
+
 ⚠️  Experimental command  ⚠️
 `
 
@@ -43,4 +44,21 @@ show the monorepo status
 include git status and details about the monorepo state and config
 `
 
-exports[`test/e2e/help.ts TAP > unknown command name 1`] = exports[`test/e2e/help.ts TAP > main 1`]
+exports[`test/e2e/help.ts TAP > status 2`] = `
+Usage: monocli update <directory> [url] 
+
+update the remote "subtree" repo associated to <directory>
+`
+
+exports[`test/e2e/help.ts TAP > unknown command name 1`] = `
+Usage: monocli <command> [options]
+
+Monorepo (Sub)Projects Manager
+
+Commands: status, mv, help, update
+
+Use monocli help <command name> for more information about one of these commands.
+
+Options:
+  --debug 	enable debug mode (set log level to "silly")
+`

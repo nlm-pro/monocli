@@ -5,13 +5,20 @@
  * Make sure to inspect the output below.  Do not ignore changes!
  */
 'use strict'
+
+exports[`test/e2e/mv.ts TAP mv command with remote > output 1`] = `
+monocli notice files moved
+monocli notice commit files renaming
+monocli notice commit config update
+monocli notice subtree successfully updated
+monocli notice remote subrepo successfully updated
+`
+
 exports[`test/e2e/mv.ts TAP mv command without remote > commits 1`] = `
 build: mv one via monocli
 
 update project directory in monocli config after mv
 from one to three
-
-chore: mv one to three
 
 feat(two): bar.txt
 
