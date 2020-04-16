@@ -5,19 +5,6 @@
  * Make sure to inspect the output below.  Do not ignore changes!
  */
 'use strict'
-exports[`test/e2e/help.ts TAP > main 1`] = `
-Usage: monocli <command> [options]
-
-Monorepo (Sub)Projects Manager
-
-Commands: status, mv, help, update
-
-Use monocli help <command name> for more information about one of these commands.
-
-Options:
-  --debug 	enable debug mode (set log level to "silly")
-`
-
 exports[`test/e2e/help.ts TAP > help 1`] = `
 Usage: monocli help [command name] 
 
@@ -26,6 +13,19 @@ Get help on monocli
 If supplied a command name, then show the associated documentation.
     
 If the command name is not provided, or does not exist, then show the main documentation.
+`
+
+exports[`test/e2e/help.ts TAP > main 1`] = `
+Usage: monocli <command> [options]
+
+Monorepo (Sub)Projects Manager
+
+Commands: status, mv, help, update, check
+
+Use monocli help <command name> for more information about one of these commands.
+
+Options:
+  --debug 	enable debug mode (set log level to "silly")
 `
 
 exports[`test/e2e/help.ts TAP > mv 1`] = `
@@ -55,7 +55,7 @@ Usage: monocli <command> [options]
 
 Monorepo (Sub)Projects Manager
 
-Commands: status, mv, help, update
+Commands: status, mv, help, update, check
 
 Use monocli help <command name> for more information about one of these commands.
 

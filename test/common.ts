@@ -65,9 +65,10 @@ export const bin = require.resolve("../bin/monocli");
 
 export function runBin(
   cmd: commandName,
-  args: string[] = []
+  args: string[] = [],
+  cwd = testDir
 ): ChildProcessPromise {
-  return spawn(nodeBin, [bin, cmd, ...args], { encoding: `utf8` });
+  return spawn(nodeBin, [bin, cmd, ...args], { encoding: `utf8`, cwd });
 }
 
 export async function run(args: string[], root = testDir): Promise<string> {

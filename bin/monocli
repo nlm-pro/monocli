@@ -1,11 +1,27 @@
 #!/usr/bin/env node
-'use strict';
+"use strict";
 
 try {
-  process.title = 'monocli ' + Array.from(process.argv).slice(2).join(' ');
-} catch(_) {
-  process.title = 'monocli';
+  process.title =
+    "monocli " +
+    Array.from(process.argv)
+      .slice(2)
+      .join(" ");
+} catch (_) {
+  process.title = "monocli";
 }
 
-const monocli = require('../dist/index');
-monocli.run(process.argv.slice(2))
+const monocli = require("../dist/index");
+const { ExitError } = require("../dist/models/errors");
+
+monocli.run(process.argv.slice(2)).catch(e => {
+  if (e instanceof ExitError) {
+    console.error(e.message);
+    console.error();
+    for (const info of e.data) {
+      console.error(`\t${info}`);
+    }
+
+    process.exitCode = e.code;
+  }
+});

@@ -16,7 +16,7 @@
     "target": "es2018",
     "traceResolution": false,
     "lib": [
-      "es2018"
+      "es2020"
     ],
     "types": [
       "node"

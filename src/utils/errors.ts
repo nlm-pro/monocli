@@ -1,5 +1,10 @@
 import * as log from "npmlog";
-import { GitError, MonorepoError, CommandOptionError } from "../models/errors";
+import {
+  GitError,
+  MonorepoError,
+  CommandOptionError,
+  ExitError
+} from "../models/errors";
 import { debugOutput, lineBreak } from "./log";
 
 export function errorsGlobalHandler(e: Error): void {
@@ -16,6 +21,8 @@ export function errorsGlobalHandler(e: Error): void {
       log.error(``, e.message);
       log.error(`options`, e.optionName.join(`, `));
     }
+  } else if (e instanceof ExitError) {
+    throw e;
   } else {
     log.error(``, e.message);
   }
