@@ -43,9 +43,7 @@ export function init(level: LogLevels, stream?: Writable): void {
 
   const logLevel = logLevels.indexOf(level);
 
-  if (logLevel < logLevels.indexOf(`git`)) {
-    debug = true;
-  }
+  debug = logLevel < logLevels.indexOf(`git`);
 
   // Limited choice of colors
   // see https://www.npmjs.com/package/console-control-strings#var-code--consolecontrolcolor-color1--color2----colorn-

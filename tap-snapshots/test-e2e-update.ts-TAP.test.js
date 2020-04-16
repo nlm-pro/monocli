@@ -39,9 +39,6 @@ stub repo
 
 exports[`test/e2e/update.ts TAP > output 1`] = `
 monocli ERR! url no remote url was given for subproj
-
-Error: no remote url was given for subproj
-    at UpdateCommand.run (/home/noel/git/me/monorepo-spm/src/commands/update.ts:76:13)
 `
 
 exports[`test/e2e/update.ts TAP > output 2`] = `
