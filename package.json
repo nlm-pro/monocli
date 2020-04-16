@@ -18,9 +18,11 @@
     "tap": "tap -J --timeout 300",
     "tap-nocleanup": "NO_TEST_CLEANUP=1 tap -J --timeout 300",
     "tap-coverage": "tap -J --coverage --timeout 600",
-    "test-tap": "npm run tap -- \"test/units/**/*.ts\" \"test/e2e/**/*.ts\"",
+    "tap-strict-coverage": "tap -J --coverage --timeout 600 --coverage-map=coverage-map.js",
+    "test-tap": "npm run tap -- \"test/tap/**/*.ts\"",
     "tap-snapshot": "npm run tap -- --snapshot",
-    "test-coverage": "npm run tap-coverage -- \"test/units/**/*.ts\" \"test/e2e/**/*.ts\"",
+    "test-coverage": "npm run tap-coverage -- \"test/tap/**/*.ts\"",
+    "test-strict-coverage": "npm run tap-strict-coverage -- \"test/tap/**/*.ts\"",
     "test": "npm run test-tap --",
     "test:watch": "npm run test-coverage -- --watch",
     "postinstall": "patch-package"
@@ -79,7 +81,6 @@
     "{src,test}/**/*.{js,ts}": "eslint --fix"
   },
   "tap": {
-    "coverage-map": "coverage-map.js",
     "nyc-arg": [
       "--all",
       "--include=\"src/**/*.ts\""

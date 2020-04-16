@@ -5,7 +5,7 @@
  * Make sure to inspect the output below.  Do not ignore changes!
  */
 'use strict'
-exports[`test/e2e/update.ts TAP > monorepo commits 1`] = `
+exports[`test/tap/commands/update.ts TAP > monorepo commits 1`] = `
 docs: README
 
 feat(proj): foo.txt
@@ -13,7 +13,7 @@ feat(proj): foo.txt
 stub repo
 `
 
-exports[`test/e2e/update.ts TAP > monorepo commits 2`] = `
+exports[`test/tap/commands/update.ts TAP > monorepo commits 2`] = `
 docs: README
 
 feat(proj): foo.txt
@@ -21,7 +21,7 @@ feat(proj): foo.txt
 stub repo
 `
 
-exports[`test/e2e/update.ts TAP > monorepo commits 3`] = `
+exports[`test/tap/commands/update.ts TAP > monorepo commits 3`] = `
 docs: README
 
 feat(proj): foo.txt
@@ -29,7 +29,7 @@ feat(proj): foo.txt
 stub repo
 `
 
-exports[`test/e2e/update.ts TAP > monorepo commits 4`] = `
+exports[`test/tap/commands/update.ts TAP > monorepo commits 4`] = `
 docs: README
 
 feat(proj): foo.txt
@@ -37,41 +37,41 @@ feat(proj): foo.txt
 stub repo
 `
 
-exports[`test/e2e/update.ts TAP > output 1`] = `
+exports[`test/tap/commands/update.ts TAP > output 1`] = `
 monocli ERR! url no remote url was given for subproj
 `
 
-exports[`test/e2e/update.ts TAP > output 2`] = `
+exports[`test/tap/commands/update.ts TAP > output 2`] = `
 monocli notice remote subrepo successfully updated
 `
 
-exports[`test/e2e/update.ts TAP > output 3`] = `
+exports[`test/tap/commands/update.ts TAP > output 3`] = `
 monocli notice remote subrepo successfully updated
 `
 
-exports[`test/e2e/update.ts TAP > output 4`] = `
+exports[`test/tap/commands/update.ts TAP > output 4`] = `
 monocli notice remote subrepo successfully updated
 `
 
-exports[`test/e2e/update.ts TAP > subrepo commits 1`] = `
+exports[`test/tap/commands/update.ts TAP > subrepo commits 1`] = `
 Error: fatal: your current branch 'master' does not have any commits yet {
   "code": 128,
 }
 `
 
-exports[`test/e2e/update.ts TAP > subrepo commits 2`] = `
+exports[`test/tap/commands/update.ts TAP > subrepo commits 2`] = `
 feat(proj): foo.txt
 `
 
-exports[`test/e2e/update.ts TAP > subrepo commits 3`] = `
+exports[`test/tap/commands/update.ts TAP > subrepo commits 3`] = `
 feat(proj): foo.txt
 `
 
-exports[`test/e2e/update.ts TAP > subrepo commits 4`] = `
+exports[`test/tap/commands/update.ts TAP > subrepo commits 4`] = `
 feat(proj): foo.txt
 `
 
-exports[`test/e2e/update.ts TAP > updated config 1`] = `
+exports[`test/tap/commands/update.ts TAP > updated config 1`] = `
 {
   "projects": [
     {
@@ -82,7 +82,7 @@ exports[`test/e2e/update.ts TAP > updated config 1`] = `
 }
 `
 
-exports[`test/e2e/update.ts TAP > updated config 2`] = `
+exports[`test/tap/commands/update.ts TAP > updated config 2`] = `
 {
   "projects": [
     {
@@ -93,7 +93,7 @@ exports[`test/e2e/update.ts TAP > updated config 2`] = `
 }
 `
 
-exports[`test/e2e/update.ts TAP > updated config 3`] = `
+exports[`test/tap/commands/update.ts TAP > updated config 3`] = `
 {
   "projects": [
     {
@@ -105,7 +105,7 @@ exports[`test/e2e/update.ts TAP > updated config 3`] = `
 }
 `
 
-exports[`test/e2e/update.ts TAP > updated config 4`] = `
+exports[`test/tap/commands/update.ts TAP > updated config 4`] = `
 {
   "projects": [
     {

@@ -1,11 +1,11 @@
 import * as path from "path";
 import * as fs from "fs-extra";
-import { makeGitRepo, testDir, run, TestRepo } from "../common";
-import { Config } from "../../src/models/config";
+import { makeGitRepo, testDir, run, TestRepo } from "../../common";
+import { Config } from "../../../src/models/config";
+import { Monorepo } from '../../../src/models/monorepo';
 
 /* eslint-disable quotes */
 import t = require("tap");
-import { Monorepo } from '../../src/models/monorepo';
 /* eslint-enable quotes */
 
 const config: Config = {

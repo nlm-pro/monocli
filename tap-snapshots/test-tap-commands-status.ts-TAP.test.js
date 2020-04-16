@@ -5,7 +5,7 @@
  * Make sure to inspect the output below.  Do not ignore changes!
  */
 'use strict'
-exports[`test/e2e/status.ts TAP > without options 1`] = `
+exports[`test/tap/commands/status.ts TAP > without options 1`] = `
 On branch master
 
 No commits yet

@@ -1,6 +1,6 @@
 // eslint-disable-next-line quotes
 import t = require("tap");
-import { run, makeGitRepo } from "../common";
+import { run, makeGitRepo } from "../../common";
 
 async function setup(): Promise<void> {
   await makeGitRepo();

@@ -6,7 +6,7 @@
  */
 'use strict'
 
-exports[`test/e2e/mv.ts TAP mv command with remote > output 1`] = `
+exports[`test/tap/commands/mv.ts TAP mv command with remote > output 1`] = `
 monocli notice files moved
 monocli notice commit files renaming
 monocli notice commit config update
@@ -14,7 +14,7 @@ monocli notice subtree successfully updated
 monocli notice remote subrepo successfully updated
 `
 
-exports[`test/e2e/mv.ts TAP mv command without remote > commits 1`] = `
+exports[`test/tap/commands/mv.ts TAP mv command without remote > commits 1`] = `
 build: mv one via monocli
 
 update project directory in monocli config after mv
@@ -27,14 +27,14 @@ feat(one): foo.txt
 stub repo
 `
 
-exports[`test/e2e/mv.ts TAP mv command without remote > output 1`] = `
+exports[`test/tap/commands/mv.ts TAP mv command without remote > output 1`] = `
 monocli notice files moved
 monocli notice commit files renaming
 monocli notice commit config update
 monocli notice no remote url in this project config
 `
 
-exports[`test/e2e/mv.ts TAP mv command without remote > updated config 1`] = `
+exports[`test/tap/commands/mv.ts TAP mv command without remote > updated config 1`] = `
 {
   "projects": [
     {

@@ -1,6 +1,6 @@
 // eslint-disable-next-line quotes
 import t = require("tap");
-import { run } from "../common";
+import { run } from "../../common";
 
 t.test(`help command`, async () => {
   t.matchSnapshot(await run([`help`]), `main`);

@@ -2,9 +2,9 @@
 import t = require("tap");
 import * as path from "path";
 import * as fs from "fs-extra";
-import { run, testDir, makeGitRepo, runBin } from "../common";
-import { SEMVER_PATTERN } from "../../src/commands/check";
-import { ExitError } from "../../src/models/errors";
+import { run, testDir, makeGitRepo, runBin } from "../../common";
+import { SEMVER_PATTERN } from "../../../src/commands/check";
+import { ExitError } from "../../../src/models/errors";
 /* eslint-enable quotes */
 
 t.test(`check command`, async t => {
