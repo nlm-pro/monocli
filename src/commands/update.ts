@@ -79,7 +79,11 @@ export class UpdateCommand extends MonorepoCommand {
       );
     }
 
-    const remoteUrl = projectConfig?.url || url;
+    let remoteUrl = projectConfig?.url || url;
+    if (remoteUrl.match(/^\.\.?\/?/)) {
+      remoteUrl = absolute(remoteUrl);
+    }
+
     let id = `${+new Date()}`;
     if (projectConfig?.scope) {
       id = projectConfig.scope.concat(`-${id}`);

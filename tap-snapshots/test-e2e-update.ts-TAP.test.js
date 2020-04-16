@@ -41,7 +41,7 @@ exports[`test/e2e/update.ts TAP > output 1`] = `
 monocli ERR! url no remote url was given for subproj
 
 Error: no remote url was given for subproj
-    at UpdateCommand.run (/home/noel/git/me/monorepo-spm/src/commands/update.ts:75:13)
+    at UpdateCommand.run (/home/noel/git/me/monorepo-spm/src/commands/update.ts:76:13)
 `
 
 exports[`test/e2e/update.ts TAP > output 2`] = `
@@ -102,7 +102,7 @@ exports[`test/e2e/update.ts TAP > updated config 3`] = `
     {
       "scope": "proj",
       "directory": "subproj",
-      "url": "/home/noel/git/me/monorepo-spm/test/e2e/update/config-arg/sub"
+      "url": "../sub"
     }
   ]
 }
@@ -114,7 +114,7 @@ exports[`test/e2e/update.ts TAP > updated config 4`] = `
     {
       "scope": "proj",
       "directory": "subproj",
-      "url": "/home/noel/git/me/monorepo-spm/test/e2e/update/config/sub"
+      "url": "../sub"
     }
   ]
 }

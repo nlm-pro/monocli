@@ -2,10 +2,11 @@ import * as path from "path";
 import * as fs from "fs-extra";
 import { makeGitRepo, testDir, run, TestRepo } from "../common";
 import { Config, SubProjectConfig } from "../../src/models/config";
+import { relativeTo } from "../../src/utils/path";
+import { Monorepo } from '../../src/models/monorepo';
 
 /* eslint-disable quotes */
 import t = require("tap");
-import { Monorepo } from '../../src/models/monorepo';
 /* eslint-enable quotes */
 
 interface TestFiles {
@@ -34,7 +35,7 @@ async function setup(dir: string, withUrl: boolean): Promise<TestFiles> {
   };
 
   if (withUrl) {
-    config.projects[0].url = subRepoDir;
+    config.projects[0].url = relativeTo(subRepoDir, mainRepoDir);
   }
 
   await fs.writeFile(
@@ -118,7 +119,11 @@ t.test(`update command`, async t => {
     const testFiles = await setup(`config-arg`, true);
 
     const output = await run(
-      [`update`, subproject.directory, testFiles.sub.path],
+      [
+        `update`,
+        subproject.directory,
+        relativeTo(testFiles.sub.path, testFiles.main.path)
+      ],
       testFiles.main.path
     );
     await assert(output, testFiles);
