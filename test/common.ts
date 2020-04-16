@@ -2,8 +2,6 @@ import * as stream from "stream";
 import * as rimraf from "rimraf";
 import * as mkdirp from "mkdirp";
 import { teardown } from "tap";
-// eslint-disable-next-line quotes
-import path = require("path");
 import { spawn, ChildProcessPromise } from "promisify-child-process";
 import { commandName } from "../src/commands";
 import { Repository } from "../src/models/git";
@@ -11,9 +9,25 @@ import { run as runCommand } from "../src/index";
 import { chdir } from "../src/utils/path";
 import * as Logger from "../src/utils/log";
 
+/* eslint-disable quotes */
+import path = require("path");
+import log = require("npmlog");
+/* eslint-enable quotes */
+
 if (typeof require.main === `undefined`) {
   throw new Error(`not a tap test`);
 }
+
+export const logs: string[] = [];
+
+const debugStream = new stream.Writable({
+  write: (chunk, encoding, next): void => {
+    logs.push(chunk);
+    next();
+  }
+});
+
+log.stream = debugStream;
 
 const main = require.main.filename;
 const testName = path.basename(main, `.ts`);
@@ -74,7 +88,7 @@ export async function makeGitRepo({
   root = testDir,
   user = `TestFaker`,
   email = `nope@not.real`,
-  added = [],
+  added = [] as string[],
   message = `stub repo`
 } = {}): Promise<Repository> {
   const repo = new Repository(root);

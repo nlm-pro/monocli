@@ -1,5 +1,6 @@
 import { resolve } from "path";
-import { ensureDir, existsSync } from "fs-extra";
+import { stat } from "fs";
+import { ensureDir, existsSync, pathExists, statSync } from "fs-extra";
 import { notice, silly } from "npmlog";
 import { MonorepoCommand } from "../models/monorepo-command";
 import { cmdOption } from "../models/options";
@@ -38,8 +39,11 @@ export class MvCommand extends MonorepoCommand {
         `missing parameter: ${this.doc.usage}`
       );
     }
-    if (!existsSync(path)) {
-      throw new CommandOptionError(`path`, `${path} directory does not exist`);
+    if (!existsSync(absolute(path))) {
+      throw new CommandOptionError(
+        `path`,
+        `${absolute(path)} directory does not exist`
+      );
     }
 
     silly(`path`, path);
@@ -48,9 +52,8 @@ export class MvCommand extends MonorepoCommand {
     const newDir = relativeTo(destination, this.monorepo.root.path);
     silly(`new directory`, newDir);
 
-    await ensureDir(absolute(destination));
-    if (!(await isEmpty(destination))) {
-      throw new RunConditionError(`the destination directory isn't empty`);
+    if (await pathExists(absolute(destination))) {
+      throw new RunConditionError(`the destination directory already exists`);
     }
 
     // Get project config
@@ -63,6 +66,10 @@ export class MvCommand extends MonorepoCommand {
       notice(``, `no project config available for ${oldDir}`);
     }
     silly(`config`, `project: %s`, projectConfig);
+
+    if (!projectConfig?.scope) {
+      throw new ConfigError(`no scope found for project ${oldDir}`);
+    }
 
     // Move files in monorepo
 
@@ -77,6 +84,19 @@ export class MvCommand extends MonorepoCommand {
       `chore: mv ${oldDir} to ${newDir}`
     ]);
     notice(``, `commit files renaming`);
+
+    // Update config
+    await this.monorepo.updateProjectConfig(`directory`, oldDir, newDir);
+
+    await this.monorepo.repository.git(`commit`, [
+      `-m`,
+      `build: mv ${projectConfig.scope} via monocli
+    
+update project directory in monocli config after mv
+from ${oldDir} to ${newDir}`,
+      Monorepo.CONFIG_FILE_NAME
+    ]);
+    notice(``, `commit config update`);
 
     if (!projectConfig?.url) {
       notice(``, `no remote url in this project config`);
@@ -130,17 +150,5 @@ export class MvCommand extends MonorepoCommand {
     // TODO: ask for confirmation
     // TODO: permit to push to another branch and create a PR
     await cloneRepo.git(`push`, [`origin`, `master`]);
-
-    // Update config
-    await this.monorepo.updateProjectConfig(`directory`, oldDir, newDir);
-
-    await this.monorepo.repository.git(`commit`, [
-      `-m`,
-      `build: mv ${projectConfig.scope} via monocli
-    
-update project directory in monocli config after mv
-from ${oldDir} to ${newDir}`,
-      Monorepo.CONFIG_FILE_NAME
-    ]);
   }
 }
