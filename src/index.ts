@@ -3,7 +3,7 @@ import { errorsGlobalHandler } from "./utils/errors";
 import { MainCommand } from "./models/main-command";
 import { parse } from "./utils/parse";
 import * as Logging from "./utils/log";
-import { chdir } from "./utils/path";
+import { chdir } from "./utils/fs";
 
 export async function run(
   argv: string[],

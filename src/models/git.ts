@@ -1,3 +1,5 @@
+import * as path from "path";
+import * as fs from "fs-extra";
 import { spawn } from "promisify-child-process";
 import * as log from "npmlog";
 import { absolute } from "../utils/path";
@@ -7,6 +9,11 @@ export const GitCommands: { [s: string]: (...args: string[]) => string } = {
   goToNewBranch: branchName => `checkout -b ${branchName}`,
   status: () => `status`
 };
+
+export interface Submodule {
+  name: string;
+  url: string;
+}
 
 export class Repository {
   private absolutePath: string;
@@ -37,5 +44,58 @@ export class Repository {
           : `Error: git command failed`;
       throw new GitError(msg, code);
     }
+  }
+
+  async getSubmodules(): Promise<Map<string, Submodule>> {
+    const regex = /^submodule\.([\w-/\\]+)\.(?:path|url) (.*)$/gm;
+
+    const pathsOutput = await this.git(`config`, [
+      `-f`,
+      `.gitmodules`,
+      `--get-regexp`,
+      `submodule.*.path`
+    ]);
+
+    const paths = pathsOutput.matchAll(regex);
+
+    if (!paths) {
+      return new Map();
+    }
+
+    const pathsByName: Map<string, string> = new Map();
+    for (const [full, name, path] of paths) {
+      pathsByName.set(name, path);
+    }
+
+    const urlsOutput = await this.git(`config`, [
+      `-f`,
+      `.gitmodules`,
+      `--get-regexp`,
+      `submodule.*.url`
+    ]);
+
+    const urls = urlsOutput.matchAll(regex);
+
+    if (!urls) {
+      return new Map();
+    }
+
+    const submodules: Map<string, Submodule> = new Map();
+    for (const [full, name, url] of urls) {
+      const path = pathsByName.get(name);
+      if (!path) {
+        continue;
+      }
+      submodules.set(path, { name, url });
+    }
+
+    return submodules as Map<string, Submodule>;
+  }
+
+  async deleteSubmodule(directory: string): Promise<void> {
+    await this.git(`submodule`, [`deinit`, directory]);
+    await this.git(`rm`, [directory]);
+    await this.git(`commit`, [`-m`, `chore: delete submodule at ${directory}`]);
+    await fs.remove(path.join(this.absolutePath, `.git/modules/`, directory));
   }
 }

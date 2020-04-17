@@ -1,15 +1,6 @@
 import { join, dirname, parse, isAbsolute, resolve, relative } from "path";
 import * as fs from "fs-extra";
-import { silly } from "npmlog";
-
-let workingDirectory: string;
-
-export function cwd(): string {
-  if (workingDirectory) {
-    return workingDirectory;
-  }
-  throw new Error(`no working directory defined`);
-}
+import { cwd } from "./fs";
 
 export function absolute(path: string): string {
   if (isAbsolute(path)) {
@@ -30,13 +21,6 @@ export function relativeTo(path: string, root: string): string {
   return relative(root, path);
 }
 
-export async function isEmpty(path: string): Promise<boolean> {
-  const content = await fs.readdir(absolute(path));
-  silly(`isEmpty`, `content: %s`, content);
-
-  return content.length === 0;
-}
-
 export function findUp(name: string, from: string): string | null {
   const root = parse(from).root;
 
@@ -51,13 +35,4 @@ export function findUp(name: string, from: string): string | null {
   }
 
   return null;
-}
-
-export function chdir(path: string): void {
-  const dir = absolute(path);
-  if (fs.existsSync(dir) && fs.statSync(dir).isDirectory()) {
-    workingDirectory = dir;
-  } else {
-    throw new Error(`${path} isn't a valid directory`);
-  }
 }

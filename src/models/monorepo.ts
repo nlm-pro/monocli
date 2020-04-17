@@ -1,7 +1,7 @@
 import { dirname, join, resolve } from "path";
 import * as fs from "fs-extra";
 import { silly } from "npmlog";
-import { findUp, cwd } from "../utils/path";
+import { findUp, cwd } from "../utils/fs";
 import { Repository } from "./git";
 import { Config, SubProjectConfig } from "./config";
 import { MonorepoError } from "./errors";

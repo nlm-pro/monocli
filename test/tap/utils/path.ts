@@ -1,7 +1,8 @@
 import { join } from "path";
 import { test } from "tap";
-import { relativeTo, absolute, chdir, cwd } from "../../../src/utils/path";
+import { relativeTo, absolute } from "../../../src/utils/path";
 import { testDir } from "../../common";
+import { chdir, cwd } from "../../../src/utils/fs";
 
 function setup(): void {
   chdir(testDir);

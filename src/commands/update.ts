@@ -1,4 +1,4 @@
-import { resolve, join } from "path";
+import { resolve } from "path";
 import { ensureDir, existsSync, statSync } from "fs-extra";
 import { notice, silly } from "npmlog";
 import { MonorepoCommand } from "../models/monorepo-command";

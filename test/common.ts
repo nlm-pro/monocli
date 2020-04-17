@@ -6,7 +6,7 @@ import { spawn, ChildProcessPromise } from "promisify-child-process";
 import { commandName } from "../src/commands";
 import { Repository } from "../src/models/git";
 import { run as runCommand } from "../src/index";
-import { chdir } from "../src/utils/path";
+import { chdir } from "../src/utils/fs";
 import * as Logger from "../src/utils/log";
 
 /* eslint-disable quotes */
