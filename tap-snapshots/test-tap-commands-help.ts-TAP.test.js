@@ -25,7 +25,7 @@ Commands: status, mv, help, update, check
 Use monocli help <command name> for more information about one of these commands.
 
 Options:
-  --debug 	enable debug mode (set log level to "silly")
+  --debug       <boolean>  enable debug mode (set log level to "silly")  (default: false)
 `
 
 exports[`test/tap/commands/help.ts TAP > mv 1`] = `
@@ -60,5 +60,5 @@ Commands: status, mv, help, update, check
 Use monocli help <command name> for more information about one of these commands.
 
 Options:
-  --debug 	enable debug mode (set log level to "silly")
+  --debug       <boolean>  enable debug mode (set log level to "silly")  (default: false)
 `

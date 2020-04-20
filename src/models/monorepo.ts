@@ -4,7 +4,7 @@ import { silly } from "npmlog";
 import { findUp, cwd } from "../utils/fs";
 import { Repository } from "./git";
 import { Config, SubProjectConfig } from "./config";
-import { MonorepoError } from "./errors";
+import { MonorepoError, ConfigError } from "./errors";
 
 export class Monorepo {
   static CONFIG_FILE_NAME = `monocli.json`;
@@ -13,8 +13,8 @@ export class Monorepo {
 
   readonly root: { path: string; configExist: boolean };
 
-  constructor() {
-    this.root = this.getRoot();
+  constructor(from?: string) {
+    this.root = this.getRoot(from);
     this.repository = new Repository(this.root.path);
   }
 
@@ -25,12 +25,47 @@ export class Monorepo {
     return JSON.parse(configContent);
   }
 
-  getRoot(): { path: string; configExist: boolean } {
+  async updateProjectConfig(
+    key: keyof SubProjectConfig,
+    oldValue: string,
+    newValue: string
+  ): Promise<void> {
+    const config = this.getConfig();
+    const index = config.projects.findIndex(
+      project => project[key] === oldValue
+    );
+    config.projects[index][key] = newValue;
+
+    await this.saveConfig(config);
+  }
+
+  async addProjectConfig(project: SubProjectConfig): Promise<void> {
+    const config = this.getConfig();
+    let conflict: `directory` | `scope` | null = null;
+    for (const p of config.projects) {
+      if (p.directory === project.directory) {
+        conflict = `directory`;
+      } else if (p.scope === project.scope) {
+        conflict = `scope`;
+      }
+    }
+    if (conflict) {
+      throw new ConfigError(
+        `a project already exist with ${conflict}=${project[conflict]}`
+      );
+    }
+    config.projects.push(project);
+    await this.saveConfig(config);
+  }
+
+  private getRoot(from?: string): { path: string; configExist: boolean } {
+    from = from || cwd();
+
     let configFilePath: string;
     let configExist = false;
-    const possibleConfigFilePath = findUp(Monorepo.CONFIG_FILE_NAME, cwd());
+    const possibleConfigFilePath = findUp(Monorepo.CONFIG_FILE_NAME, from);
     if (possibleConfigFilePath === null) {
-      const possibleGitRoot = findUp(`.git`, cwd());
+      const possibleGitRoot = findUp(`.git`, from);
       if (possibleGitRoot === null) {
         throw new MonorepoError(
           `not a monocli nor a git repository (or any parent up to mount point /)`
@@ -48,24 +83,10 @@ export class Monorepo {
     return { path: dirname(configFilePath), configExist };
   }
 
-  async updateProjectConfig(
-    key: keyof SubProjectConfig,
-    oldValue: string,
-    newValue: string
-  ): Promise<void> {
-    const config = this.getConfig();
-    const index = config.projects.findIndex(
-      project => project[key] === oldValue
-    );
-    config.projects[index][key] = newValue;
-
-    await this.saveConfig(config);
-  }
-
   private async saveConfig(config: Config): Promise<void> {
     await fs.writeFile(
       resolve(this.root.path, Monorepo.CONFIG_FILE_NAME),
-      JSON.stringify(config, null, `  `)
+      JSON.stringify(config, null, 2)
     );
   }
 

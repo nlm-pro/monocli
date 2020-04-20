@@ -32,7 +32,7 @@ Use monocli help <command name> for more information about one of these commands
     const cmdName = params[0] as commandName;
     const subCommandParams = params.slice(1);
     const command = buildCommand(cmdName);
-    this.validate(options);
+    this.validate(params, options);
 
     const subCommandOptions = new Map([...options]);
     for (const [optionName] of this.doc.options) {

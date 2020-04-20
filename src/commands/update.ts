@@ -24,11 +24,23 @@ export class UpdateCommand extends MonorepoCommand {
     [directory, url]: [string, string],
     options?: Map<string, cmdOption>
   ): Promise<string | void> {
-    // TODO: doc and move to Command
+    this.validateDirectory(directory);
+
+    silly(`path`, directory);
+
+    const config = await this.getProjectConfig(directory, url);
+
+    await this.updateSubtree(config, directory);
+
+    notice(``, `remote subrepo successfully updated`);
+  }
+
+  // TODO: doc and move to Command
+  validateDirectory(directory: string): void {
     if (!directory) {
       throw new CommandOptionError(
         `parameters`,
-        `missing parameter: ${this.doc.usage}`
+        `missing directory parameter: ${this.doc.usage}`
       );
     }
 
@@ -48,11 +60,12 @@ export class UpdateCommand extends MonorepoCommand {
         `${absolute(directory)} isn't a directory`
       );
     }
+  }
 
-    silly(`path`, directory);
-
-    // Get project config
-
+  async getProjectConfig(
+    directory: string,
+    url: string
+  ): Promise<{ id: string; remoteUrl: string }> {
     let projectConfig: SubProjectConfig | null = null;
 
     try {
@@ -89,8 +102,17 @@ export class UpdateCommand extends MonorepoCommand {
       id = projectConfig.scope.concat(`-${id}`);
     }
 
-    // Update subtree remote repository
-    const splitBranch = `monocli-update-${id}`;
+    return {
+      id,
+      remoteUrl
+    };
+  }
+
+  async updateSubtree(
+    config: { id: string; remoteUrl: string },
+    directory: string
+  ): Promise<void> {
+    const splitBranch = `monocli-update-${config.id}`;
 
     await this.monorepo.repository.git(`subtree`, [
       `split`,
@@ -99,20 +121,16 @@ export class UpdateCommand extends MonorepoCommand {
       splitBranch
     ]);
 
-    const clonePath = resolve(`/tmp`, `monocli`, id);
-    await ensureDir(clonePath);
-    const cloneRepo = new Repository(clonePath);
-    await cloneRepo.git(`clone`, [`--bare`, remoteUrl, `.`]);
+    const cloneRepo = new Repository();
+    await cloneRepo.git(`clone`, [`--bare`, config.remoteUrl, `.`]);
 
     await this.monorepo.repository.git(`push`, [
-      clonePath,
+      cloneRepo.path,
       `${splitBranch}:master`
     ]);
 
     // TODO: ask for confirmation
     // TODO: permit to push to another branch and create a PR
     await cloneRepo.git(`push`, [`origin`, `master`]);
-
-    notice(``, `remote subrepo successfully updated`);
   }
 }

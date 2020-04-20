@@ -12,6 +12,7 @@ import {
 import { getProject } from "../utils/config";
 import { SubProjectConfig } from "../models/config";
 import { Monorepo } from "../models/monorepo";
+import { buildCommand } from "../utils/build-command";
 import { UpdateCommand } from "./update";
 
 export class MvCommand extends MonorepoCommand {
@@ -118,9 +119,7 @@ from ${oldDir} to ${newDir}`
 
     // Update subtree remote repository
 
-    // TODO: better DX
-    const update = new UpdateCommand();
-    update.setMonorepo(this.monorepo);
+    const update = buildCommand(`update`) as UpdateCommand;
     await update.run([newDir, projectConfig.url]);
   }
 }

@@ -5,15 +5,21 @@ import { CommandOptionError } from "./errors";
 
 const optionToString = (
   name: string,
-  { type, description, defaultValue }: CommandOptionConfig
+  { type, description, defaultValue, defaultDescription }: CommandOptionConfig
 ): string => {
   // TODO: dash-case name
-  let defaultStr = type === `string` ? `"${defaultValue}` : defaultValue;
+  let defaultStr = type === `string` ? `"${defaultValue}"` : defaultValue;
   defaultStr =
-    typeof defaultValue !== `undefined` ? `(default: ${defaultStr})` : ``;
-  const typeStr = type !== `boolean` ? `<${type}>` : ``;
+    typeof defaultValue !== `undefined`
+      ? `(default: ${defaultDescription || defaultStr})`
+      : type === `boolean`
+      ? `(default: false)`
+      : ``;
+  const typeStr = `<${type}>`;
 
-  return `--${name} ${typeStr}\t${description} ${defaultStr}`;
+  return `--${name.padEnd(10)}  ${typeStr.padEnd(
+    9
+  )}  ${description}  ${defaultStr}`;
 };
 
 export abstract class Command {
@@ -27,7 +33,9 @@ export abstract class Command {
       this.singleMandatoryOptions = new Map(
         [...this.doc.options].filter(
           // eslint-disable-next-line @typescript-eslint/no-unused-vars
-          ([name, config]) => typeof config.defaultValue !== `undefined`
+          ([name, config]) =>
+            config.type !== `boolean` &&
+            typeof config.defaultValue === `undefined`
         )
       );
     }
@@ -54,12 +62,18 @@ ${options}
     `;
   }
 
-  validate(options: Map<string, cmdOption>): void {
+  validate(params: string[], options: Map<string, cmdOption>): void {
     const mandatoryOptionsPile = this.mandatoryOptions;
     for (const [optionName, optionConfig] of this.doc.options) {
       if (typeof optionConfig.defaultValue !== `undefined`) {
         if (!options.has(optionName)) {
           throw new CommandOptionError(optionName, `missing mandatory option`);
+        }
+        if (
+          typeof optionConfig.defaultValue === `function` &&
+          !options.has(optionName)
+        ) {
+          options.set(optionName, optionConfig.defaultValue(params, options));
         }
       } else {
         mandatoryOptionsPile.delete(optionName);
@@ -89,7 +103,7 @@ ${options}
     }
 
     return [...options].reduce(
-      (prev, [name, config]) => `${prev}\n\t${optionToString(name, config)}`,
+      (prev, [name, config]) => `${prev}\n  ${optionToString(name, config)}`,
       `  ${optionToString(...firstOption)}`
     );
   }

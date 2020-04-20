@@ -4,7 +4,7 @@ import { Command } from "../models/command";
 import { MonorepoCommand } from "../models/monorepo-command";
 import { Monorepo } from "../models/monorepo";
 
-export function buildCommand(cmdName: commandName): Command {
+export function buildCommand(cmdName: commandName, from?: string): Command {
   let possibleCommand = commandsMap.get(cmdName);
   if (!possibleCommand) {
     log.warn(cmdName, `unknown command`);
@@ -12,7 +12,7 @@ export function buildCommand(cmdName: commandName): Command {
   }
   const command = new possibleCommand();
   if (command instanceof MonorepoCommand) {
-    command.setMonorepo(new Monorepo());
+    command.setMonorepo(new Monorepo(from));
   }
 
   return command;

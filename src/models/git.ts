@@ -18,8 +18,17 @@ export interface Submodule {
 export class Repository {
   private absolutePath: string;
 
-  constructor(pathFromCwd: string) {
-    this.absolutePath = absolute(pathFromCwd);
+  constructor(pathFromCwd?: string) {
+    this.absolutePath = pathFromCwd
+      ? absolute(pathFromCwd)
+      : path.resolve(`/tmp`, `monocli`, `${+new Date()}`);
+    if (!pathFromCwd) {
+      fs.ensureDirSync(this.absolutePath);
+    }
+  }
+
+  get path(): string {
+    return this.absolutePath;
   }
 
   async git(command: string, args: string[] = []): Promise<string> {
@@ -49,14 +58,21 @@ export class Repository {
   async getSubmodules(): Promise<Map<string, Submodule>> {
     const regex = /^submodule\.([\w-/\\]+)\.(?:path|url) (.*)$/gm;
 
-    const pathsOutput = await this.git(`config`, [
-      `-f`,
-      `.gitmodules`,
-      `--get-regexp`,
-      `submodule.*.path`
-    ]);
+    let paths;
 
-    const paths = pathsOutput.matchAll(regex);
+    try {
+      const pathsOutput = await this.git(`config`, [
+        `-f`,
+        `.gitmodules`,
+        `--get-regexp`,
+        `submodule.*.path`
+      ]);
+
+      paths = pathsOutput.matchAll(regex);
+    } catch (e) {
+      log.silly(`git`, `no submodule found in ${this.path}`);
+      log.silly(`error`, e);
+    }
 
     if (!paths) {
       return new Map();
