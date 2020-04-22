@@ -1,6 +1,6 @@
 import * as stream from "stream";
-import * as rimraf from "rimraf";
-import * as mkdirp from "mkdirp";
+import * as path from "path";
+import * as fs from "fs-extra";
 import { teardown } from "tap";
 import { spawn, ChildProcessPromise } from "promisify-child-process";
 import { commandName } from "../src/commands";
@@ -10,7 +10,6 @@ import { chdir } from "../src/utils/fs";
 import * as Logger from "../src/utils/log";
 
 /* eslint-disable quotes */
-import path = require("path");
 import log = require("npmlog");
 /* eslint-enable quotes */
 
@@ -33,8 +32,8 @@ const main = require.main.filename;
 const testName = path.basename(main, `.ts`);
 export const testDir = path.resolve(path.dirname(main), testName);
 
-rimraf.sync(testDir);
-mkdirp.sync(testDir);
+fs.removeSync(testDir);
+fs.mkdirpSync(testDir);
 
 // TODO: refactor global settings
 chdir(testDir);
@@ -48,7 +47,7 @@ teardown(() => {
     process.chdir(returnCwd);
     try {
       if (!process.env.NO_TEST_CLEANUP) {
-        rimraf.sync(testDir);
+        fs.removeSync(testDir);
       }
     } catch (e) {
       if (process.platform !== `win32`) {

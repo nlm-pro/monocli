@@ -51,11 +51,13 @@ If the command name is not provided, or does not exist, then show the main docum
 exports[`test/tap/commands/help.ts TAP > main 1`] = `
 Usage: monocli <command> [options]
 
-Monorepo (Sub)Projects Manager
+One CLI to rule them all.
+
+Easy monorepos management, and more.
 
 Commands: status, mv, help, update, check, add
 
-Use monocli help <command name> for more information about one of these commands.
+Use 'monocli help <command name>' for more information about one of these commands.
 
 Options:
   --debug       <boolean>  enable debug mode (set log level to "silly")  (default: false)
@@ -86,11 +88,13 @@ update the remote "subtree" repo associated to <directory>
 exports[`test/tap/commands/help.ts TAP > unknown command name 1`] = `
 Usage: monocli <command> [options]
 
-Monorepo (Sub)Projects Manager
+One CLI to rule them all.
+
+Easy monorepos management, and more.
 
 Commands: status, mv, help, update, check, add
 
-Use monocli help <command name> for more information about one of these commands.
+Use 'monocli help <command name>' for more information about one of these commands.
 
 Options:
   --debug       <boolean>  enable debug mode (set log level to "silly")  (default: false)

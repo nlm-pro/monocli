@@ -9,11 +9,13 @@ export class MainCommand extends Command {
   protected readonly doc: CommandDocumentation = {
     name: ``,
     usage: `<command>`,
-    description: `Monorepo (Sub)Projects Manager`,
+    description: `One CLI to rule them all.`,
     details: `
+Easy monorepos management, and more.
+
 Commands: ${[...commandsMap.keys()].join(`, `)}
 
-Use monocli help <command name> for more information about one of these commands.`,
+Use 'monocli help <command name>' for more information about one of these commands.`,
     options: new Map([
       [
         `debug`,

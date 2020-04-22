@@ -5,7 +5,7 @@ One CLI to rule them all.
 ## Quick Start
 
 ```shell-session
-$ npm install --global monocli
+$ npm install --global @monocli/cli
 
 $ monocli help
 ```

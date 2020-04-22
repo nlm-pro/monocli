@@ -21,7 +21,7 @@ module.exports = {
     "plugin:@typescript-eslint/recommended",
     "prettier"
   ],
-  "ignorePatterns": ["coverage-map.js", "node_modules/"],
+  "ignorePatterns": ["coverage-map.js", "publish.js", "node_modules/"],
   "rules": {
     "no-console": "error",
     "no-process-env": "error",
