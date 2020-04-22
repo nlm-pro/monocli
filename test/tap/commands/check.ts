@@ -23,7 +23,7 @@ t.test(`check command`, async t => {
     const promise = run([`check`, `subproj`], root);
 
     // FIXME: typing
-    (t as any).rejects(
+    t.rejects(
       promise,
       new ExitError(
         `check failed: last version of subproj has already been released`,

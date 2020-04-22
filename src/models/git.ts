@@ -79,7 +79,7 @@ export class Repository {
     }
 
     const pathsByName: Map<string, string> = new Map();
-    for (const [full, name, path] of paths) {
+    for (const [, name, path] of paths) {
       pathsByName.set(name, path);
     }
 
@@ -97,7 +97,7 @@ export class Repository {
     }
 
     const submodules: Map<string, Submodule> = new Map();
-    for (const [full, name, url] of urls) {
+    for (const [, name, url] of urls) {
       const path = pathsByName.get(name);
       if (!path) {
         continue;

@@ -1,8 +1,6 @@
-import { resolve } from "path";
-import { ensureDir, existsSync, statSync } from "fs-extra";
+import { existsSync, statSync } from "fs-extra";
 import { notice, silly } from "npmlog";
 import { MonorepoCommand } from "../models/monorepo-command";
-import { cmdOption } from "../models/options";
 import { CommandDocumentation } from "../models/documentation";
 import { absolute } from "../utils/path";
 import { CommandOptionError } from "../models/errors";
@@ -20,10 +18,7 @@ export class UpdateCommand extends MonorepoCommand {
     options: new Map()
   };
 
-  async run(
-    [directory, url]: [string, string],
-    options?: Map<string, cmdOption>
-  ): Promise<string | void> {
+  async run([directory, url]: [string, string]): Promise<string | void> {
     this.validateDirectory(directory);
 
     silly(`path`, directory);

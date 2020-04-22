@@ -3,7 +3,7 @@ import * as fs from "fs-extra";
 import { makeGitRepo, testDir, run, TestRepo } from "../../common";
 import { Config, SubProjectConfig } from "../../../src/models/config";
 import { relativeTo } from "../../../src/utils/path";
-import { Monorepo } from '../../../src/models/monorepo';
+import { Monorepo } from "../../../src/models/monorepo";
 
 /* eslint-disable quotes */
 import t = require("tap");

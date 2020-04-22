@@ -2,7 +2,7 @@ import * as path from "path";
 import * as fs from "fs-extra";
 import { makeGitRepo, testDir, run, TestRepo } from "../../common";
 import { Config } from "../../../src/models/config";
-import { Monorepo } from '../../../src/models/monorepo';
+import { Monorepo } from "../../../src/models/monorepo";
 
 /* eslint-disable quotes */
 import t = require("tap");
@@ -66,7 +66,10 @@ t.test(`mv command`, async t => {
       `move to new folder`
     );
     t.matchSnapshot(
-      fs.readFileSync(path.resolve(testRepo.path, Monorepo.CONFIG_FILE_NAME), `utf8`),
+      fs.readFileSync(
+        path.resolve(testRepo.path, Monorepo.CONFIG_FILE_NAME),
+        `utf8`
+      ),
       `updated config`
     );
 

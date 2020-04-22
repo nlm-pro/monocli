@@ -1,7 +1,6 @@
 import { existsSync, pathExists } from "fs-extra";
 import { notice, silly } from "npmlog";
 import { MonorepoCommand } from "../models/monorepo-command";
-import { cmdOption } from "../models/options";
 import { CommandDocumentation } from "../models/documentation";
 import { relativeTo, absolute } from "../utils/path";
 import {
@@ -28,10 +27,7 @@ export class MvCommand extends MonorepoCommand {
     options: new Map()
   };
 
-  async run(
-    [path, destination]: [string, string],
-    options: Map<string, cmdOption>
-  ): Promise<string | void> {
+  async run([path, destination]: [string, string]): Promise<string | void> {
     // TODO: doc and move to Command
     if (!path || !destination) {
       throw new CommandOptionError(

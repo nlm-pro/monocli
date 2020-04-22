@@ -1,7 +1,7 @@
 import * as path from "path";
 import * as t from "tap";
 import * as fs from "fs-extra";
-import { testDir, makeGitRepo, TestRepo, run, graphLog } from "../../common";
+import { testDir, makeGitRepo, run, graphLog } from "../../common";
 import { AddCommand } from "../../../src/commands";
 import { buildCommand } from "../../../src/utils/build-command";
 import { Repository } from "../../../src/models/git";
@@ -164,7 +164,7 @@ t.test(`add command`, async t => {
     await monorepo.addProjectConfig(config);
     const cmd = buildCommand(`add`, repo.path) as AddCommand;
 
-    (t as any).rejects(
+    t.rejects(
       cmd.checkProject(config.directory),
       new CommandOptionError(
         `directory`,

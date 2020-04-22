@@ -21,7 +21,7 @@ export class CommandOptionError extends Error {
 export class ExitError extends Error {
   constructor(
     message?: string,
-    public data: Iterable<any> = [],
+    public data: Iterable<unknown> = [],
     public code: number = 1
   ) {
     super(message);

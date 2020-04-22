@@ -57,12 +57,14 @@ export function init(level: LogLevels, stream?: Writable): void {
  * @author npm, Inc. and Contributors
  * @see https://github.com/npm/cli/blob/b829d62c98506325d2afb2d85d191a8ff1c49157/lib/utils/output.js
  */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function output(...args: any[]): void {
   log.clearProgress();
   outConsole.log(...args);
   log.showProgress();
 }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function debugOutput(...args: any[]): void {
   if (debug) {
     output(...args);
