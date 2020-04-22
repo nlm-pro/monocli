@@ -1,10 +1,9 @@
-import { Project } from "./Project";
-
-export interface Config {
-  projects: Project[];
+export interface SubProjectConfig {
+  scope: string;
+  directory: string;
+  url?: string;
 }
 
-export interface ConfigDescriptor {
-  config: Config;
-  filePath: string;
+export interface Config {
+  projects: SubProjectConfig[];
 }

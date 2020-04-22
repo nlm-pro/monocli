@@ -22,6 +22,8 @@ module.exports = {
     "prettier"
   ],
   "rules": {
+    "no-console": "error",
+    "no-warning-comments": "warn",
     "import/no-unresolved": "error", 
     "import/default": "error",
     "import/export": "error",
@@ -33,6 +35,7 @@ module.exports = {
     "@typescript-eslint/no-non-null-assertion": "error",
     "@typescript-eslint/no-unnecessary-qualifier": "error",
     "@typescript-eslint/prefer-namespace-keyword": "error",
+    "@typescript-eslint/member-ordering": "error",
     "camelcase": "error",
     "curly": "error",
     "id-blacklist": ["error", "any", "Number", "number", "String", "string", "Boolean", "boolean", "Undefined", "undefined"],
