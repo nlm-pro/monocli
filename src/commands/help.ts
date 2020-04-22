@@ -10,7 +10,7 @@ export class HelpCommand extends Command {
   protected readonly doc: CommandDocumentation = {
     name: `help`,
     usage: `[command name]`,
-    description: `Get help on monocli`,
+    description: `display usage info`,
     details: `
 If supplied a command name, then show the associated documentation.
     

@@ -4,7 +4,7 @@ One CLI to rule them all.
 
 ## Quick Start
 
-```
+```shell-session
 $ npm install --global monocli
 
 $ monocli help
@@ -32,8 +32,9 @@ Run `monocli help` and `monocli help <command>` for more information.
 
 ### Git
 
-- `add`
-- `check`
-- `mv`
-- `update`
-
+- `help`: display usage info
+- `add`: add, convert or import a project
+- `check`: check if a directory has changed since a release
+- `mv`: change a subtree prefix
+- `update`: update a remote subtree
+- `status`: show the monorepo status

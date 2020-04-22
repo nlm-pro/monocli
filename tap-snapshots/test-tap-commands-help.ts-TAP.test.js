@@ -41,7 +41,7 @@ Options:
 exports[`test/tap/commands/help.ts TAP > help 1`] = `
 Usage: monocli help [command name] 
 
-Get help on monocli
+display usage info
 
 If supplied a command name, then show the associated documentation.
     
