@@ -1,7 +1,7 @@
 import * as log from "npmlog";
 import { MonorepoCommand } from "../models/monorepo-command";
 import { CommandDocumentation } from "../models/documentation";
-import { cmdOption } from "../models/options";
+import { cmdOption, CommandOptionConfig } from "../models/options";
 import { ExitError } from "../models/errors";
 
 export const SEMVER_PATTERN = `v?(0|[1-9]\\d*)\\.(0|[1-9]\\d*)\\.(0|[1-9]\\d*)(?:-((?:0|[1-9]\\d*|\\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\\.(?:0|[1-9]\\d*|\\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\\+([0-9a-zA-Z-]+(?:\\.[0-9a-zA-Z-]+)*))?`;
@@ -12,15 +12,20 @@ export class CheckCommand extends MonorepoCommand {
   protected doc: CommandDocumentation = {
     name: `check`,
     usage: `<directory>`,
-    description: `check if <directory> has changed since the last release`,
-    // TODO
-    details: ``,
-    options: new Map([
+    description: `check if <directory> has changed since a release`,
+    details: `
+fails (non zero exit code) if the last commit including changes in <directory> is behind the specified (or latest semver) tag
+
+useful for release scripts and incremental builds
+`,
+    options: new Map<string, CommandOptionConfig>([
       [
         `tag`,
         {
           type: `string`,
-          description: `check changes since specific tag instead of the last release`
+          description: `tag name to check against`,
+          defaultValue: null,
+          defaultDescription: `latest semver compliant tag name`
         }
       ]
     ])
@@ -43,14 +48,15 @@ export class CheckCommand extends MonorepoCommand {
 
     log.info(``, `Latest commit in ${directory} is ${latestCommit}`);
 
-    if (!options.get(`tag`)) {
+    const tag = options.get(`tag`) as string | null;
+    if (!tag) {
       const validTags = (
         await this.monorepo.repository.git(`tag`, [`--contains`, latestCommit])
       ).split(`\n`);
       releaseTags = validTags.filter(tag => tag.match(semver));
     } else {
       const validTag = await this.monorepo.repository.git(`tag`, [
-        options.get(`tag`) as string,
+        tag,
         `--contains`,
         latestCommit
       ]);

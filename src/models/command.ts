@@ -1,5 +1,5 @@
 import { resolve } from "path";
-import { cmdOption, CommandOptionConfig } from "./options";
+import { cmdOption, CommandOptionConfig, cmdOptionValueFn } from "./options";
 import { CommandDocumentation } from "./documentation";
 import { CommandOptionError } from "./errors";
 
@@ -62,36 +62,40 @@ ${options}
     `;
   }
 
-  validate(params: string[], options: Map<string, cmdOption>): void {
-    const mandatoryOptionsPile = this.mandatoryOptions;
+  validate(
+    params: string[],
+    options: Map<string, cmdOption>
+  ): Map<string, cmdOption> {
+    const rslt = new Map<string, cmdOption>();
+    const derivedOptions: Array<[string, cmdOptionValueFn]> = [];
     for (const [optionName, optionConfig] of this.doc.options) {
-      if (typeof optionConfig.defaultValue !== `undefined`) {
-        if (!options.has(optionName)) {
-          throw new CommandOptionError(optionName, `missing mandatory option`);
-        }
-        if (
-          typeof optionConfig.defaultValue === `function` &&
-          !options.has(optionName)
-        ) {
-          options.set(optionName, optionConfig.defaultValue(params, options));
-        }
-      } else {
-        mandatoryOptionsPile.delete(optionName);
+      const value = options.get(optionName);
+      if (typeof value !== `undefined`) {
+        rslt.set(optionName, value);
+        continue;
       }
 
-      if (
-        options.has(optionName) &&
-        typeof options.get(optionName) !== optionConfig.type
-      ) {
-        throw new CommandOptionError(optionName, `invalid type provided`);
+      if (optionConfig.type === `boolean`) {
+        rslt.set(optionName, false);
+        continue;
+      }
+
+      if (typeof optionConfig.defaultValue === `undefined`) {
+        throw new CommandOptionError(optionName, `missing mandatory option`);
+      }
+
+      if (typeof optionConfig.defaultValue !== `function`) {
+        rslt.set(optionName, optionConfig.defaultValue);
+      } else {
+        derivedOptions.push([optionName, optionConfig.defaultValue]);
       }
     }
-    if (mandatoryOptionsPile.size > 0) {
-      throw new CommandOptionError(
-        [...mandatoryOptionsPile.keys()],
-        `missing mandatory options`
-      );
-    }
+
+    derivedOptions.forEach(([optionName, defaultFn]) => {
+      rslt.set(optionName, defaultFn(params, rslt));
+    });
+
+    return rslt;
   }
 
   private get optionsHelp(): string {

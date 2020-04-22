@@ -34,10 +34,12 @@ Use monocli help <command name> for more information about one of these commands
     const command = buildCommand(cmdName);
     this.validate(params, options);
 
-    const subCommandOptions = new Map([...options]);
+    let subCommandOptions = new Map([...options]);
     for (const [optionName] of this.doc.options) {
       subCommandOptions.delete(optionName);
     }
+
+    subCommandOptions = command.validate(subCommandParams, subCommandOptions);
 
     await remove(this.tmpDir);
     await ensureDir(this.tmpDir);

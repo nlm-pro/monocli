@@ -3,7 +3,6 @@ import t = require("tap");
 import * as path from "path";
 import * as fs from "fs-extra";
 import { run, testDir, makeGitRepo, runBin } from "../../common";
-import { SEMVER_PATTERN } from "../../../src/commands/check";
 import { ExitError } from "../../../src/models/errors";
 /* eslint-enable quotes */
 
@@ -21,9 +20,11 @@ t.test(`check command`, async t => {
     await repo.git(`commit`, [`-m`, `feat(project): bar`]);
     await repo.git(`tag`, [`-a`, `v0.2.0`, `-m`, `v0.2.0`]);
 
+    const promise = run([`check`, `subproj`], root);
+
     // FIXME: typing
     (t as any).rejects(
-      run([`check`, `subproj`], root),
+      promise,
       new ExitError(
         `check failed: last version of subproj has already been released`,
         [`v0.2.0`]
@@ -31,6 +32,7 @@ t.test(`check command`, async t => {
     );
 
     let binError;
+
     try {
       await runBin(`check`, [`subproj`], root);
     } catch (e) {

@@ -10,7 +10,7 @@
       "env": {
         "TS_NODE_PROJECT": "tsconfig.json"
       },
-      "args": ["${relativeFile}"],
+      "args": ["${relativeFile}", "--only"],
       "runtimeArgs": ["-r", "ts-node/register"],
       "sourceMaps": true,
       "cwd": "${workspaceRoot}"

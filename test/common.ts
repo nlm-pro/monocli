@@ -108,6 +108,22 @@ export async function makeGitRepo({
   return repo;
 }
 
+export async function graphLog(repository: Repository): Promise<string> {
+  let commits = `NONE`;
+  try {
+    commits = await repository.git(`log`, [
+      `--graph`,
+      `--all`,
+      `--pretty=format:'%d %s'`
+    ]);
+    commits = commits.replace(/(["'])/g, ``);
+  } catch (e) {
+    commits = `ERROR: ${e}`;
+  }
+
+  return commits;
+}
+
 export interface TestRepo {
   repo: Repository;
   path: string;
