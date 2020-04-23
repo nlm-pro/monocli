@@ -38,28 +38,32 @@ useful for release scripts and incremental builds
     let releaseTags: string[] = [];
 
     const latestCommit = (
-      await this.monorepo.repository.git(`log`, [
-        `-1`,
-        `--format=format:%H`,
-        `--full-diff`,
-        directory
-      ])
+      await this.monorepo.repository.git(
+        `log`,
+        [`-1`, `--format=format:%H`, `--full-diff`, directory],
+        `get the hash code of the latest commit affecting ${directory}`,
+        true
+      )
     ).trim();
-
-    log.info(``, `Latest commit in ${directory} is ${latestCommit}`);
 
     const tag = options.get(`tag`) as string | null;
     if (!tag) {
       const validTags = (
-        await this.monorepo.repository.git(`tag`, [`--contains`, latestCommit])
+        await this.monorepo.repository.git(
+          `tag`,
+          [`--contains`, latestCommit],
+          `get all tags after ${latestCommit}`,
+          true
+        )
       ).split(`\n`);
       releaseTags = validTags.filter(tag => semver.exec(tag));
     } else {
-      const validTag = await this.monorepo.repository.git(`tag`, [
-        tag,
-        `--contains`,
-        latestCommit
-      ]);
+      const validTag = await this.monorepo.repository.git(
+        `tag`,
+        [tag, `--contains`, latestCommit],
+        `return ${tag} only if it's after ${latestCommit}`,
+        true
+      );
       if (validTag) {
         releaseTags.push(validTag);
       }

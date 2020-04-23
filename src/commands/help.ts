@@ -25,7 +25,7 @@ If the command name is not provided, or does not exist, then show the main docum
     if (cmdName && [...commandsMap.keys()].includes(cmdName)) {
       message = buildCommand(cmdName).help;
     } else {
-      message = new MainCommand().help;
+      message = new MainCommand(process.stdout).help;
     }
     output(message);
   }

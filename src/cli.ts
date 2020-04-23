@@ -2,9 +2,7 @@ import { Writable } from "stream";
 import { errorsGlobalHandler } from "./utils/errors";
 import { MainCommand } from "./models/main-command";
 import { parse } from "./utils/parse";
-import * as Logging from "./utils/log";
 import { chdir } from "./utils/fs";
-import * as prompt from "./utils/prompt";
 
 export async function main(
   argv: string[],
@@ -14,10 +12,7 @@ export async function main(
   try {
     chdir(directory || process.cwd());
     const args = parse(argv);
-    Logging.init(args[1].get(`debug`) ? `silly` : `notice`, output);
-    prompt.setOutput(output || process.stdout);
-
-    const main = new MainCommand(true);
+    const main = new MainCommand(output);
     await main.run(...args);
   } catch (e) {
     errorsGlobalHandler(e);

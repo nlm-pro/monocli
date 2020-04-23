@@ -3,9 +3,23 @@ import { cmdOption, CommandOptionConfig, cmdOptionValueFn } from "./options";
 import { CommandDocumentation } from "./documentation";
 import { CommandOptionError } from "./errors";
 
+const indent = {
+  option: {
+    start: 2,
+    name: 10,
+    details: 9
+  }
+};
+
 const optionToString = (
   name: string,
-  { type, description, defaultValue, defaultDescription }: CommandOptionConfig
+  {
+    type,
+    description,
+    defaultValue,
+    defaultDescription,
+    details
+  }: CommandOptionConfig
 ): string => {
   // TODO: dash-case name
   let defaultStr = type === `string` ? `"${defaultValue}"` : defaultValue;
@@ -17,9 +31,27 @@ const optionToString = (
       : ``;
   const typeStr = `<${type}>`;
 
-  return `--${name.padEnd(10)}  ${typeStr.padEnd(
-    9
-  )}  ${description}  ${defaultStr}`;
+  const padName = name.padEnd(indent.option.name);
+  const padType = typeStr.padEnd(indent.option.details);
+
+  let msg = `--${padName}  ${padType}  ${description}  ${defaultStr}`;
+
+  if (details) {
+    const formattedDetails = details
+      .split(`\n`)
+      .map(
+        line => ` `.repeat(indent.option.start + indent.option.name - 2) + line
+      )
+      .join(`\n`);
+
+    msg = `${msg}
+
+${formattedDetails}
+
+    `;
+  }
+
+  return msg;
 };
 
 export abstract class Command {
@@ -109,8 +141,12 @@ ${options}
     }
 
     return [...options].reduce(
-      (prev, [name, config]) => `${prev}\n  ${optionToString(name, config)}`,
-      `  ${optionToString(...firstOption)}`
+      (prev, [name, config]) =>
+        `${prev}\n${` `.repeat(indent.option.start)}${optionToString(
+          name,
+          config
+        )}`,
+      `${` `.repeat(indent.option.start)}${optionToString(...firstOption)}`
     );
   }
 

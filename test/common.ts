@@ -3,7 +3,7 @@ import * as path from "path";
 import * as fs from "fs-extra";
 import * as log from "npmlog";
 import { teardown } from "tap";
-import { spawn, ChildProcessPromise } from "promisify-child-process";
+import { spawn as asyncSpawn, Output } from "promisify-child-process";
 import { commandName } from "../src/commands";
 import { Repository } from "../src/models/git";
 import { main } from "../src/cli";
@@ -65,8 +65,8 @@ export function runBin(
   cmd: commandName,
   args: string[] = [],
   cwd = testDir
-): ChildProcessPromise {
-  return spawn(nodeBin, [bin, cmd, ...args], { encoding: `utf8`, cwd });
+): Promise<Output> {
+  return asyncSpawn(nodeBin, [bin, cmd, ...args], { encoding: `utf8`, cwd });
 }
 
 export async function run(args: string[], root = testDir): Promise<string> {

@@ -1,8 +1,8 @@
 import * as path from "path";
 import * as fs from "fs-extra";
-import { spawn } from "promisify-child-process";
 import * as log from "npmlog";
 import { absolute } from "../utils/path";
+import { spawn } from "../utils/child-process";
 import { GitError } from "./errors";
 
 export const GitCommands: { [s: string]: (...args: string[]) => string } = {
@@ -31,21 +31,25 @@ export class Repository {
     return this.absolutePath;
   }
 
-  async git(command: string, args: string[] = []): Promise<string> {
-    const cmdString = [`git`, command, ...args].join(` `);
-    log.git(`run`, cmdString);
+  async git(
+    command: string,
+    args: string[] = [],
+    description?: string,
+    dry = false
+  ): Promise<string> {
     try {
-      const { stdout } = await spawn(`git`, [command, ...args], {
-        encoding: `utf8`,
-        cwd: this.absolutePath
-      });
-      if (typeof stdout === `string` && stdout) {
-        return stdout.trim();
-      }
+      const { stdout } = await spawn(
+        `git`,
+        [command, ...args],
+        {
+          encoding: `utf8`,
+          cwd: this.absolutePath
+        },
+        description,
+        dry
+      );
 
-      log.silly(`git`, `unhandled buffer result`);
-
-      return ``;
+      return stdout;
     } catch ({ stderr, code }) {
       const msg =
         stderr instanceof Buffer
@@ -60,15 +64,17 @@ export class Repository {
   async getSubmodules(): Promise<Map<string, Submodule>> {
     const regex = /^submodule\.([\w-/\\]+)\.(?:path|url) (.*)$/gm;
 
+    log.explain(`git`, `retrieving submodules configuration`);
+
     let paths;
 
     try {
-      const pathsOutput = await this.git(`config`, [
-        `-f`,
-        `.gitmodules`,
-        `--get-regexp`,
-        `submodule.*.path`
-      ]);
+      const pathsOutput = await this.git(
+        `config`,
+        [`-f`, `.gitmodules`, `--get-regexp`, `submodule.*.path`],
+        `print all submodules path`,
+        true
+      );
 
       paths = pathsOutput.matchAll(regex);
     } catch (e) {
@@ -85,12 +91,12 @@ export class Repository {
       pathsByName.set(name, path);
     }
 
-    const urlsOutput = await this.git(`config`, [
-      `-f`,
-      `.gitmodules`,
-      `--get-regexp`,
-      `submodule.*.url`
-    ]);
+    const urlsOutput = await this.git(
+      `config`,
+      [`-f`, `.gitmodules`, `--get-regexp`, `submodule.*.url`],
+      `print all submodules' urls`,
+      true
+    );
 
     const urls = urlsOutput.matchAll(regex);
 
@@ -111,9 +117,29 @@ export class Repository {
   }
 
   async deleteSubmodule(directory: string): Promise<void> {
-    await this.git(`submodule`, [`deinit`, directory]);
-    await this.git(`rm`, [directory]);
-    await this.git(`commit`, [`-m`, `chore: delete submodule at ${directory}`]);
-    await fs.remove(path.join(this.absolutePath, `.git/modules/`, directory));
+    log.explain(`git`, `deleting a submodule`);
+    await this.git(
+      `submodule`,
+      [`deinit`, directory],
+      `remove submodule.$name section from .git/config`
+    );
+    await this.git(
+      `rm`,
+      [directory],
+      `remove the ${directory} folder from the index (and the working tree if necessary)`
+    );
+    // TODO: better description
+    await this.git(
+      `commit`,
+      [`-m`, `chore: delete submodule at ${directory}`],
+      `save the current modifications`
+    );
+
+    // TODO: wrap fs-extra methods for explanations
+    log.explain(`fs`, `delete submodule in `);
+    const moduleDir = path.join(`.git/modules/`, directory);
+    log.run(`in`, this.absolutePath);
+    log.run(`fs`, `rm -rf ${moduleDir}`);
+    await fs.remove(path.join(this.absolutePath, moduleDir));
   }
 }
