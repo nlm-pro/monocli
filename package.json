@@ -1,6 +1,6 @@
 {
   "name": "@monocli/cli",
-  "version": "0.4.0",
+  "version": "0.4.1",
   "description": "one CLI to rule them all",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
