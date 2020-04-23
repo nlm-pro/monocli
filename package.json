@@ -50,12 +50,14 @@
   "dependencies": {
     "fs-extra": "^8.1.0",
     "npmlog": "^4.1.2",
-    "promisify-child-process": "^3.1.3"
+    "promisify-child-process": "^3.1.3",
+    "prompts": "^2.3.2"
   },
   "devDependencies": {
     "@types/fs-extra": "^8.1.0",
     "@types/node": "^13.7.2",
     "@types/npmlog": "^4.1.2",
+    "@types/prompts": "^2.0.5",
     "@typescript-eslint/eslint-plugin": "^2.20.0",
     "@typescript-eslint/parser": "^2.20.0",
     "concurrently": "^5.1.0",

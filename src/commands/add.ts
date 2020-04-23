@@ -14,7 +14,7 @@ import {
 } from "../models/errors";
 import { Repository } from "../models/git";
 import { output } from "../utils/log";
-import { getPrompter } from "../utils/prompt";
+import { confirm } from "../utils/prompt";
 import { SubProjectConfig } from "../models/config";
 
 export type AddCmdUrls = {
@@ -265,8 +265,8 @@ Behavior depends on what the <path> directory contains and if you provided an [u
             `go to ${repo.path} and resolve the conflict in another terminal`
           );
 
-          const shouldContinue = await getPrompter().yn(
-            `Continue (only if the conflict was resolved, or N to abort)?`
+          const shouldContinue = await confirm(
+            `Did you resolved this conflict? (y to continue, or N to abort)?`
           );
 
           if (!shouldContinue) {
@@ -299,7 +299,11 @@ Behavior depends on what the <path> directory contains and if you provided an [u
       if (interactive) {
         output(message);
 
-        if (await getPrompter().yn(`Reword this commit?`)) {
+        const isMsgOk = await confirm(
+          `Is this commit message OK (n to reword)?`
+        );
+
+        if (!isMsgOk) {
           await repo.git(`commit`, [`--amend`]);
         }
       }

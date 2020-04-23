@@ -37,6 +37,8 @@ exports[`test/tap/commands/add.ts TAP add command run() rewrite > commits 1`] = 
 `
 
 exports[`test/tap/commands/add.ts TAP add command run() rewrite > output 1`] = `
+chore(test): stub repo
+chore(test): Move all files into packages/foo
 monocli notice you should now check everything is ok and then run the update command
 `
 

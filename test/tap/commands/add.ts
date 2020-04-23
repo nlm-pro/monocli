@@ -9,6 +9,7 @@ import { CommandOptionError } from "../../../src/models/errors";
 import { SubProjectConfig } from "../../../src/models/config";
 import { Monorepo } from "../../../src/models/monorepo";
 import { getProject } from "../../../src/utils/config";
+import prompts = require(`prompts`);
 
 async function setupMonorepo(id: string): Promise<Repository> {
   const root = path.resolve(testDir, `prepare-submodule`, id);
@@ -271,6 +272,8 @@ t.test(`add command`, async t => {
         url: remoteRepo.path
       };
 
+      prompts.inject([true, true]);
+
       const output = await run(
         [
           `add`,
@@ -278,8 +281,7 @@ t.test(`add command`, async t => {
           config.url,
           `--scope`,
           config.scope,
-          `--rewrite`,
-          `--yes`
+          `--rewrite`
         ],
         monorepo.path
       );

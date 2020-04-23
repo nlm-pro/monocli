@@ -1,51 +1,41 @@
-import * as readline from "readline";
-import { Readable, Writable } from "stream";
+import { Writable } from "stream";
+import * as NPrompt from "prompts";
 
-let prompter: Prompter;
+let stdout: Writable;
 
-class Prompter {
-  private rl: readline.Interface;
-
-  constructor(input: Readable, output: Writable) {
-    this.rl = readline.createInterface({
-      input,
-      output
-    });
-  }
-
-  question(query: string): Promise<string> {
-    return new Promise(resolve => {
-      this.rl.question(query, resolve);
-    });
-  }
-
-  yn(query: string, defaultTo = true): Promise<boolean> {
-    const valPrompt = defaultTo === true ? `[Y/n]` : `[y/N]`;
-    const regex = defaultTo === true ? /^n(o)?/i : /^y(es)?/i;
-
-    return new Promise(resolve => {
-      this.rl.question(`${query} ${valPrompt}`, answer => {
-        resolve(regex.test(answer));
-      });
-    });
-  }
-
-  close(): void {
-    this.rl.close();
-  }
+export function setOutput(stream: Writable) {
+  stdout = stream;
 }
 
-export function setPrompter(
-  input: Readable = process.stdin,
-  output: Writable = process.stdout
-): void {
-  prompter = new Prompter(input, output);
+export function prompts<T extends string = string>(
+  questions: NPrompt.PromptObject<T> | Array<NPrompt.PromptObject<T>>,
+  options?: NPrompt.Options
+): Promise<NPrompt.Answers<T>> {
+  const mappedQuestions = (Array.isArray(questions)
+    ? questions
+    : [questions]
+  ).map(question => ({
+    stdout,
+    ...question
+  }));
+
+  return NPrompt(mappedQuestions, options);
 }
 
-export function getPrompter(): Prompter {
-  if (!prompter) {
-    throw new Error(`interactive mode unavailable`);
-  }
+export async function confirm(
+  message: string,
+  params: Partial<NPrompt.PromptObject> = {},
+  options?: NPrompt.Options
+): Promise<boolean> {
+  const answer = await prompts(
+    {
+      ...params,
+      type: `confirm`,
+      name: `confirm`,
+      message
+    },
+    options
+  );
 
-  return prompter;
+  return answer.confirm;
 }
