@@ -10,8 +10,10 @@ export type LogLevels =
   | `info`
   | `timing`
   | `http`
-  | `git`
   | `notice`
+  | `explain`
+  | `output`
+  | `run`
   | `warn`
   | `error`
   | `silent`;
@@ -22,7 +24,9 @@ const logLevels: Array<LogLevels> = [
   `info`,
   `timing`,
   `http`,
-  `git`,
+  `explain`,
+  `output`,
+  `run`,
   `notice`,
   `warn`,
   `error`,
@@ -43,11 +47,14 @@ export function init(level: LogLevels, stream?: Writable): void {
 
   const logLevel = logLevels.indexOf(level);
 
-  debug = logLevel < logLevels.indexOf(`git`);
+  debug = logLevel < logLevels.indexOf(`run`);
 
   // Limited choice of colors
   // see https://www.npmjs.com/package/console-control-strings#var-code--consolecontrolcolor-color1--color2----colorn-
-  log.addLevel(`git`, 1900, { fg: `magenta`, bg: `yellow` });
+  log.addLevel(`explain`, 3180, { fg: `black`, bg: `yellow` });
+  log.addLevel(`output`, 3190, { fg: `black`, bg: `yellow` });
+  log.addLevel(`run`, 3200, { fg: `black`, bg: `yellow` });
+
   log.heading = `monocli`;
 }
 

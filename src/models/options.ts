@@ -22,4 +22,5 @@ export interface CommandOptionConfig {
   description: string;
   defaultValue?: cmdOption | cmdOptionValueFn;
   defaultDescription?: string;
+  details?: string;
 }

@@ -1,6 +1,7 @@
 import * as path from "path";
 import * as t from "tap";
 import * as fs from "fs-extra";
+import * as prompts from "prompts";
 import { testDir, makeGitRepo, run, graphLog } from "../../common";
 import { AddCommand } from "../../../src/commands";
 import { buildCommand } from "../../../src/utils/build-command";
@@ -9,7 +10,6 @@ import { CommandOptionError } from "../../../src/models/errors";
 import { SubProjectConfig } from "../../../src/models/config";
 import { Monorepo } from "../../../src/models/monorepo";
 import { getProject } from "../../../src/utils/config";
-import prompts = require(`prompts`);
 
 async function setupMonorepo(id: string): Promise<Repository> {
   const root = path.resolve(testDir, `prepare-submodule`, id);

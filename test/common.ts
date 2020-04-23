@@ -1,17 +1,14 @@
 import * as stream from "stream";
 import * as path from "path";
 import * as fs from "fs-extra";
+import * as log from "npmlog";
 import { teardown } from "tap";
-import { spawn, ChildProcessPromise } from "promisify-child-process";
+import { spawn as asyncSpawn, Output } from "promisify-child-process";
 import { commandName } from "../src/commands";
 import { Repository } from "../src/models/git";
 import { run as runCommand } from "../src/index";
 import { chdir } from "../src/utils/fs";
 import * as Logger from "../src/utils/log";
-
-/* eslint-disable quotes */
-import log = require("npmlog");
-/* eslint-enable quotes */
 
 if (typeof require.main === `undefined`) {
   throw new Error(`not a tap test`);
@@ -26,7 +23,7 @@ const debugStream = new stream.Writable({
   }
 });
 
-log.stream = debugStream;
+(log as any).stream = debugStream;
 
 const main = require.main.filename;
 const testName = path.basename(main, `.ts`);
@@ -66,8 +63,8 @@ export function runBin(
   cmd: commandName,
   args: string[] = [],
   cwd = testDir
-): ChildProcessPromise {
-  return spawn(nodeBin, [bin, cmd, ...args], { encoding: `utf8`, cwd });
+): Promise<Output> {
+  return asyncSpawn(nodeBin, [bin, cmd, ...args], { encoding: `utf8`, cwd });
 }
 
 export async function run(args: string[], root = testDir): Promise<string> {

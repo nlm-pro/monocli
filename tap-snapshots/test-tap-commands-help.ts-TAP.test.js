@@ -61,6 +61,9 @@ Use 'monocli help <command name>' for more information about one of these comman
 
 Options:
   --debug       <boolean>  enable debug mode (set log level to "silly")  (default: false)
+  --dry         <boolean>  only run commands without any effect  (default: false)
+  --explain     <boolean>  print commands, explanations & outputs  (default: false)
+  --show        <boolean>  print commands & their output  (default: false)
 `
 
 exports[`test/tap/commands/help.ts TAP > mv 1`] = `
@@ -98,4 +101,7 @@ Use 'monocli help <command name>' for more information about one of these comman
 
 Options:
   --debug       <boolean>  enable debug mode (set log level to "silly")  (default: false)
+  --dry         <boolean>  only run commands without any effect  (default: false)
+  --explain     <boolean>  print commands, explanations & outputs  (default: false)
+  --show        <boolean>  print commands & their output  (default: false)
 `
