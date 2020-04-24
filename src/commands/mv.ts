@@ -12,7 +12,7 @@ import { getProject } from "../utils/config";
 import { SubProjectConfig } from "../models/config";
 import { Monorepo } from "../models/monorepo";
 import { buildCommand } from "../utils/build-command";
-import { UpdateCommand } from "./update";
+import { SPushCommand } from "./spush";
 
 export class MvCommand extends MonorepoCommand {
   protected doc: CommandDocumentation = {
@@ -115,7 +115,7 @@ from ${oldDir} to ${newDir}`
 
     // Update subtree remote repository
 
-    const update = buildCommand(`update`) as UpdateCommand;
+    const update = buildCommand(`spush`) as SPushCommand;
     await update.run([newDir, projectConfig.url]);
   }
 }

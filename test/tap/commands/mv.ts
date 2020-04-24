@@ -82,7 +82,7 @@ t.test(`mv command`, async t => {
 
     await makeGitRepo({ root: remote, bare: true });
     const testRepo = await setup(`push`, remote);
-    await run([`update`, config.projects[0].directory], testRepo.path);
+    await run([`spush`, config.projects[0].directory], testRepo.path);
 
     const output = await run(
       [
