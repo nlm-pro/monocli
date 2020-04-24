@@ -15,13 +15,10 @@ async function setupMonorepo(id: string): Promise<Repository> {
   const root = path.resolve(testDir, `prepare-submodule`, id);
   const monoDir = path.resolve(root, `mono`);
   await fs.mkdirp(monoDir);
-  fs.writeFileSync(
-    path.resolve(monoDir, Monorepo.CONFIG_FILE_NAME),
-    JSON.stringify({ projects: [] })
-  );
+  fs.createFile(path.resolve(monoDir, `README.md`));
   const monorepo = await makeGitRepo({
     root: monoDir,
-    added: [Monorepo.CONFIG_FILE_NAME]
+    added: [`README.md`]
   });
 
   return monorepo;
@@ -310,6 +307,12 @@ t.test(`add command`, async t => {
       );
 
       t.same(projectConfig, config, `project config`);
+
+      t.equals(
+        await monorepo.git(`status`, [`--porcelain`]),
+        ``,
+        `no files remaining to commit`
+      );
     });
   });
 });

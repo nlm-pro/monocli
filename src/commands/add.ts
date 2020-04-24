@@ -1,5 +1,5 @@
 import { resolve, basename } from "path";
-import { existsSync, mkdirp } from "fs-extra";
+import { existsSync, mkdirp, ensureDirSync } from "fs-extra";
 import * as log from "npmlog";
 import { MonorepoCommand } from "../models/monorepo-command";
 import { CommandDocumentation } from "../models/documentation";
@@ -16,6 +16,7 @@ import { Repository } from "../models/git";
 import { output } from "../utils/log";
 import { confirm } from "../utils/prompt";
 import { SubProjectConfig } from "../models/config";
+import { Monorepo } from "../models/monorepo";
 
 export type AddCmdUrls = {
   remote: string;
@@ -31,7 +32,7 @@ export class AddCommand extends MonorepoCommand {
     details: `
 <path>   path to the project directory
 [url]    subrepo origin url (default: from submodule)
- 
+
 Behavior depends on what the <path> directory contains and if you provided an [url] or not:
   - if <path> is a submodule, it will be converted to a "subproject"
   - if [url] is provided, the associated repository will be imported (overriding any pre-existing submodule)
@@ -132,8 +133,10 @@ Behavior depends on what the <path> directory contains and if you provided an [u
 
     await this.monorepo.addProjectConfig(config);
 
+    await this.monorepo.repository.git(`add`, [Monorepo.CONFIG_FILE_NAME]);
+
     await this.monorepo.repository.git(`commit`, [
-      `-am`,
+      `-m`,
       `build: add monocli config for ${directory}`
     ]);
 
@@ -169,8 +172,10 @@ Behavior depends on what the <path> directory contains and if you provided an [u
 
     let isSubmodule = false;
 
-    if (urls === null || !submodule) {
+    if (urls === null) {
       ensureNotEmptyDir(pathToDirectory);
+    } else if (!submodule) {
+      ensureDirSync(pathToDirectory);
     } else if (!url) {
       await this.monorepo.repository.git(`submodule`, [`update`]);
 
