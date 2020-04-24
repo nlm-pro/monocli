@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.4.3](https://github.com/noelmace/monocli/compare/v0.4.2...v0.4.3) (2020-04-24)
+
+
+### Bug Fixes
+
+* **add:** include scopes with # or / when rewriting ([13d4be0](https://github.com/noelmace/monocli/commit/13d4be08d3e67234bdda909e84ba716a28e3dedd)), closes [#1](https://github.com/noelmace/monocli/issues/1) [#1](https://github.com/noelmace/monocli/issues/1)
+
 ### [0.4.2](https://github.com/noelmace/monocli/compare/v0.4.1...v0.4.2) (2020-04-24)
 
 ### [0.4.1](https://github.com/noelmace/monocli/compare/v0.4.0...v0.4.1) (2020-04-23)
