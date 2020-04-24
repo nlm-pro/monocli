@@ -1,6 +1,7 @@
 import * as path from "path";
 import * as t from "tap";
 import * as fs from "fs-extra";
+import * as prompts from "prompts";
 import { testDir, makeGitRepo, run, graphLog } from "../../common";
 import { AddCommand } from "../../../src/commands";
 import { buildCommand } from "../../../src/utils/build-command";
@@ -9,7 +10,6 @@ import { CommandOptionError } from "../../../src/models/errors";
 import { SubProjectConfig } from "../../../src/models/config";
 import { Monorepo } from "../../../src/models/monorepo";
 import { getProject } from "../../../src/utils/config";
-import prompts = require(`prompts`);
 
 async function setupMonorepo(id: string): Promise<Repository> {
   const root = path.resolve(testDir, `prepare-submodule`, id);
@@ -33,10 +33,19 @@ async function setupRemoteProject(monorepo: Repository): Promise<Repository> {
   await fs.mkdirp(subrepoDir);
   await fs.createFile(path.resolve(subrepoDir, `foo.txt`));
 
-  return makeGitRepo({
+  const repo = await makeGitRepo({
     root: subrepoDir,
     added: [`foo.txt`]
   });
+
+  await fs.createFile(path.resolve(subrepoDir, `bar.txt`));
+  await repo.git(`add`, [`bar.txt`]);
+  await repo.git(`commit`, [`-m`, `feat(#1): bar`]);
+  await fs.createFile(path.resolve(subrepoDir, `baz.txt`));
+  await repo.git(`add`, [`baz.txt`]);
+  await repo.git(`commit`, [`-m`, `chore(test/foo): baz`]);
+
+  return repo;
 }
 
 async function setupSubmodule(
@@ -272,7 +281,7 @@ t.test(`add command`, async t => {
         url: remoteRepo.path
       };
 
-      prompts.inject([true, true]);
+      prompts.inject([true, true, true, true]);
 
       const output = await run(
         [

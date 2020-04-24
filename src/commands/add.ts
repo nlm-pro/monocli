@@ -280,7 +280,7 @@ Behavior depends on what the <path> directory contains and if you provided an [u
       }
 
       if (!message.startsWith(`Merge`) && !message.startsWith(`Revert`)) {
-        const commitHeadRegex = /^([\w-]+)(?:[[(]([\w -]+)[\])])?: ?(.*)/;
+        const commitHeadRegex = /^([\w-]+)(?:[[(]([\w -#/]+)[\])])?: ?(.*)/;
         const msgLines = message.split(`\n`);
         const parsedHead = commitHeadRegex.exec(message);
         const msg = {
