@@ -19,7 +19,6 @@ Behavior depends on what the <path> directory contains and if you provided an [u
   - finally, the project's data will be added to the configuration
 
 Options:
-  --yes         <boolean>  Assume "yes" as answer to all prompts and run non-interactively  (default: false)
   --scope       <string>   conventional commit scope  (default: path basename)
   --rewrite     <boolean>  rewrite subproject history before merge  (default: false)
 `
@@ -61,6 +60,7 @@ Use 'monocli help <command name>' for more information about one of these comman
 
 Options:
   --debug       <boolean>  enable debug mode (set log level to "silly")  (default: false)
+  --trust       <boolean>  run non-interactively (by default answer to all prompts)  (default: false)
 `
 
 exports[`test/tap/commands/help.ts TAP > mv 1`] = `
@@ -98,4 +98,5 @@ Use 'monocli help <command name>' for more information about one of these comman
 
 Options:
   --debug       <boolean>  enable debug mode (set log level to "silly")  (default: false)
+  --trust       <boolean>  run non-interactively (by default answer to all prompts)  (default: false)
 `

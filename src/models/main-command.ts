@@ -23,6 +23,13 @@ Use 'monocli help <command name>' for more information about one of these comman
           type: `boolean`,
           description: `enable debug mode (set log level to "silly")`
         }
+      ],
+      [
+        `trust`,
+        {
+          type: `boolean`,
+          description: `run non-interactively (by default answer to all prompts)`
+        }
       ]
     ])
   };
@@ -34,7 +41,7 @@ Use 'monocli help <command name>' for more information about one of these comman
     const cmdName = params[0] as commandName;
     const subCommandParams = params.slice(1);
     const command = buildCommand(cmdName);
-    this.validate(params, options);
+    const mainCommandOptions = this.validate(params, options);
 
     let subCommandOptions = new Map([...options]);
     for (const [optionName] of this.doc.options) {
@@ -46,6 +53,9 @@ Use 'monocli help <command name>' for more information about one of these comman
     await remove(this.tmpDir);
     await ensureDir(this.tmpDir);
 
-    return command.run(subCommandParams, subCommandOptions);
+    return command.run(
+      subCommandParams,
+      new Map([...mainCommandOptions.entries(), ...subCommandOptions.entries()])
+    );
   }
 }

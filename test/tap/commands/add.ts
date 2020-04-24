@@ -269,50 +269,94 @@ t.test(`add command`, async t => {
     });
 
     await t.test(`rewrite`, async t => {
-      const monorepo = await setupMonorepo(`run-rewrite`);
-      const remoteRepo = await setupRemoteProject(monorepo);
+      async function setup(
+        id: string
+      ): Promise<{ monorepo: Repository; config: SubProjectConfig }> {
+        const monorepo = await setupMonorepo(`run-rewrite-${id}`);
+        const remoteRepo = await setupRemoteProject(monorepo);
 
-      const config = {
-        directory: `packages/foo`,
-        scope: `test`,
-        url: remoteRepo.path
-      };
+        const config = {
+          directory: `packages/foo`,
+          scope: `test`,
+          url: remoteRepo.path
+        };
 
-      prompts.inject([true, true, true, true]);
+        return {
+          monorepo,
+          config
+        };
+      }
 
-      const output = await run(
-        [
-          `add`,
-          config.directory,
-          config.url,
-          `--scope`,
-          config.scope,
-          `--rewrite`
-        ],
-        monorepo.path
-      );
+      async function assert(
+        monorepo: Repository,
+        config: SubProjectConfig
+      ): Promise<void> {
+        t.matchSnapshot(await graphLog(monorepo), `commits`);
 
-      t.matchSnapshot(output, `output`);
-      t.matchSnapshot(await graphLog(monorepo), `commits`);
+        t.true(
+          fs.existsSync(
+            path.resolve(monorepo.path, config.directory, `foo.txt`)
+          ),
+          `subproject files`
+        );
 
-      t.true(
-        fs.existsSync(path.resolve(monorepo.path, config.directory, `foo.txt`)),
-        `subproject files`
-      );
+        const projectConfig = getProject(
+          new Monorepo(monorepo.path).getConfig(),
+          `directory`,
+          config.directory
+        );
 
-      const projectConfig = getProject(
-        new Monorepo(monorepo.path).getConfig(),
-        `directory`,
-        config.directory
-      );
+        t.same(projectConfig, config, `project config`);
 
-      t.same(projectConfig, config, `project config`);
+        t.equals(
+          await monorepo.git(`status`, [`--porcelain`]),
+          ``,
+          `no files remaining to commit`
+        );
+      }
 
-      t.equals(
-        await monorepo.git(`status`, [`--porcelain`]),
-        ``,
-        `no files remaining to commit`
-      );
+      await t.test(`--trust`, async t => {
+        const { monorepo, config } = await setup(`trust`);
+
+        const output = await run(
+          [
+            `add`,
+            config.directory,
+            config.url as string,
+            `--scope`,
+            config.scope,
+            `--rewrite`,
+            `--trust`
+          ],
+          monorepo.path
+        );
+
+        t.matchSnapshot(output, `output`);
+
+        await assert(monorepo, config);
+      });
+
+      await t.test(`interactive`, async t => {
+        const { monorepo, config } = await setup(`interactive`);
+
+        prompts.inject([true, true, true, true]);
+
+        const output = await run(
+          [
+            `add`,
+            config.directory,
+            config.url as string,
+            `--scope`,
+            config.scope,
+            `--rewrite`
+          ],
+          monorepo.path
+        );
+
+        t.matchSnapshot(output, `output`);
+
+        await assert(monorepo, config);
+      });
     });
   });
 });

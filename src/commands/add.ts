@@ -39,13 +39,6 @@ Behavior depends on what the <path> directory contains and if you provided an [u
   - finally, the project's data will be added to the configuration`,
     options: new Map<string, CommandOptionConfig>([
       [
-        `yes`,
-        {
-          type: `boolean`,
-          description: `Assume "yes" as answer to all prompts and run non-interactively`
-        }
-      ],
-      [
         `scope`,
         {
           type: `string`,
@@ -105,7 +98,7 @@ Behavior depends on what the <path> directory contains and if you provided an [u
         await this.rewriteHistory(
           cloneRepo,
           scope,
-          !options.get(`yes`),
+          !options.get(`trust`),
           branch
         );
       } else {

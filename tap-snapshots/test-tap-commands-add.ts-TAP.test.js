@@ -29,6 +29,10 @@ exports[`test/tap/commands/add.ts TAP add command run() remote > output 1`] = `
 monocli notice you should now check everything is ok and then run the update command
 `
 
+exports[`test/tap/commands/add.ts TAP add command run() rewrite --trust > output 1`] = `
+monocli notice you should now check everything is ok and then run the update command
+`
+
 exports[`test/tap/commands/add.ts TAP add command run() rewrite > commits 1`] = `
 *  (HEAD -> master) build: add monocli config for packages/foo
 *    Merge remote-tracking branch test/monocli-add-test
@@ -40,7 +44,18 @@ exports[`test/tap/commands/add.ts TAP add command run() rewrite > commits 1`] = 
 *  stub repo
 `
 
-exports[`test/tap/commands/add.ts TAP add command run() rewrite > output 1`] = `
+exports[`test/tap/commands/add.ts TAP add command run() rewrite > commits 2`] = `
+*  (HEAD -> master) build: add monocli config for packages/foo
+*    Merge remote-tracking branch test/monocli-add-test
+|\\  
+| *  (test/monocli-add-test) chore(test): Move all files into packages/foo
+| *  chore(test): baz
+| *  feat(test): bar
+| *  chore(test): stub repo
+*  stub repo
+`
+
+exports[`test/tap/commands/add.ts TAP add command run() rewrite interactive > output 1`] = `
 chore(test): stub repo
 feat(test): bar
 chore(test): baz
