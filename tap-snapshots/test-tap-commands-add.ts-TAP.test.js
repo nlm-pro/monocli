@@ -19,7 +19,7 @@ monocli notice project added to configuration
 exports[`test/tap/commands/add.ts TAP add command run() remote > commits 1`] = `
 *  (HEAD -> master) build: add monocli config for packages/foo
 *    Merge remote-tracking branch test/monocli-add-test
-|\\  
+|\\
 | *  (test/monocli-add-test) chore(test): Move all files into packages/foo
 | *  chore(test/foo): baz
 | *  feat(#1): bar
@@ -36,7 +36,7 @@ exports[
 ] = `
 *  (HEAD -> master) build: add monocli config for packages/foo
 *    Merge remote-tracking branch test/monocli-add-test
-|\\  
+|\\
 | *  (test/monocli-add-test) chore(test): Move all files into packages/foo
 | *  chore(test): baz
 | *  feat(test): bar
@@ -57,7 +57,7 @@ exports[
 ] = `
 *  (HEAD -> master) build: add monocli config for packages/subproject
 *    Merge remote-tracking branch subproject/monocli-add-subproject
-|\\  
+|\\
 | *  (subproject/monocli-add-subproject) chore(subproject): Move all files into packages/subproject
 | *  chore(test/foo): baz
 | *  feat(#1): bar
@@ -79,7 +79,7 @@ exports[
 ] = `
 *  (HEAD -> master) build: add monocli config for packages/subproject
 *    Merge remote-tracking branch subproject/monocli-add-subproject
-|\\  
+|\\
 | *  (subproject/monocli-add-subproject) chore(subproject): Move all files into packages/subproject
 | *  chore(test/foo): baz
 | *  feat(#1): bar
