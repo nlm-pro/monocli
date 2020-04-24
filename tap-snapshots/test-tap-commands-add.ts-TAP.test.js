@@ -5,7 +5,8 @@
  * Make sure to inspect the output below.  Do not ignore changes!
  */
 'use strict'
-exports[`test/tap/commands/add.ts TAP add command run() empty > must match snapshot 1`] = `
+exports[`test/tap/commands/add.ts TAP add command run() empty > must match snapshot 1`] =
+    `
 *  (HEAD -> master) build: add monocli config for packages/foo
 *  stub repo
 `
@@ -29,7 +30,8 @@ exports[`test/tap/commands/add.ts TAP add command run() remote > output 1`] = `
 monocli notice you should now check everything is ok and then run the update command
 `
 
-exports[`test/tap/commands/add.ts TAP add command run() rewrite > commits 1`] = `
+exports[`test/tap/commands/add.ts TAP add command run() rewrite > commits 1`] =
+    `
 *  (HEAD -> master) build: add monocli config for packages/foo
 *    Merge remote-tracking branch test/monocli-add-test
 |\\  
@@ -48,7 +50,8 @@ chore(test): Move all files into packages/foo
 monocli notice you should now check everything is ok and then run the update command
 `
 
-exports[`test/tap/commands/add.ts TAP add command run() with submodule with url option > commits 1`] = `
+exports[`test/tap/commands/add.ts TAP add command run() with submodule with url option > commits 1`] =
+    `
 *  (HEAD -> master) build: add monocli config for packages/subproject
 *    Merge remote-tracking branch subproject/monocli-add-subproject
 |\\  
@@ -61,12 +64,14 @@ exports[`test/tap/commands/add.ts TAP add command run() with submodule with url 
 *  stub repo
 `
 
-exports[`test/tap/commands/add.ts TAP add command run() with submodule with url option > output 1`] = `
+exports[`test/tap/commands/add.ts TAP add command run() with submodule with url option > output 1`] =
+    `
 monocli WARN submodule existing submodule deleted
 monocli notice you should now check everything is ok and then run the update command
 `
 
-exports[`test/tap/commands/add.ts TAP add command run() with submodule without url option > commits 1`] = `
+exports[`test/tap/commands/add.ts TAP add command run() with submodule without url option > commits 1`] =
+    `
 *  (HEAD -> master) build: add monocli config for packages/subproject
 *    Merge remote-tracking branch subproject/monocli-add-subproject
 |\\  
@@ -79,6 +84,7 @@ exports[`test/tap/commands/add.ts TAP add command run() with submodule without u
 *  stub repo
 `
 
-exports[`test/tap/commands/add.ts TAP add command run() with submodule without url option > output 1`] = `
+exports[`test/tap/commands/add.ts TAP add command run() with submodule without url option > output 1`] =
+    `
 monocli notice you should now check everything is ok and then run the update command
 `
