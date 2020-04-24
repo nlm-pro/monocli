@@ -92,6 +92,7 @@ export async function makeGitRepo({
   message = `stub repo`,
   bare = false
 } = {}): Promise<Repository> {
+  await fs.ensureDir(root);
   const repo = new Repository(root);
   await repo.git(`init`, bare ? [`--bare`] : []);
   await repo.git(`config`, [`user.name`, user]);
@@ -99,12 +100,43 @@ export async function makeGitRepo({
   // don't time out tests waiting for a gpg passphrase or 2fa
   await repo.git(`config`, [`tag.gpgSign`, `false`]);
   await repo.git(`config`, [`tag.forceSignAnnotated`, `false`]);
+
   if (added.length > 0) {
-    await repo.git(`add`, added);
-    await repo.git(`commit`, [`-m`, message]);
+    if (!bare) {
+      await repo.git(`add`, added);
+      await repo.git(`commit`, [`-m`, message]);
+    }
   }
 
   return repo;
+}
+
+export async function commitNewFile(
+  repo: Repository,
+  filename: string,
+  message?: string
+): Promise<void> {
+  const msg = message || `chore: add file ${filename}`;
+
+  const createAndCommitFile = async (re: Repository): Promise<void> => {
+    fs.createFileSync(path.resolve(re.path, filename));
+    await re.git(`add`, [filename]);
+    await re.git(`commit`, [`-m`, msg]);
+  };
+
+  const isBare =
+    (await repo.git(`rev-parse`, [`--is-bare-repository`])) === `true`;
+
+  if (isBare) {
+    const clone = await makeGitRepo({
+      root: path.resolve(testDir, `tmp`, `${Date.now()}`)
+    });
+    await clone.git(`clone`, [repo.path]);
+    await createAndCommitFile(clone);
+    await clone.git(`push`, [repo.path, `master`]);
+  } else {
+    await createAndCommitFile(repo);
+  }
 }
 
 export async function graphLog(repository: Repository): Promise<string> {

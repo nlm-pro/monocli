@@ -1,5 +1,5 @@
 import { existsSync, statSync } from "fs-extra";
-import { notice, silly } from "npmlog";
+import { notice, silly, error } from "npmlog";
 import { MonorepoCommand } from "../models/monorepo-command";
 import { CommandDocumentation } from "../models/documentation";
 import { absolute } from "../utils/path";
@@ -8,6 +8,8 @@ import { getProject } from "../utils/config";
 import { SubProjectConfig } from "../models/config";
 import { Repository } from "../models/git";
 import { Monorepo } from "../models/monorepo";
+import { cmdOption, CommandOptionConfig } from "../models/options";
+import { confirm } from "../utils/prompt";
 
 export class UpdateCommand extends MonorepoCommand {
   protected doc: CommandDocumentation = {
@@ -15,17 +17,42 @@ export class UpdateCommand extends MonorepoCommand {
     usage: `<directory> [url]`,
     description: `update the remote "subtree" repo associated to <directory>`,
     details: ``,
-    options: new Map()
+    options: new Map<string, CommandOptionConfig>([
+      [
+        `force`,
+        {
+          type: `boolean`,
+          description: `Force push to the remote repository. Use with caution!`
+        }
+      ],
+      [
+        `branch`,
+        {
+          type: `string`,
+          description: `name of the remote branch you would want to push to`,
+          defaultValue: `master`
+        }
+      ]
+    ])
   };
 
-  async run([directory, url]: [string, string]): Promise<string | void> {
+  async run(
+    [directory, url]: [string, string],
+    options: Map<string, cmdOption> = new Map()
+  ): Promise<string | void> {
     this.validateDirectory(directory);
 
     silly(`path`, directory);
 
     const config = await this.getProjectConfig(directory, url);
 
-    await this.updateSubtree(config, directory);
+    await this.updateSubtree(
+      config,
+      directory,
+      (options.get(`branch`) as string) || `master`,
+      options.get(`trust`) !== true,
+      options.get(`force`) === true
+    );
 
     notice(``, `remote subrepo successfully updated`);
   }
@@ -105,7 +132,10 @@ export class UpdateCommand extends MonorepoCommand {
 
   async updateSubtree(
     config: { id: string; remoteUrl: string },
-    directory: string
+    directory: string,
+    branch: string,
+    interactive: boolean,
+    force: boolean
   ): Promise<void> {
     const splitBranch = `monocli-update-${config.id}`;
 
@@ -119,13 +149,34 @@ export class UpdateCommand extends MonorepoCommand {
     const cloneRepo = new Repository();
     await cloneRepo.git(`clone`, [`--bare`, config.remoteUrl, `.`]);
 
-    await this.monorepo.repository.git(`push`, [
-      cloneRepo.path,
-      `${splitBranch}:master`
-    ]);
+    try {
+      await this.monorepo.repository.git(`push`, [
+        cloneRepo.path,
+        `${splitBranch}:${branch}`
+      ]);
 
-    // TODO: ask for confirmation
-    // TODO: permit to push to another branch and create a PR
-    await cloneRepo.git(`push`, [`origin`, `master`]);
+      await cloneRepo.git(`push`, [`origin`, branch]);
+    } catch (e) {
+      error(`git`, `Push to ${config.remoteUrl} ${branch} branch failed!`);
+      error(`git`, e.message);
+
+      let forcePush = force;
+
+      if (interactive) {
+        forcePush = await confirm(`Force push?`);
+      } else {
+        // "interactive" only reflects the --trust option here
+        forcePush = true;
+      }
+
+      if (forcePush) {
+        await cloneRepo.git(`push`, [`origin`, branch, `--force-with-lease`]);
+      } else {
+        notice(
+          `git`,
+          `Go to ${cloneRepo.path} in order to resolve this conflict, or re-run this command with the --force option.`
+        );
+      }
+    }
   }
 }

@@ -1,13 +1,17 @@
 import * as path from "path";
 import * as fs from "fs-extra";
-import { makeGitRepo, testDir, run, TestRepo } from "../../common";
+import * as t from "tap";
+import * as prompts from "prompts";
+import {
+  makeGitRepo,
+  testDir,
+  run,
+  TestRepo,
+  commitNewFile
+} from "../../common";
 import { Config, SubProjectConfig } from "../../../src/models/config";
 import { relativeTo } from "../../../src/utils/path";
 import { Monorepo } from "../../../src/models/monorepo";
-
-/* eslint-disable quotes */
-import t = require("tap");
-/* eslint-enable quotes */
 
 interface TestFiles {
   main: TestRepo;
@@ -19,7 +23,11 @@ const subproject: SubProjectConfig = {
   directory: `subproj`
 };
 
-async function setup(dir: string, withUrl: boolean): Promise<TestFiles> {
+async function setup(
+  dir: string,
+  withUrl: boolean,
+  conflict = false
+): Promise<TestFiles> {
   const root = path.resolve(testDir, dir);
   await fs.mkdir(root);
 
@@ -48,6 +56,10 @@ async function setup(dir: string, withUrl: boolean): Promise<TestFiles> {
     added: [Monorepo.CONFIG_FILE_NAME]
   });
   const subRepo = await makeGitRepo({ root: subRepoDir, bare: true });
+
+  if (conflict) {
+    await commitNewFile(subRepo, `README.md`);
+  }
 
   // TODO: use Add command
 
@@ -104,15 +116,71 @@ t.test(`update command`, async t => {
   });
 
   await t.test(`with url argument`, async t => {
-    const testFiles = await setup(`arg`, false);
+    await t.test(`without conflict`, async t => {
+      const testFiles = await setup(`arg`, false);
 
-    const output = await run(
-      [`update`, subproject.directory, testFiles.sub.path],
-      testFiles.main.path
-    );
-    await assert(output, testFiles);
+      const output = await run(
+        [`update`, subproject.directory, testFiles.sub.path],
+        testFiles.main.path
+      );
+      await assert(output, testFiles);
 
-    t.end();
+      t.end();
+    });
+
+    await t.test(`with conflict`, async t => {
+      await t.test(`do nothing`, async t => {
+        const testFiles = await setup(`conflict`, false, true);
+
+        prompts.inject([false]);
+
+        const output = await run(
+          [`update`, subproject.directory, testFiles.sub.path],
+          testFiles.main.path
+        );
+
+        t.matchSnapshot(output, `ouput`);
+      });
+
+      await t.test(`--force`, async t => {
+        const testFiles = await setup(`force`, false, true);
+
+        const output = await run(
+          [`update`, subproject.directory, testFiles.sub.path, `--force`],
+          testFiles.main.path
+        );
+
+        t.matchSnapshot(output, `ouput`);
+      });
+
+      await t.test(`--trust`, async t => {
+        const testFiles = await setup(`trust`, false, true);
+
+        const output = await run(
+          [`update`, subproject.directory, testFiles.sub.path, `--trust`],
+          testFiles.main.path
+        );
+
+        t.matchSnapshot(output, `ouput`);
+      });
+
+      await t.test(`new branch`, async t => {
+        const testFiles = await setup(`new-branch`, false, true);
+
+        const output = await run(
+          [
+            `update`,
+            subproject.directory,
+            testFiles.sub.path,
+            `--branch`,
+            `test-branch`
+          ],
+          testFiles.main.path
+        );
+
+        t.matchSnapshot(output, `ouput`);
+      });
+    });
   });
 
   await t.test(`with url in config and argument`, async t => {

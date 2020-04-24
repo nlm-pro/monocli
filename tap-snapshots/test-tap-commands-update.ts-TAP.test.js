@@ -116,3 +116,27 @@ exports[`test/tap/commands/update.ts TAP > updated config 4`] = `
   ]
 }
 `
+
+exports[`test/tap/commands/update.ts TAP update command with url argument with conflict --force > ouput 1`] = `
+monocli ERR! git Push to /home/noel/git/me/monocli/test/tap/commands/update/force/sub master branch failed!
+monocli ERR! git To /tmp/monocli/1587766391640
+monocli notice git Go to /tmp/monocli/1587766391640 in order to resolve this conflict, or re-run this command with the --force option.
+monocli notice remote subrepo successfully updated
+`
+
+exports[`test/tap/commands/update.ts TAP update command with url argument with conflict --trust > ouput 1`] = `
+monocli ERR! git Push to /home/noel/git/me/monocli/test/tap/commands/update/trust/sub master branch failed!
+monocli ERR! git To /tmp/monocli/1587766393096
+monocli notice remote subrepo successfully updated
+`
+
+exports[`test/tap/commands/update.ts TAP update command with url argument with conflict do nothing > ouput 1`] = `
+monocli ERR! git Push to /home/noel/git/me/monocli/test/tap/commands/update/conflict/sub master branch failed!
+monocli ERR! git To /tmp/monocli/1587766390193
+monocli notice git Go to /tmp/monocli/1587766390193 in order to resolve this conflict, or re-run this command with the --force option.
+monocli notice remote subrepo successfully updated
+`
+
+exports[`test/tap/commands/update.ts TAP update command with url argument with conflict new branch > ouput 1`] = `
+monocli notice remote subrepo successfully updated
+`
