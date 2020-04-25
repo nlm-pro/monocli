@@ -82,7 +82,7 @@ export class MvCommand extends MonorepoCommand {
     await this.monorepo.repository.git(`commit`, [
       `-m`,
       `build: mv ${projectConfig.scope} via monocli
-    
+
 update project directory in monocli config after mv
 from ${oldDir} to ${newDir}`
     ]);

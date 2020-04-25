@@ -8,7 +8,7 @@
 exports[`test/tap/commands/spull.ts TAP spull command > commits 1`] = `
 *  (HEAD -> master) build: add monocli config for packages/foo
 *    Merge remote-tracking branch foo/monocli-add-foo
-|\\  
+|\\
 | *  (foo/monocli-add-foo) docs: add README before add
 *  initial commit
 `;

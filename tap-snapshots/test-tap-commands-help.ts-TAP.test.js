@@ -38,12 +38,12 @@ Options:
 `;
 
 exports[`test/tap/commands/help.ts TAP > help 1`] = `
-Usage: monocli help [command name] 
+Usage: monocli help [command name]
 
 display usage info
 
 If supplied a command name, then show the associated documentation.
-    
+
 If the command name is not provided, or does not exist, then show the main documentation.
 `;
 
@@ -64,7 +64,7 @@ Options:
 `;
 
 exports[`test/tap/commands/help.ts TAP > mv 1`] = `
-Usage: monocli mv <path> <new-path> 
+Usage: monocli mv <path> <new-path>
 
 change a subtree prefix
 This command requires that <path> is associated with a existing project.
@@ -73,7 +73,7 @@ This command requires that <path> is associated with a existing project.
 `;
 
 exports[`test/tap/commands/help.ts TAP > spull 1`] = `
-Usage: monocli spull <directory> [url] [branch] 
+Usage: monocli spull <directory> [url] [branch]
 
 update (pull) <directory> subtree from a remote repo
 `;
@@ -90,7 +90,7 @@ Options:
 `;
 
 exports[`test/tap/commands/help.ts TAP > status 1`] = `
-Usage: monocli status  
+Usage: monocli status
 
 show the monorepo status
 include git status and details about the monorepo state and config
