@@ -79,14 +79,14 @@ Build a project only if it changed since the last release:
 monocli check packages/awesome && ./build-awesome
 ```
 
-#### Update
+#### Spush
 
 Push new subtree commits to a remote repository.
 
 ##### example
 
 ```
-monocli update packages/awesome git@github.com:me/awesome.git
+monocli spush packages/awesome git@github.com:me/awesome.git
 ```
 
 #### Mv

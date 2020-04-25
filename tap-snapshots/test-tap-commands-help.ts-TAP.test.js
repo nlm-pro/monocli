@@ -12,7 +12,7 @@ add, convert or import a project
 
 <path>   path to the project directory
 [url]    subrepo origin url (default: from submodule)
- 
+
 Behavior depends on what the <path> directory contains and if you provided an [url] or not:
   - if <path> is a submodule, it will be converted to a "subproject"
   - if [url] is provided, the associated repository will be imported (overriding any pre-existing submodule)
@@ -54,7 +54,7 @@ One CLI to rule them all.
 
 Easy monorepos management, and more.
 
-Commands: status, mv, help, update, check, add
+Commands: status, mv, help, spush, check, add
 
 Use 'monocli help <command name>' for more information about one of these commands.
 
@@ -80,9 +80,14 @@ include git status and details about the monorepo state and config
 `
 
 exports[`test/tap/commands/help.ts TAP > status 2`] = `
-Usage: monocli update <directory> [url] 
+Usage: monocli spush <directory> [url] [options]
 
-update the remote "subtree" repo associated to <directory>
+update (push to) the remote "subtree" repo associated to <directory>
+
+
+Options:
+  --force       <boolean>  Force push to the remote repository. Use with caution!  (default: false)
+  --branch      <string>   name of the remote branch you would want to push to  (default: "master")
 `
 
 exports[`test/tap/commands/help.ts TAP > unknown command name 1`] = `
@@ -92,7 +97,7 @@ One CLI to rule them all.
 
 Easy monorepos management, and more.
 
-Commands: status, mv, help, update, check, add
+Commands: status, mv, help, spush, check, add
 
 Use 'monocli help <command name>' for more information about one of these commands.
 

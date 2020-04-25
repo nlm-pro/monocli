@@ -137,7 +137,7 @@ Behavior depends on what the <path> directory contains and if you provided an [u
     log.notice(
       ``,
       urls
-        ? `you should now check everything is ok and then run the update command`
+        ? `you should now check everything is ok and then run the spush command`
         : `project added to configuration`
     );
   }

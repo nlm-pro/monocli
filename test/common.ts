@@ -155,6 +155,16 @@ export async function graphLog(repository: Repository): Promise<string> {
   return commits;
 }
 
+export function cleanSnapshot(input: string): string {
+  input = input.replace(/[\dabcdef]{7}([\dabcdef]{33})/g, `[[COMMIT HASH]]`);
+  input = input.replace(/\d{13}/g, `[[TIMESTAMP]]`);
+  // FIXME: Windows compatibility
+  input = input.replace(/\/.*\/monocli\/test/g, `[[TEST DIRECTORY]]`);
+  input = input.replace(/\/tmp\/monocli/g, `[[TMP DIRECTORY]]`);
+
+  return input;
+}
+
 export interface TestRepo {
   repo: Repository;
   path: string;

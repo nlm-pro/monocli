@@ -7,7 +7,8 @@ import {
   testDir,
   run,
   TestRepo,
-  commitNewFile
+  commitNewFile,
+  cleanSnapshot
 } from "../../common";
 import { Config, SubProjectConfig } from "../../../src/models/config";
 import { relativeTo } from "../../../src/utils/path";
@@ -102,12 +103,12 @@ async function assert(output: string, testFiles: TestFiles): Promise<void> {
   );
 }
 
-t.test(`update command`, async t => {
+t.test(`spush command`, async t => {
   await t.test(`without remote url`, async t => {
     const testFiles = await setup(`remote`, false);
 
     const output = await run(
-      [`update`, subproject.directory],
+      [`spush`, subproject.directory],
       testFiles.main.path
     );
     await assert(output, testFiles);
@@ -120,7 +121,7 @@ t.test(`update command`, async t => {
       const testFiles = await setup(`arg`, false);
 
       const output = await run(
-        [`update`, subproject.directory, testFiles.sub.path],
+        [`spush`, subproject.directory, testFiles.sub.path],
         testFiles.main.path
       );
       await assert(output, testFiles);
@@ -135,41 +136,41 @@ t.test(`update command`, async t => {
         prompts.inject([false]);
 
         const output = await run(
-          [`update`, subproject.directory, testFiles.sub.path],
+          [`spush`, subproject.directory, testFiles.sub.path],
           testFiles.main.path
         );
 
-        t.matchSnapshot(output, `ouput`);
+        t.matchSnapshot(cleanSnapshot(output), `ouput`);
       });
 
-      await t.test(`--force`, async t => {
-        const testFiles = await setup(`force`, false, true);
+      //   await t.test(`--force`, async t => {
+      //     const testFiles = await setup(`force`, false, true);
 
-        const output = await run(
-          [`update`, subproject.directory, testFiles.sub.path, `--force`],
-          testFiles.main.path
-        );
+      //     const output = await run(
+      //       [`spush`, subproject.directory, testFiles.sub.path, `--force`],
+      //       testFiles.main.path
+      //     );
 
-        t.matchSnapshot(output, `ouput`);
-      });
+      //     t.matchSnapshot(output, `ouput`);
+      //   });
 
-      await t.test(`--trust`, async t => {
-        const testFiles = await setup(`trust`, false, true);
+      //   await t.test(`--trust`, async t => {
+      //     const testFiles = await setup(`trust`, false, true);
 
-        const output = await run(
-          [`update`, subproject.directory, testFiles.sub.path, `--trust`],
-          testFiles.main.path
-        );
+      //     const output = await run(
+      //       [`spush`, subproject.directory, testFiles.sub.path, `--trust`],
+      //       testFiles.main.path
+      //     );
 
-        t.matchSnapshot(output, `ouput`);
-      });
+      //     t.matchSnapshot(output, `ouput`);
+      //   });
 
       await t.test(`new branch`, async t => {
         const testFiles = await setup(`new-branch`, false, true);
 
         const output = await run(
           [
-            `update`,
+            `spush`,
             subproject.directory,
             testFiles.sub.path,
             `--branch`,
@@ -178,7 +179,7 @@ t.test(`update command`, async t => {
           testFiles.main.path
         );
 
-        t.matchSnapshot(output, `ouput`);
+        t.matchSnapshot(cleanSnapshot(output), `output`);
       });
     });
   });
@@ -188,7 +189,7 @@ t.test(`update command`, async t => {
 
     const output = await run(
       [
-        `update`,
+        `spush`,
         subproject.directory,
         relativeTo(testFiles.sub.path, testFiles.main.path)
       ],
@@ -203,7 +204,7 @@ t.test(`update command`, async t => {
     const testFiles = await setup(`config`, true);
 
     const output = await run(
-      [`update`, subproject.directory],
+      [`spush`, subproject.directory],
       testFiles.main.path
     );
     await assert(output, testFiles);

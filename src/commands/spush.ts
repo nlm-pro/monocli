@@ -11,11 +11,11 @@ import { Monorepo } from "../models/monorepo";
 import { cmdOption, CommandOptionConfig } from "../models/options";
 import { confirm } from "../utils/prompt";
 
-export class UpdateCommand extends MonorepoCommand {
+export class SPushCommand extends MonorepoCommand {
   protected doc: CommandDocumentation = {
-    name: `update`,
+    name: `spush`,
     usage: `<directory> [url]`,
-    description: `update the remote "subtree" repo associated to <directory>`,
+    description: `update (push to) the remote "subtree" repo associated to <directory>`,
     details: ``,
     options: new Map<string, CommandOptionConfig>([
       [
@@ -46,7 +46,7 @@ export class UpdateCommand extends MonorepoCommand {
 
     const config = await this.getProjectConfig(directory, url);
 
-    await this.updateSubtree(
+    await this.pushSubtree(
       config,
       directory,
       (options.get(`branch`) as string) || `master`,
@@ -130,14 +130,14 @@ export class UpdateCommand extends MonorepoCommand {
     };
   }
 
-  async updateSubtree(
+  async pushSubtree(
     config: { id: string; remoteUrl: string },
     directory: string,
     branch: string,
     interactive: boolean,
     force: boolean
   ): Promise<void> {
-    const splitBranch = `monocli-update-${config.id}`;
+    const splitBranch = `monocli-spush-${config.id}`;
 
     await this.monorepo.repository.git(`subtree`, [
       `split`,

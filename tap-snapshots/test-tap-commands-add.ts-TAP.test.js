@@ -26,11 +26,11 @@ exports[`test/tap/commands/add.ts TAP add command run() remote > commits 1`] = `
 `
 
 exports[`test/tap/commands/add.ts TAP add command run() remote > output 1`] = `
-monocli notice you should now check everything is ok and then run the update command
+monocli notice you should now check everything is ok and then run the spush command
 `
 
 exports[`test/tap/commands/add.ts TAP add command run() rewrite --trust > output 1`] = `
-monocli notice you should now check everything is ok and then run the update command
+monocli notice you should now check everything is ok and then run the spush command
 `
 
 exports[`test/tap/commands/add.ts TAP add command run() rewrite > commits 1`] = `
@@ -60,7 +60,7 @@ chore(test): stub repo
 feat(test): bar
 chore(test): baz
 chore(test): Move all files into packages/foo
-monocli notice you should now check everything is ok and then run the update command
+monocli notice you should now check everything is ok and then run the spush command
 `
 
 exports[`test/tap/commands/add.ts TAP add command run() with submodule with url option > commits 1`] = `
@@ -78,7 +78,7 @@ exports[`test/tap/commands/add.ts TAP add command run() with submodule with url 
 
 exports[`test/tap/commands/add.ts TAP add command run() with submodule with url option > output 1`] = `
 monocli WARN submodule existing submodule deleted
-monocli notice you should now check everything is ok and then run the update command
+monocli notice you should now check everything is ok and then run the spush command
 `
 
 exports[`test/tap/commands/add.ts TAP add command run() with submodule without url option > commits 1`] = `
@@ -95,5 +95,5 @@ exports[`test/tap/commands/add.ts TAP add command run() with submodule without u
 `
 
 exports[`test/tap/commands/add.ts TAP add command run() with submodule without url option > output 1`] = `
-monocli notice you should now check everything is ok and then run the update command
+monocli notice you should now check everything is ok and then run the spush command
 `
