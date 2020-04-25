@@ -13,7 +13,7 @@ export class HelpCommand extends Command {
     description: `display usage info`,
     details: `
 If supplied a command name, then show the associated documentation.
-    
+
 If the command name is not provided, or does not exist, then show the main documentation.`,
     options: new Map()
   };

@@ -12,7 +12,7 @@ add, convert or import a project
 
 <path>   path to the project directory
 [url]    subrepo origin url (default: from submodule)
- 
+
 Behavior depends on what the <path> directory contains and if you provided an [url] or not:
   - if <path> is a submodule, it will be converted to a "subproject"
   - if [url] is provided, the associated repository will be imported (overriding any pre-existing submodule)
@@ -39,12 +39,12 @@ Options:
 `;
 
 exports[`test/tap/commands/help.ts TAP > help 1`] = `
-Usage: monocli help [command name] 
+Usage: monocli help [command name]
 
 display usage info
 
 If supplied a command name, then show the associated documentation.
-    
+
 If the command name is not provided, or does not exist, then show the main documentation.
 `;
 
@@ -67,7 +67,7 @@ Options:
 `;
 
 exports[`test/tap/commands/help.ts TAP > mv 1`] = `
-Usage: monocli mv <path> <new-path> 
+Usage: monocli mv <path> <new-path>
 
 change a subtree prefix
 This command requires that <path> is associated with a existing project.
@@ -76,14 +76,14 @@ This command requires that <path> is associated with a existing project.
 `;
 
 exports[`test/tap/commands/help.ts TAP > status 1`] = `
-Usage: monocli status  
+Usage: monocli status
 
 show the monorepo status
 include git status and details about the monorepo state and config
 `;
 
 exports[`test/tap/commands/help.ts TAP > status 2`] = `
-Usage: monocli update <directory> [url] 
+Usage: monocli update <directory> [url]
 
 update the remote "subtree" repo associated to <directory>
 `;
