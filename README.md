@@ -89,6 +89,15 @@ Push new subtree commits to a remote repository.
 monocli spush packages/awesome git@github.com:me/awesome.git
 ```
 
+#### Update
+
+Update (push & pull) the subtree associated to <directory
+##### example
+
+```
+monocli update packages/awesome git@github.com:me/awesome.git
+```
+
 #### Mv
 
 Change a subtree prefix

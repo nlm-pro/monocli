@@ -54,7 +54,7 @@ One CLI to rule them all.
 
 Easy monorepos management, and more.
 
-Commands: status, mv, help, spush, check, add
+Commands: status, mv, help, update, spush, check, add
 
 Use 'monocli help <command name>' for more information about one of these commands.
 
@@ -72,14 +72,7 @@ This command requires that <path> is associated with a existing project.
 ⚠️  Experimental command  ⚠️
 `
 
-exports[`test/tap/commands/help.ts TAP > status 1`] = `
-Usage: monocli status  
-
-show the monorepo status
-include git status and details about the monorepo state and config
-`
-
-exports[`test/tap/commands/help.ts TAP > status 2`] = `
+exports[`test/tap/commands/help.ts TAP > spush 1`] = `
 Usage: monocli spush <directory> [url] [options]
 
 update (push to) the remote "subtree" repo associated to <directory>
@@ -90,6 +83,13 @@ Options:
   --branch      <string>   name of the remote branch you would want to push to  (default: "master")
 `
 
+exports[`test/tap/commands/help.ts TAP > status 1`] = `
+Usage: monocli status  
+
+show the monorepo status
+include git status and details about the monorepo state and config
+`
+
 exports[`test/tap/commands/help.ts TAP > unknown command name 1`] = `
 Usage: monocli <command> [options]
 
@@ -97,11 +97,24 @@ One CLI to rule them all.
 
 Easy monorepos management, and more.
 
-Commands: status, mv, help, spush, check, add
+Commands: status, mv, help, update, spush, check, add
 
 Use 'monocli help <command name>' for more information about one of these commands.
 
 Options:
   --debug       <boolean>  enable debug mode (set log level to "silly")  (default: false)
   --trust       <boolean>  run non-interactively (by default answer to all prompts)  (default: false)
+`
+
+exports[`test/tap/commands/help.ts TAP > update 1`] = `
+Usage: monocli update <directory> [url] [options]
+
+update the subtree associated to <directory>
+This command will first try to push to the remote "subtree repo".
+If this fails, it will try to pull new commits from this repo, then push again.
+This is equivalent to running the spull, then the spush command, except spull will be run only if necessary.
+
+Options:
+  --force       <boolean>  Force push to the remote repository. Use with caution!  (default: false)
+  --branch      <string>   name of the remote branch you would want to push to  (default: "master")
 `

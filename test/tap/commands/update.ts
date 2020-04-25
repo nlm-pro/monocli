@@ -143,6 +143,28 @@ t.test(`spush command`, async t => {
         t.matchSnapshot(cleanSnapshot(output), `ouput`);
       });
 
+      //   await t.test(`--force`, async t => {
+      //     const testFiles = await setup(`force`, false, true);
+
+      //     const output = await run(
+      //       [`spush`, subproject.directory, testFiles.sub.path, `--force`],
+      //       testFiles.main.path
+      //     );
+
+      //     t.matchSnapshot(output, `ouput`);
+      //   });
+
+      //   await t.test(`--trust`, async t => {
+      //     const testFiles = await setup(`trust`, false, true);
+
+      //     const output = await run(
+      //       [`spush`, subproject.directory, testFiles.sub.path, `--trust`],
+      //       testFiles.main.path
+      //     );
+
+      //     t.matchSnapshot(output, `ouput`);
+      //   });
+
       await t.test(`new branch`, async t => {
         const testFiles = await setup(`new-branch`, false, true);
 
