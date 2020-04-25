@@ -5,11 +5,13 @@ import { UpdateCommand } from "./update";
 import { SPushCommand } from "./spush";
 import { CheckCommand } from "./check";
 import { AddCommand } from "./add";
+import { SPullCommand } from "./spull";
 
 export type commandName =
   | `status`
   | `mv`
   | `help`
+  | `spull`
   | `spush`
   | `update`
   | `check`
@@ -21,6 +23,7 @@ export type typesOfCommand =
   | typeof HelpCommand
   | typeof UpdateCommand
   | typeof SPushCommand
+  | typeof SPullCommand
   | typeof CheckCommand
   | typeof AddCommand;
 
@@ -30,6 +33,7 @@ export const commandsMap: Map<commandName, typesOfCommand> = new Map([
   [`help`, HelpCommand],
   [`update`, UpdateCommand],
   [`spush`, SPushCommand],
+  [`spull`, SPullCommand],
   [`check`, CheckCommand],
   [`add`, AddCommand]
 ] as [commandName, typesOfCommand][]);
@@ -40,6 +44,7 @@ export {
   HelpCommand,
   UpdateCommand,
   SPushCommand,
+  SPullCommand,
   CheckCommand,
   AddCommand
 };

@@ -54,7 +54,7 @@ One CLI to rule them all.
 
 Easy monorepos management, and more.
 
-Commands: status, mv, help, update, spush, check, add
+Commands: status, mv, help, update, spush, spull, check, add
 
 Use 'monocli help <command name>' for more information about one of these commands.
 
@@ -70,6 +70,16 @@ change a subtree prefix
 This command requires that <path> is associated with a existing project.
 
 ⚠️  Experimental command  ⚠️
+`
+
+exports[`test/tap/commands/help.ts TAP > spull 1`] = `
+Usage: monocli spull <directory> [url] [options]
+
+update (pull) <directory> subtree from a remote repo
+Not implemented yet!
+
+Options:
+  --branch      <string>   name of the remote branch you would want to push to  (default: "master")
 `
 
 exports[`test/tap/commands/help.ts TAP > spush 1`] = `
@@ -97,7 +107,7 @@ One CLI to rule them all.
 
 Easy monorepos management, and more.
 
-Commands: status, mv, help, update, spush, check, add
+Commands: status, mv, help, update, spush, spull, check, add
 
 Use 'monocli help <command name>' for more information about one of these commands.
 
@@ -109,9 +119,9 @@ Options:
 exports[`test/tap/commands/help.ts TAP > update 1`] = `
 Usage: monocli update <directory> [url] [options]
 
-update the subtree associated to <directory>
+update (push & pull) the subtree associated to <directory>
 This command will first try to push to the remote "subtree repo".
-If this fails, it will try to pull new commits from this repo, then push again.
+If it fails, it will try to pull new commits from this repo, then push again.
 This is equivalent to running the spull, then the spush command, except spull will be run only if necessary.
 
 Options:
