@@ -15,7 +15,7 @@ export class HelpCommand extends Command {
     description: `display usage info`,
     details: `
 If supplied a command name, then show the associated documentation.
-If supplied "all" as the command name, then show the documentation of every command.    
+If supplied "all" as the command name, then show the documentation of every command.
 If the command name is not provided, or does not exists, then show the main documentation.`,
     options: new Map<string, CommandOptionConfig>([
       [
