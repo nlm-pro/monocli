@@ -18,8 +18,7 @@ exports[`test/tap/commands/add.ts TAP add command run() remote > commits 1`] = `
 *  (HEAD -> master) build: add monocli config for packages/foo
 *    Merge remote-tracking branch test/monocli-add-test
 |\\  
-| *  (test/monocli-add-test) chore(test): Move all files into packages/foo
-| *  chore(test/foo): baz
+| *  (test/monocli-add-test) chore(test/foo): baz
 | *  feat(#1): bar
 | *  stub repo
 *  stub repo
@@ -37,8 +36,7 @@ exports[`test/tap/commands/add.ts TAP add command run() rewrite > commits 1`] = 
 *  (HEAD -> master) build: add monocli config for packages/foo
 *    Merge remote-tracking branch test/monocli-add-test
 |\\  
-| *  (test/monocli-add-test) chore(test): Move all files into packages/foo
-| *  chore(test): baz
+| *  (test/monocli-add-test) chore(test): baz
 | *  feat(test): bar
 | *  chore(test): stub repo
 *  stub repo
@@ -48,8 +46,7 @@ exports[`test/tap/commands/add.ts TAP add command run() rewrite > commits 2`] = 
 *  (HEAD -> master) build: add monocli config for packages/foo
 *    Merge remote-tracking branch test/monocli-add-test
 |\\  
-| *  (test/monocli-add-test) chore(test): Move all files into packages/foo
-| *  chore(test): baz
+| *  (test/monocli-add-test) chore(test): baz
 | *  feat(test): bar
 | *  chore(test): stub repo
 *  stub repo
@@ -59,7 +56,6 @@ exports[`test/tap/commands/add.ts TAP add command run() rewrite interactive > ou
 chore(test): stub repo
 feat(test): bar
 chore(test): baz
-chore(test): Move all files into packages/foo
 monocli notice you should now check everything is ok and then run the spush command
 `
 
@@ -67,8 +63,7 @@ exports[`test/tap/commands/add.ts TAP add command run() with submodule with url 
 *  (HEAD -> master) build: add monocli config for packages/subproject
 *    Merge remote-tracking branch subproject/monocli-add-subproject
 |\\  
-| *  (subproject/monocli-add-subproject) chore(subproject): Move all files into packages/subproject
-| *  chore(test/foo): baz
+| *  (subproject/monocli-add-subproject) chore(test/foo): baz
 | *  feat(#1): bar
 | *  stub repo
 *  chore: delete submodule at packages/subproject

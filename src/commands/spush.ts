@@ -4,10 +4,7 @@ import { MonorepoCommand } from "../models/monorepo-command";
 import { CommandDocumentation } from "../models/documentation";
 import { absolute } from "../utils/path";
 import { CommandOptionError } from "../models/errors";
-import { getProject } from "../utils/config";
-import { SubProjectConfig } from "../models/config";
 import { Repository } from "../models/git";
-import { Monorepo } from "../models/monorepo";
 import { cmdOption, CommandOptionConfig } from "../models/options";
 import { confirm } from "../utils/prompt";
 
@@ -44,7 +41,7 @@ export class SPushCommand extends MonorepoCommand {
 
     silly(`path`, directory);
 
-    const config = await this.getProjectConfig(directory, url);
+    const config = await this.getProjectRemote(directory, url);
 
     await this.pushSubtree(
       config,
@@ -80,52 +77,6 @@ export class SPushCommand extends MonorepoCommand {
         `${absolute(directory)} isn't a directory`
       );
     }
-  }
-
-  async getProjectConfig(
-    directory: string,
-    url: string
-  ): Promise<{ id: string; remoteUrl: string }> {
-    let projectConfig: SubProjectConfig | null = null;
-
-    try {
-      const config = await this.monorepo.getConfig();
-      projectConfig = getProject(config, `directory`, directory);
-      if (projectConfig) {
-        silly(`config`, `project: %s`, projectConfig);
-      }
-    } catch (e) {
-      notice(``, `no project config available for ${directory}`);
-    }
-
-    if (projectConfig?.url && url && projectConfig?.url !== url) {
-      throw new CommandOptionError(
-        `url`,
-        `a different url is defined for ${directory} in ${Monorepo.CONFIG_FILE_NAME}: ${projectConfig.url}`
-      );
-    }
-
-    if (!projectConfig?.url && !url) {
-      throw new CommandOptionError(
-        `url`,
-        `no remote url was given for ${directory}`
-      );
-    }
-
-    let remoteUrl = projectConfig?.url || url;
-    if (remoteUrl.match(/^\.\.?\/?/)) {
-      remoteUrl = absolute(remoteUrl);
-    }
-
-    let id = `${+new Date()}`;
-    if (projectConfig?.scope) {
-      id = projectConfig.scope.concat(`-${id}`);
-    }
-
-    return {
-      id,
-      remoteUrl
-    };
   }
 
   async pushSubtree(

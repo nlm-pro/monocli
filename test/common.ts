@@ -111,6 +111,14 @@ export async function makeGitRepo({
   return repo;
 }
 
+export async function cloneRepo(from: string, to: string) {
+  fs.ensureDirSync(to);
+  const repo = new Repository(to);
+  await repo.git(`clone`, [`--reference`, from, `--`, from, `.`]);
+
+  return repo;
+}
+
 export async function commitNewFile(
   repo: Repository,
   filename: string,
@@ -128,10 +136,10 @@ export async function commitNewFile(
     (await repo.git(`rev-parse`, [`--is-bare-repository`])) === `true`;
 
   if (isBare) {
-    const clone = await makeGitRepo({
-      root: path.resolve(testDir, `tmp`, `${Date.now()}`)
-    });
-    await clone.git(`clone`, [repo.path]);
+    const clone = await cloneRepo(
+      repo.path,
+      path.resolve(testDir, `tmp`, `${Date.now()}`)
+    );
     await createAndCommitFile(clone);
     await clone.git(`push`, [repo.path, `master`]);
   } else {
