@@ -121,7 +121,6 @@ exports[`test/tap/commands/spush.ts TAP spush command with url argument with con
 monocli ERR! git Push to [[TEST DIRECTORY]]/tap/commands/spush/conflict/sub master branch failed!
 monocli ERR! git To [[TMP DIRECTORY]]/[[TIMESTAMP]]
 monocli notice git Go to [[TMP DIRECTORY]]/[[TIMESTAMP]] in order to resolve this conflict, or re-run this command with the --force option.
-monocli notice remote subrepo successfully updated
 `
 
 exports[`test/tap/commands/spush.ts TAP spush command with url argument with conflict new branch > output 1`] = `

@@ -53,8 +53,6 @@ export class SPushCommand extends MonorepoCommand {
       options.get(`trust`) !== true,
       options.get(`force`) === true
     );
-
-    notice(``, `remote subrepo successfully updated`);
   }
 
   // TODO: doc and move to Command
@@ -156,6 +154,7 @@ export class SPushCommand extends MonorepoCommand {
       ]);
 
       await cloneRepo.git(`push`, [`origin`, branch]);
+      notice(``, `remote subrepo successfully updated`);
     } catch (e) {
       error(`git`, `Push to ${config.remoteUrl} ${branch} branch failed!`);
       error(`git`, e.message);
@@ -171,6 +170,7 @@ export class SPushCommand extends MonorepoCommand {
 
       if (forcePush) {
         await cloneRepo.git(`push`, [`origin`, branch, `--force-with-lease`]);
+        notice(``, `remote subrepo successfully updated`);
       } else {
         notice(
           `git`,
