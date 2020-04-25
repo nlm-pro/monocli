@@ -1,6 +1,9 @@
 # Monocli
 
-[![GitHub package.json version](https://img.shields.io/github/package-json/v/noelmace/monocli)](https://github.com/noelmace/monocli/blob/master/CHANGELOG.md) ![npm](https://img.shields.io/npm/l/@monocli/cli) ![typescript](https://img.shields.io/npm/types/@monocli/cli) [![package](https://img.shields.io/npm/v/@monocli/cli)](https://www.npmjs.com/package/@monocli/cli)
+[![GitHub package.json version](https://img.shields.io/github/package-json/v/noelmace/monocli)](https://github.com/noelmace/monocli/blob/master/CHANGELOG.md)
+![npm](https://img.shields.io/npm/l/@monocli/cli)
+![typescript](https://img.shields.io/npm/types/@monocli/cli)
+[![package](https://img.shields.io/npm/v/@monocli/cli)](https://www.npmjs.com/package/@monocli/cli)
 
 <p align="center">
   <img src="/logo.png" alt="monocli logo" height="130"/>
@@ -18,17 +21,25 @@ $ monocli help
 
 ## Principles
 
-`monocli` is a very simple "Meta" CLI, easing advanced usage of commonly used command line tools.
+`monocli` is a very simple "Meta" CLI, easing advanced usage of commonly used
+command line tools.
 
-Its first goal is to help you manage your monorepos without requiring any other tool. But it's more than that!
+Its first goal is to help you manage your monorepos without requiring any other
+tool. But it's more than that!
 
-It aim to be as **generic**, **light**, **efficient** and **simple** as possible.
+It aim to be as **generic**, **light**, **efficient** and **simple** as
+possible.
 
-1. **No need to reinvent the wheel**: `monocli` simply run other commands with some tricks and hacks, that it!
+1. **No need to reinvent the wheel**: `monocli` simply run other commands with
+   some tricks and hacks, that it!
 2. **Keep your freedom**: you can always use other CLIs alongside `monocli`
-3. **Learn from the bests**: `monocli` helps you learn and follow good practices and conventions
+3. **Learn from the bests**: `monocli` helps you learn and follow good practices
+   and conventions
 
-`monocli` is still in an early phase of development. New [PR](https://github.com/noelmace/monocli/fork), [bug reports and feature requests](https://github.com/noelmace/monocli/issues/new/choose) are more than welcome.
+`monocli` is still in an early phase of development. New
+[PR](https://github.com/noelmace/monocli/fork),
+[bug reports and feature requests](https://github.com/noelmace/monocli/issues/new/choose)
+are more than welcome.
 
 ## Commands
 
@@ -44,7 +55,8 @@ Run `monocli help` and `monocli help <command>` for more information.
 
 ### GIT
 
-Use subtrees and follow [conventionnal commits](https://www.conventionalcommits.org) with ease.
+Use subtrees and follow
+[conventionnal commits](https://www.conventionalcommits.org) with ease.
 
 <p align="center">
   <img src="https://imgs.xkcd.com/comics/git.png" height="300px">
@@ -58,7 +70,8 @@ Add, convert or import a "subproject" in a monorepo.
 
 ##### example
 
-Convert the `packages/awesome` submodule to a subtree and add the `awesome` scope to all commit messages:
+Convert the `packages/awesome` submodule to a subtree and add the `awesome`
+scope to all commit messages:
 
 ```
 monocli add ./packages/awesome --scope awesome --rewrite
