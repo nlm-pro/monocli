@@ -25,7 +25,7 @@ Its first goal is to help you manage your monorepos without requiring any other 
 It aim to be as **generic**, **light**, **efficient** and **simple** as possible.
 
 1. **No need to reinvent the wheel**: `monocli` simply run other commands with some tricks and hacks, that it!
-2. **Keep your freedom**: you can always use other CLIs  alongside `monocli`
+2. **Keep your freedom**: you can always use other CLIs alongside `monocli`
 3. **Learn from the bests**: `monocli` helps you learn and follow good practices and conventions
 
 `monocli` is still in an early phase of development. New [PR](https://github.com/noelmace/monocli/fork), [bug reports and feature requests](https://github.com/noelmace/monocli/issues/new/choose) are more than welcome.
@@ -52,14 +52,13 @@ Use subtrees and follow [conventionnal commits](https://www.conventionalcommits.
 
 <p align="center">By <a href="https://xkcd.com/1597/">XKCD</a></p>
 
-
 #### Add
 
 Add, convert or import a "subproject" in a monorepo.
 
 ##### example
 
-Convert the `packages/awesome` submodule to a subtree and  add the `awesome` scope to all commit messages:
+Convert the `packages/awesome` submodule to a subtree and add the `awesome` scope to all commit messages:
 
 ```
 monocli add ./packages/awesome --scope awesome --rewrite
@@ -92,6 +91,7 @@ monocli spush packages/awesome git@github.com:me/awesome.git
 #### Update
 
 Update (push & pull) the subtree associated to <directory
+
 ##### example
 
 ```

@@ -73,13 +73,9 @@ This command requires that <path> is associated with a existing project.
 `
 
 exports[`test/tap/commands/help.ts TAP > spull 1`] = `
-Usage: monocli spull <directory> [url] [options]
+Usage: monocli spull <directory> [url] [branch] 
 
 update (pull) <directory> subtree from a remote repo
-Not implemented yet!
-
-Options:
-  --branch      <string>   name of the remote branch you would want to push to  (default: "master")
 `
 
 exports[`test/tap/commands/help.ts TAP > spush 1`] = `

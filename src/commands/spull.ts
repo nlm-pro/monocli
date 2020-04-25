@@ -6,25 +6,27 @@ import { cmdOption, CommandOptionConfig } from "../models/options";
 export class SPullCommand extends MonorepoCommand {
   protected doc: CommandDocumentation = {
     name: `spull`,
-    usage: `<directory> [url]`,
+    usage: `<directory> [url] [branch]`,
     description: `update (pull) <directory> subtree from a remote repo`,
-    details: `Not implemented yet!`,
-    options: new Map<string, CommandOptionConfig>([
-      [
-        `branch`,
-        {
-          type: `string`,
-          description: `name of the remote branch you would want to push to`,
-          defaultValue: `master`
-        }
-      ]
-    ])
+    // TODO
+    details: ``,
+    options: new Map<string, CommandOptionConfig>()
   };
 
   async run(
-    [directory, url]: [string, string],
+    [directory, urlOption, branch]: [string, string, string],
     options: Map<string, cmdOption> = new Map()
   ): Promise<string | void> {
-    log.error(`command`, `not implemented yet`);
+    branch = branch || `master`;
+    const { remoteUrl } = await this.getProjectRemote(directory, urlOption);
+    // FIXME: add subtree if necessary
+    await this.monorepo.repository.git(`subtree`, [
+      `pull`,
+      `--prefix`,
+      directory,
+      `--squash`,
+      remoteUrl,
+      branch
+    ]);
   }
 }

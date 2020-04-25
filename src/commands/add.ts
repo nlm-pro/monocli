@@ -85,12 +85,14 @@ Behavior depends on what the <path> directory contains and if you provided an [u
       const cloneRepo = new Repository();
       await cloneRepo.git(`clone`, [urls.clone, `.`]);
 
-      await this.mvFiles(cloneRepo, directory);
+      if (isSubmodule) {
+        await this.mvFiles(cloneRepo, directory);
 
-      await cloneRepo.git(`commit`, [
-        `-m`,
-        `chore(${scope}): Move all files into ${directory}`
-      ]);
+        await cloneRepo.git(`commit`, [
+          `-m`,
+          `chore(${scope}): Move all files into ${directory}`
+        ]);
+      }
 
       const branch = `monocli-add-${scope}`;
 
@@ -111,7 +113,7 @@ Behavior depends on what the <path> directory contains and if you provided an [u
 
       await this.monorepo.repository.git(`remote`, [`add`, scope, urls.remote]);
 
-      // TODO: use "subtree add" instead
+      // FIXME: use "subtree add" instead (because no more mv files)
       await this.monorepo.repository.git(`fetch`, [scope, branch]);
 
       if (isSubmodule) {
