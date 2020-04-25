@@ -11,6 +11,8 @@
     "release:test": "standard-version --dry-run",
     "postrelease": "node publish.js && git push --follow-tags",
     "build": "rimraf ./dist && tsc",
+    "prebuild:docs": "node-ts src/index.ts",
+    "build:docs": "typedoc --out docs src --includes 'mdDocs/'",
     "watch": "rimraf ./dist && concurrently --raw -n tsc,eslint \"tsc -w\" \"esw --fix -w ./{src,test}/**/*.ts\"",
     "lint:prettier": "prettier --write ./{src,test}/**/*.{md,js,ts}",
     "lint:eslint": "eslint \"{src,test}/**/*.{js,ts}\" --fix",
@@ -65,6 +67,7 @@
     "eslint-config-prettier": "^6.10.0",
     "eslint-import-resolver-typescript": "^2.0.0",
     "eslint-plugin-import": "^2.20.1",
+    "eslint-plugin-tsdoc": "^0.2.4",
     "eslint-watch": "^6.0.1",
     "husky": "^4.2.3",
     "libnpmpublish": "^3.0.1",
@@ -76,6 +79,8 @@
     "semver": "^7.3.2",
     "standard-version": "^7.1.0",
     "tap": "^14.10.7",
+    "ts-node": "^8.9.0",
+    "typedoc": "^0.17.4",
     "typescript": "^3.7.5"
   }
 }

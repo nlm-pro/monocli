@@ -3,7 +3,11 @@
 [![GitHub package.json version](https://img.shields.io/github/package-json/v/noelmace/monocli)](https://github.com/noelmace/monocli/blob/master/CHANGELOG.md) ![npm](https://img.shields.io/npm/l/@monocli/cli) ![typescript](https://img.shields.io/npm/types/@monocli/cli) [![package](https://img.shields.io/npm/v/@monocli/cli)](https://www.npmjs.com/package/@monocli/cli)
 
 <p align="center">
-  <img src="/logo.png" alt="monocli logo" height="130"/>
+  <img
+    src="https://raw.githubusercontent.com/noelmace/monocli/fd9bf5d35bb3b5ebc88a79ba22e83c8335947e01/logo.png"
+    alt="monocli logo"
+    height="130"
+  />
 </p>
 
 <p align="center">One CLI to rule them all</p>

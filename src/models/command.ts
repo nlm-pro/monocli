@@ -45,16 +45,17 @@ export abstract class Command {
     return this.singleMandatoryOptions;
   }
 
-  get help(): string {
-    let options = this.optionsHelp;
-    options = options
-      ? `Options:
+  help(isMd = false): string {
+    if (!isMd) {
+      let options = this.optionsHelp;
+      options = options
+        ? `Options:
 ${options}`
-      : ``;
-    const optUsage = this.doc.options.size > 0 ? `[options]` : ``;
-    const name = this.doc.name ? ` ${this.doc.name}` : ``;
+        : ``;
+      const optUsage = this.doc.options.size > 0 ? `[options]` : ``;
+      const name = this.doc.name ? ` ${this.doc.name}` : ``;
 
-    return `
+      return `
 Usage: monocli${name} ${this.doc.usage} ${optUsage}
 
 ${this.doc.description}
@@ -62,6 +63,9 @@ ${this.doc.details}
 
 ${options}
     `;
+    } else {
+      throw new CommandOptionError(`markdown`, `not implemented yet`);
+    }
   }
 
   validate(

@@ -14,6 +14,10 @@ module.exports = {
     "project": ["tsconfig.json", "test/tsconfig.json"],
     "sourceType": "module"
   },
+  "plugins": [
+    "@typescript-eslint/eslint-plugin",
+    "eslint-plugin-tsdoc"
+  ],
   "extends": [
     "eslint:recommended",
     "plugin:import/warnings",
@@ -24,6 +28,7 @@ module.exports = {
   ],
   "ignorePatterns": ["coverage-map.js", "publish.js", "node_modules/"],
   "rules": {
+    "tsdoc/syntax": "warn",
     "no-console": "error",
     "no-process-env": "error",
     "no-warning-comments": "off",
