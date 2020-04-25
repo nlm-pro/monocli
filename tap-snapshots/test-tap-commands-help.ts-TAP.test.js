@@ -4,7 +4,7 @@
  * Re-generate by setting TAP_SNAPSHOT=1 and running tests.
  * Make sure to inspect the output below.  Do not ignore changes!
  */
-'use strict'
+"use strict";
 exports[`test/tap/commands/help.ts TAP > add 1`] = `
 Usage: monocli add <path> [url] [...options] [options]
 
@@ -21,7 +21,7 @@ Behavior depends on what the <path> directory contains and if you provided an [u
 Options:
   --scope       <string>   conventional commit scope  (default: path basename)
   --rewrite     <boolean>  rewrite subproject history before merge  (default: false)
-`
+`;
 
 exports[`test/tap/commands/help.ts TAP > check 1`] = `
 Usage: monocli check <directory> [options]
@@ -35,7 +35,7 @@ useful for release scripts and incremental builds
 
 Options:
   --tag         <string>   tag name to check against  (default: latest semver compliant tag name)
-`
+`;
 
 exports[`test/tap/commands/help.ts TAP > help 1`] = `
 Usage: monocli help [command name] 
@@ -45,7 +45,7 @@ display usage info
 If supplied a command name, then show the associated documentation.
     
 If the command name is not provided, or does not exist, then show the main documentation.
-`
+`;
 
 exports[`test/tap/commands/help.ts TAP > main 1`] = `
 Usage: monocli <command> [options]
@@ -61,7 +61,7 @@ Use 'monocli help <command name>' for more information about one of these comman
 Options:
   --debug       <boolean>  enable debug mode (set log level to "silly")  (default: false)
   --trust       <boolean>  run non-interactively (by default answer to all prompts)  (default: false)
-`
+`;
 
 exports[`test/tap/commands/help.ts TAP > mv 1`] = `
 Usage: monocli mv <path> <new-path> 
@@ -70,13 +70,13 @@ change a subtree prefix
 This command requires that <path> is associated with a existing project.
 
 ⚠️  Experimental command  ⚠️
-`
+`;
 
 exports[`test/tap/commands/help.ts TAP > spull 1`] = `
 Usage: monocli spull <directory> [url] [branch] 
 
 update (pull) <directory> subtree from a remote repo
-`
+`;
 
 exports[`test/tap/commands/help.ts TAP > spush 1`] = `
 Usage: monocli spush <directory> [url] [options]
@@ -87,14 +87,14 @@ update (push to) the remote "subtree" repo associated to <directory>
 Options:
   --force       <boolean>  Force push to the remote repository. Use with caution!  (default: false)
   --branch      <string>   name of the remote branch you would want to push to  (default: "master")
-`
+`;
 
 exports[`test/tap/commands/help.ts TAP > status 1`] = `
 Usage: monocli status  
 
 show the monorepo status
 include git status and details about the monorepo state and config
-`
+`;
 
 exports[`test/tap/commands/help.ts TAP > unknown command name 1`] = `
 Usage: monocli <command> [options]
@@ -110,7 +110,7 @@ Use 'monocli help <command name>' for more information about one of these comman
 Options:
   --debug       <boolean>  enable debug mode (set log level to "silly")  (default: false)
   --trust       <boolean>  run non-interactively (by default answer to all prompts)  (default: false)
-`
+`;
 
 exports[`test/tap/commands/help.ts TAP > update 1`] = `
 Usage: monocli update <directory> [url] [options]
@@ -123,4 +123,4 @@ This is equivalent to running the spull, then the spush command, except spull wi
 Options:
   --force       <boolean>  Force push to the remote repository. Use with caution!  (default: false)
   --branch      <string>   name of the remote branch you would want to push to  (default: "master")
-`
+`;

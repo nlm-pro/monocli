@@ -4,16 +4,17 @@
  * Re-generate by setting TAP_SNAPSHOT=1 and running tests.
  * Make sure to inspect the output below.  Do not ignore changes!
  */
-'use strict'
-exports[`test/tap/commands/add.ts TAP add command run() empty > must match snapshot 1`] =
-    `
+"use strict";
+exports[
+  `test/tap/commands/add.ts TAP add command run() empty > must match snapshot 1`
+] = `
 *  (HEAD -> master) build: add monocli config for packages/foo
 *  stub repo
-`
+`;
 
 exports[`test/tap/commands/add.ts TAP add command run() empty > output 1`] = `
 monocli notice project added to configuration
-`
+`;
 
 exports[`test/tap/commands/add.ts TAP add command run() remote > commits 1`] = `
 *  (HEAD -> master) build: add monocli config for packages/foo
@@ -23,19 +24,21 @@ exports[`test/tap/commands/add.ts TAP add command run() remote > commits 1`] = `
 | *  feat(#1): bar
 | *  stub repo
 *  stub repo
-`
+`;
 
 exports[`test/tap/commands/add.ts TAP add command run() remote > output 1`] = `
 monocli notice you should now check everything is ok and then run the spush command
-`
+`;
 
-exports[`test/tap/commands/add.ts TAP add command run() rewrite --trust > output 1`] =
-    `
+exports[
+  `test/tap/commands/add.ts TAP add command run() rewrite --trust > output 1`
+] = `
 monocli notice you should now check everything is ok and then run the spush command
-`
+`;
 
-exports[`test/tap/commands/add.ts TAP add command run() rewrite > commits 1`] =
-    `
+exports[
+  `test/tap/commands/add.ts TAP add command run() rewrite > commits 1`
+] = `
 *  (HEAD -> master) build: add monocli config for packages/foo
 *    Merge remote-tracking branch test/monocli-add-test
 |\\  
@@ -43,10 +46,11 @@ exports[`test/tap/commands/add.ts TAP add command run() rewrite > commits 1`] =
 | *  feat(test): bar
 | *  chore(test): stub repo
 *  stub repo
-`
+`;
 
-exports[`test/tap/commands/add.ts TAP add command run() rewrite > commits 2`] =
-    `
+exports[
+  `test/tap/commands/add.ts TAP add command run() rewrite > commits 2`
+] = `
 *  (HEAD -> master) build: add monocli config for packages/foo
 *    Merge remote-tracking branch test/monocli-add-test
 |\\  
@@ -54,18 +58,20 @@ exports[`test/tap/commands/add.ts TAP add command run() rewrite > commits 2`] =
 | *  feat(test): bar
 | *  chore(test): stub repo
 *  stub repo
-`
+`;
 
-exports[`test/tap/commands/add.ts TAP add command run() rewrite interactive > output 1`] =
-    `
+exports[
+  `test/tap/commands/add.ts TAP add command run() rewrite interactive > output 1`
+] = `
 chore(test): stub repo
 feat(test): bar
 chore(test): baz
 monocli notice you should now check everything is ok and then run the spush command
-`
+`;
 
-exports[`test/tap/commands/add.ts TAP add command run() with submodule with url option > commits 1`] =
-    `
+exports[
+  `test/tap/commands/add.ts TAP add command run() with submodule with url option > commits 1`
+] = `
 *  (HEAD -> master) build: add monocli config for packages/subproject
 *    Merge remote-tracking branch subproject/monocli-add-subproject
 |\\  
@@ -75,16 +81,18 @@ exports[`test/tap/commands/add.ts TAP add command run() with submodule with url 
 *  chore: delete submodule at packages/subproject
 *  submodule
 *  stub repo
-`
+`;
 
-exports[`test/tap/commands/add.ts TAP add command run() with submodule with url option > output 1`] =
-    `
+exports[
+  `test/tap/commands/add.ts TAP add command run() with submodule with url option > output 1`
+] = `
 monocli WARN submodule existing submodule deleted
 monocli notice you should now check everything is ok and then run the spush command
-`
+`;
 
-exports[`test/tap/commands/add.ts TAP add command run() with submodule without url option > commits 1`] =
-    `
+exports[
+  `test/tap/commands/add.ts TAP add command run() with submodule without url option > commits 1`
+] = `
 *  (HEAD -> master) build: add monocli config for packages/subproject
 *    Merge remote-tracking branch subproject/monocli-add-subproject
 |\\  
@@ -95,9 +103,10 @@ exports[`test/tap/commands/add.ts TAP add command run() with submodule without u
 *  chore: delete submodule at packages/subproject
 *  submodule
 *  stub repo
-`
+`;
 
-exports[`test/tap/commands/add.ts TAP add command run() with submodule without url option > output 1`] =
-    `
+exports[
+  `test/tap/commands/add.ts TAP add command run() with submodule without url option > output 1`
+] = `
 monocli notice you should now check everything is ok and then run the spush command
-`
+`;
