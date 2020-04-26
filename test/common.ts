@@ -147,6 +147,16 @@ export async function commitNewFile(
   }
 }
 
+export function cleanSnapshot(input: string): string {
+  input = input.replace(/[\dabcdef]{7}([\dabcdef]{33})/g, `[[COMMIT HASH]]`);
+  input = input.replace(/\d{13}/g, `[[TIMESTAMP]]`);
+  // FIXME: Windows compatibility
+  input = input.replace(/\/[\w-_/]*\/monocli\/test/g, `[[TEST DIRECTORY]]`);
+  input = input.replace(/\/tmp\/monocli/g, `[[TMP DIRECTORY]]`);
+
+  return input;
+}
+
 export async function graphLog(repository: Repository): Promise<string> {
   let commits = `NONE`;
   try {
@@ -160,17 +170,7 @@ export async function graphLog(repository: Repository): Promise<string> {
     commits = `ERROR: ${e}`;
   }
 
-  return commits;
-}
-
-export function cleanSnapshot(input: string): string {
-  input = input.replace(/[\dabcdef]{7}([\dabcdef]{33})/g, `[[COMMIT HASH]]`);
-  input = input.replace(/\d{13}/g, `[[TIMESTAMP]]`);
-  // FIXME: Windows compatibility
-  input = input.replace(/\/.*\/monocli\/test/g, `[[TEST DIRECTORY]]`);
-  input = input.replace(/\/tmp\/monocli/g, `[[TMP DIRECTORY]]`);
-
-  return input;
+  return cleanSnapshot(commits);
 }
 
 export interface TestRepo {
