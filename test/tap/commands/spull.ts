@@ -10,8 +10,6 @@ import {
   graphLog,
   run
 } from "../../common";
-import { buildCommand } from "../../../src/utils/build-command";
-import { absolute } from "../../../src/utils/path";
 import { Repository } from "../../../src/models/git";
 
 async function setup(
@@ -30,7 +28,7 @@ async function setup(
     added: [`mono.cool`],
     message: `initial commit`
   });
-  await run([`add`, directory, remote.path], monorepo.path);
+  await run([`add`, directory, remote.path, `--trust`], monorepo.path);
   await commitNewFile(remote, `foo.txt`, `feat: add file after add`);
 
   return {

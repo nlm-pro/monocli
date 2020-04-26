@@ -113,7 +113,20 @@ Behavior depends on what the <path> directory contains and if you provided an [u
 
       await cloneRepo.git(`remote`, [`add`, `subrepo`, urls.remote]);
 
-      await cloneRepo.git(`push`, [`subrepo`, subprojectBranch, `--force`]);
+      try {
+        await cloneRepo.git(`push`, [`subrepo`, subprojectBranch]);
+      } catch (e) {
+        log.warn(
+          `git`,
+          `push from ${cloneRepo.path} to ${urls.remote}/${subprojectBranch} failed`
+        );
+        const forcePush =
+          options.get(`trust`) || confirm(`Force push to ${subprojectBranch}?`);
+        if (forcePush) {
+          log.notice(`git`, `force push to ${urls.remote}/${subprojectBranch}`);
+          await cloneRepo.git(`push`, [`subrepo`, subprojectBranch, `--force`]);
+        }
+      }
 
       await this.monorepo.repository.git(`remote`, [
         `add`,
