@@ -46,12 +46,6 @@ Run `monocli help` and `monocli help <command>` for more information.
 
 Use subtrees and follow [conventionnal commits](https://www.conventionalcommits.org) with ease.
 
-<p align="center">
-  <img src="https://imgs.xkcd.com/comics/git.png" height="300px">
-</p>
-
-<p align="center">By <a href="https://xkcd.com/1597/">XKCD</a></p>
-
 #### Add
 
 Add, convert or import a "subproject" in a monorepo.
