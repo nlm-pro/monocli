@@ -17,7 +17,7 @@
     "lint:check": "prettier --check ./{src,test}/**/*.{md,js,ts}; eslint \"{src,test}/**/*.{js,ts}\"",
     "lint": "tsc --noEmit && prettier --write ./{src,test}/**/*.{md,js,ts} && eslint \"{src,test}/**/*.{js,ts}\" --quiet --fix",
     "eslint-check": "eslint --print-config ./src/index.ts | eslint-config-prettier-check",
-    "tap": "tap -J --timeout 300",
+    "tap": "tap -J --timeout 600",
     "tap-nocleanup": "NO_TEST_CLEANUP=1 tap -J --timeout 300",
     "tap-coverage": "tap -J --coverage --timeout 600",
     "tap-strict-coverage": "tap -J --coverage --timeout 600 --coverage-map=coverage-map.js",

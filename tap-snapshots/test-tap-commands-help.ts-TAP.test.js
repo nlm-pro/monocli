@@ -12,7 +12,7 @@ add, convert or import a project
 
 <path>   path to the project directory
 [url]    subrepo origin url (default: from submodule)
- 
+
 Behavior depends on what the <path> directory contains and if you provided an [url] or not:
   - if <path> is a submodule, it will be converted to a "subproject"
   - if [url] is provided, the associated repository will be imported (overriding any pre-existing submodule)

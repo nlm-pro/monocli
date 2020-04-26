@@ -48,8 +48,10 @@ export class Repository {
       return ``;
     } catch ({ stderr, code }) {
       const msg =
-        typeof stderr === `string`
-          ? stderr.split(`\n`)[0].trim()
+        stderr instanceof Buffer
+          ? stderr.toString(`utf8`)
+          : typeof stderr === `string`
+          ? stderr.trim()
           : `Error: git command failed`;
       throw new GitError(msg, code);
     }
