@@ -55,6 +55,19 @@ Behavior depends on what the <path> directory contains and if you provided an [u
           type: `boolean`,
           description: `rewrite subproject history before merge`
         }
+      ],
+      [
+        `branch`,
+        {
+          type: `string`,
+          description: `name of the branch were all modifications to the remote subtree repository will be made and push`,
+          defaultValue: (_, options): string => {
+            const id = (options?.get(`scope`) as string) || `${Date.now()}`;
+
+            return `monocli-add-${id}`;
+          },
+          defaultDescription: `monocli-add-<scope>`
+        }
       ]
     ])
   };
@@ -85,7 +98,7 @@ Behavior depends on what the <path> directory contains and if you provided an [u
       const cloneRepo = new Repository();
       await cloneRepo.git(`clone`, [urls.clone, `.`]);
 
-      const subprojectBranch = `monocli-add-${scope}`;
+      const subprojectBranch = options.get(`branch`) as string;
 
       if (options.get(`rewrite`)) {
         await this.rewriteHistory(

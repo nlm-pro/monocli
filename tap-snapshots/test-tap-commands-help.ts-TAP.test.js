@@ -21,6 +21,7 @@ Behavior depends on what the <path> directory contains and if you provided an [u
 Options:
   --scope       <string>   conventional commit scope  (default: path basename)
   --rewrite     <boolean>  rewrite subproject history before merge  (default: false)
+  --branch      <string>   name of the branch were all modifications to the remote subtree repository will be made and push  (default: monocli-add-<scope>)
 `
 
 exports[`test/tap/commands/help.ts TAP > check 1`] = `
