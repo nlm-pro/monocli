@@ -2,7 +2,13 @@ import * as path from "path";
 import * as t from "tap";
 import * as fs from "fs-extra";
 import * as prompts from "prompts";
-import { testDir, makeGitRepo, run, graphLog } from "../../common";
+import {
+  testDir,
+  makeGitRepo,
+  run,
+  graphLog,
+  cleanSnapshot
+} from "../../common";
 import { AddCommand } from "../../../src/commands";
 import { buildCommand } from "../../../src/utils/build-command";
 import { Repository } from "../../../src/models/git";
@@ -193,7 +199,7 @@ t.test(`add command`, async t => {
           remoteRepo.path
         );
         const output = await run([`add`, submoduleDirectory], monorepo.path);
-        t.matchSnapshot(output, `output`);
+        t.matchSnapshot(cleanSnapshot(output), `output`);
         t.matchSnapshot(await graphLog(monorepo), `commits`);
       });
 
@@ -208,7 +214,7 @@ t.test(`add command`, async t => {
           [`add`, submoduleDirectory, remoteRepo.path],
           monorepo.path
         );
-        t.matchSnapshot(output, `output`);
+        t.matchSnapshot(cleanSnapshot(output), `output`);
         t.matchSnapshot(await graphLog(monorepo), `commits`);
       });
     });
@@ -223,7 +229,7 @@ t.test(`add command`, async t => {
         [`add`, config.directory, `--scope`, config.scope],
         monorepo.path
       );
-      t.matchSnapshot(output, `output`);
+      t.matchSnapshot(cleanSnapshot(output), `output`);
       t.matchSnapshot(await graphLog(monorepo));
       t.true(
         fs.existsSync(path.resolve(monorepo.path, config.directory, `.gitkeep`))
@@ -247,11 +253,18 @@ t.test(`add command`, async t => {
       };
 
       const output = await run(
-        [`add`, config.directory, config.url, `--scope`, config.scope],
+        [
+          `add`,
+          config.directory,
+          config.url,
+          `--scope`,
+          config.scope,
+          `--trust`
+        ],
         monorepo.path
       );
 
-      t.matchSnapshot(output, `output`);
+      t.matchSnapshot(cleanSnapshot(output), `output`);
       t.matchSnapshot(await graphLog(monorepo), `commits`);
 
       t.true(
@@ -331,7 +344,7 @@ t.test(`add command`, async t => {
           monorepo.path
         );
 
-        t.matchSnapshot(output, `output`);
+        t.matchSnapshot(cleanSnapshot(output), `output`);
 
         await assert(monorepo, config);
       });
@@ -353,7 +366,7 @@ t.test(`add command`, async t => {
           monorepo.path
         );
 
-        t.matchSnapshot(output, `output`);
+        t.matchSnapshot(cleanSnapshot(output), `output`);
 
         await assert(monorepo, config);
       });
