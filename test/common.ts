@@ -92,6 +92,7 @@ export async function makeGitRepo({
   message = `stub repo`,
   bare = false
 } = {}): Promise<Repository> {
+  await fs.ensureDir(root);
   const repo = new Repository(root);
   await repo.git(`init`, bare ? [`--bare`] : []);
   await repo.git(`config`, [`user.name`, user]);
@@ -99,12 +100,51 @@ export async function makeGitRepo({
   // don't time out tests waiting for a gpg passphrase or 2fa
   await repo.git(`config`, [`tag.gpgSign`, `false`]);
   await repo.git(`config`, [`tag.forceSignAnnotated`, `false`]);
+
   if (added.length > 0) {
-    await repo.git(`add`, added);
-    await repo.git(`commit`, [`-m`, message]);
+    if (!bare) {
+      await repo.git(`add`, added);
+      await repo.git(`commit`, [`-m`, message]);
+    }
   }
 
   return repo;
+}
+
+export async function cloneRepo(from: string, to: string) {
+  fs.ensureDirSync(to);
+  const repo = new Repository(to);
+  await repo.git(`clone`, [`--reference`, from, `--`, from, `.`]);
+
+  return repo;
+}
+
+export async function commitNewFile(
+  repo: Repository,
+  filename: string,
+  message?: string
+): Promise<void> {
+  const msg = message || `chore: add file ${filename}`;
+
+  const createAndCommitFile = async (re: Repository): Promise<void> => {
+    fs.createFileSync(path.resolve(re.path, filename));
+    await re.git(`add`, [filename]);
+    await re.git(`commit`, [`-m`, msg]);
+  };
+
+  const isBare =
+    (await repo.git(`rev-parse`, [`--is-bare-repository`])) === `true`;
+
+  if (isBare) {
+    const clone = await cloneRepo(
+      repo.path,
+      path.resolve(testDir, `tmp`, `${Date.now()}`)
+    );
+    await createAndCommitFile(clone);
+    await clone.git(`push`, [repo.path, `master`]);
+  } else {
+    await createAndCommitFile(repo);
+  }
 }
 
 export async function graphLog(repository: Repository): Promise<string> {
@@ -121,6 +161,16 @@ export async function graphLog(repository: Repository): Promise<string> {
   }
 
   return commits;
+}
+
+export function cleanSnapshot(input: string): string {
+  input = input.replace(/[\dabcdef]{7}([\dabcdef]{33})/g, `[[COMMIT HASH]]`);
+  input = input.replace(/\d{13}/g, `[[TIMESTAMP]]`);
+  // FIXME: Windows compatibility
+  input = input.replace(/\/.*\/monocli\/test/g, `[[TEST DIRECTORY]]`);
+  input = input.replace(/\/tmp\/monocli/g, `[[TMP DIRECTORY]]`);
+
+  return input;
 }
 
 export interface TestRepo {
