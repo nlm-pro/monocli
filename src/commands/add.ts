@@ -1,5 +1,5 @@
 import { resolve, basename } from "path";
-import { existsSync, mkdirp, ensureDirSync } from "fs-extra";
+import { existsSync, mkdirp, ensureDirSync, rmdir, rmdirSync } from "fs-extra";
 import * as log from "npmlog";
 import { MonorepoCommand } from "../models/monorepo-command";
 import { CommandDocumentation } from "../models/documentation";
@@ -39,13 +39,6 @@ Behavior depends on what the <path> directory contains and if you provided an [u
   - finally, the project's data will be added to the configuration`,
     options: new Map<string, CommandOptionConfig>([
       [
-        `yes`,
-        {
-          type: `boolean`,
-          description: `Assume "yes" as answer to all prompts and run non-interactively`
-        }
-      ],
-      [
         `scope`,
         {
           type: `string`,
@@ -61,6 +54,19 @@ Behavior depends on what the <path> directory contains and if you provided an [u
         {
           type: `boolean`,
           description: `rewrite subproject history before merge`
+        }
+      ],
+      [
+        `branch`,
+        {
+          type: `string`,
+          description: `name of the branch were all modifications to the remote subtree repository will be made and push`,
+          defaultValue: (_, options): string => {
+            const id = (options?.get(`scope`) as string) || `${Date.now()}`;
+
+            return `monocli-add-${id}`;
+          },
+          defaultDescription: `monocli-add-<scope>`
         }
       ]
     ])
@@ -92,42 +98,53 @@ Behavior depends on what the <path> directory contains and if you provided an [u
       const cloneRepo = new Repository();
       await cloneRepo.git(`clone`, [urls.clone, `.`]);
 
-      await this.mvFiles(cloneRepo, directory);
-
-      await cloneRepo.git(`commit`, [
-        `-m`,
-        `chore(${scope}): Move all files into ${directory}`
-      ]);
-
-      const branch = `monocli-add-${scope}`;
+      const subprojectBranch = options.get(`branch`) as string;
 
       if (options.get(`rewrite`)) {
         await this.rewriteHistory(
           cloneRepo,
           scope,
-          !options.get(`yes`),
-          branch
+          !options.get(`trust`),
+          subprojectBranch
         );
       } else {
-        await cloneRepo.git(`checkout`, [`-b`, branch]);
+        await cloneRepo.git(`checkout`, [`-b`, subprojectBranch]);
       }
 
       await cloneRepo.git(`remote`, [`add`, `subrepo`, urls.remote]);
 
-      await cloneRepo.git(`push`, [`subrepo`, branch, `--force`]);
+      try {
+        await cloneRepo.git(`push`, [`subrepo`, subprojectBranch]);
+      } catch (e) {
+        log.warn(
+          `git`,
+          `push from ${cloneRepo.path} to ${urls.remote}/${subprojectBranch} failed`
+        );
+        const forcePush =
+          options.get(`trust`) || confirm(`Force push to ${subprojectBranch}?`);
+        if (forcePush) {
+          log.notice(`git`, `force push to ${urls.remote}/${subprojectBranch}`);
+          await cloneRepo.git(`push`, [`subrepo`, subprojectBranch, `--force`]);
+        }
+      }
 
-      await this.monorepo.repository.git(`remote`, [`add`, scope, urls.remote]);
-
-      // TODO: use "subtree add" instead
-      await this.monorepo.repository.git(`fetch`, [scope, branch]);
+      await this.monorepo.repository.git(`remote`, [
+        `add`,
+        `-f`,
+        scope,
+        urls.remote
+      ]);
 
       if (isSubmodule) {
         await this.monorepo.repository.deleteSubmodule(directory);
       }
 
-      await this.monorepo.repository.git(`merge`, [
-        `--allow-unrelated-histories`,
-        `${scope}/${branch}`
+      await this.monorepo.repository.git(`subtree`, [
+        `add`,
+        `--prefix`,
+        directory,
+        scope,
+        subprojectBranch
       ]);
     }
 
@@ -175,7 +192,9 @@ Behavior depends on what the <path> directory contains and if you provided an [u
     if (urls === null) {
       ensureNotEmptyDir(pathToDirectory);
     } else if (!submodule) {
-      ensureDirSync(pathToDirectory);
+      if (existsSync(pathToDirectory)) {
+        rmdirSync(pathToDirectory);
+      }
     } else if (!url) {
       await this.monorepo.repository.git(`submodule`, [`update`]);
 
