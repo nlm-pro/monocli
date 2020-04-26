@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.4.4](https://github.com/noelmace/monocli/compare/v0.4.3...v0.4.4) (2020-04-26)
+
+
+### Bug Fixes
+
+* **add:** uncommited files ([5c924f9](https://github.com/noelmace/monocli/commit/5c924f950d8586637ad07d48c6fa697bf369f0d7))
+
 ### [0.4.3](https://github.com/noelmace/monocli/compare/v0.4.2...v0.4.3) (2020-04-24)
 
 
