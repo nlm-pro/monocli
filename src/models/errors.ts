@@ -30,4 +30,6 @@ export class ExitError extends Error {
 
 export class MonorepoError extends Error {}
 
+export class InternalError extends Error {}
+
 export class ConfigError extends Error {}

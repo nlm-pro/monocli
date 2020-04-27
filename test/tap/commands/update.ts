@@ -6,29 +6,28 @@ import {
   makeGitRepo,
   testDir,
   run,
-  TestRepo,
   commitNewFile,
+  graphLog,
+  fileSnapshot,
   cleanSnapshot
 } from "../../common";
 import { Config, SubProjectConfig } from "../../../src/models/config";
 import { relativeTo } from "../../../src/utils/path";
 import { Monorepo } from "../../../src/models/monorepo";
-
-interface TestFiles {
-  main: TestRepo;
-  sub: TestRepo;
-}
+import { Repository } from "../../../src/models/git";
 
 const subproject: SubProjectConfig = {
   scope: `proj`,
   directory: `subproj`
 };
 
+prompts.inject([false]);
+
 async function setup(
   dir: string,
   withUrl: boolean,
   conflict = false
-): Promise<TestFiles> {
+): Promise<{ mainRepo: Repository; subRepo: Repository }> {
   const root = path.resolve(testDir, dir);
   await fs.mkdir(root);
 
@@ -47,168 +46,185 @@ async function setup(
     config.projects[0].url = relativeTo(subRepoDir, mainRepoDir);
   }
 
-  await fs.writeFile(
-    path.resolve(mainRepoDir, Monorepo.CONFIG_FILE_NAME),
-    JSON.stringify(config, null, 2)
+  const mainRepo = await makeGitRepo({
+    root: mainRepoDir
+  });
+
+  await commitNewFile(
+    mainRepo,
+    `one.txt`,
+    `feat(root): initial commit before add`
   );
 
-  const mainRepo = await makeGitRepo({
-    root: mainRepoDir,
-    added: [Monorepo.CONFIG_FILE_NAME]
-  });
   const subRepo = await makeGitRepo({ root: subRepoDir, bare: true });
 
+  await commitNewFile(
+    subRepo,
+    `README.md`,
+    `feat(${subproject.scope}): in remote before add`
+  );
+
+  await run([`add`, subproject.directory, subRepo.path], mainRepo.path);
+
+  await commitNewFile(
+    mainRepo,
+    path.join(subproject.directory, `two.txt`),
+    `feat(${subproject.scope}): in root after add`
+  );
+
+  await commitNewFile(mainRepo, `README.md`, `docs(root): README after add`);
+
   if (conflict) {
-    await commitNewFile(subRepo, `README.md`);
+    await commitNewFile(
+      subRepo,
+      `test.txt`,
+      `feat(${subproject.scope}): in remote after add`
+    );
   }
 
-  // TODO: use Add command
-
-  await fs.createFile(
-    path.resolve(mainRepoDir, subproject.directory, `foo.txt`)
-  );
-  await mainRepo.git(`add`, [`${subproject.directory}/foo.txt`]);
-  await mainRepo.git(`commit`, [`-m`, `feat(${subproject.scope}): foo.txt`]);
-
-  await fs.createFile(path.resolve(mainRepoDir, `README.md`));
-  await mainRepo.git(`add`, [`README.md`]);
-  await mainRepo.git(`commit`, [`-m`, `docs: README`]);
-
   return {
-    main: { repo: mainRepo, path: mainRepoDir },
-    sub: { repo: subRepo, path: subRepoDir }
+    mainRepo,
+    subRepo
   };
 }
 
-async function assert(output: string, testFiles: TestFiles): Promise<void> {
-  t.matchSnapshot(output, `output`);
-  t.matchSnapshot(
-    await testFiles.main.repo.git(`log`, [`--format=%B`]),
-    `monorepo commits`
-  );
-  let subrepoLog: string;
-  try {
-    subrepoLog = await testFiles.sub.repo.git(`log`, [`--format=%B`]);
-  } catch (e) {
-    subrepoLog = e;
-  }
-  t.matchSnapshot(subrepoLog, `subrepo commits`);
-
-  t.matchSnapshot(
-    fs.readFileSync(
-      path.resolve(testFiles.main.path, Monorepo.CONFIG_FILE_NAME),
-      `utf8`
-    ),
-    `updated config`
-  );
-}
-
+// eslint-disable-next-line @typescript-eslint/no-floating-promises
 t.test(`update command`, async t => {
   await t.test(`without remote url`, async t => {
-    const testFiles = await setup(`remote`, false);
+    const { mainRepo, subRepo } = await setup(`remote`, false);
 
-    const output = await run(
-      [`update`, subproject.directory],
-      testFiles.main.path
+    const output = await run([`update`, subproject.directory], mainRepo.path);
+
+    t.matchSnapshot(cleanSnapshot(output), `output`);
+
+    t.matchSnapshot(await graphLog(mainRepo), `monorepo commits`);
+
+    t.matchSnapshot(await graphLog(subRepo), `subrepo commits`);
+
+    t.matchSnapshot(
+      await fileSnapshot(mainRepo.path, Monorepo.CONFIG_FILE_NAME),
+      `updated config`
     );
-    await assert(output, testFiles);
-
-    t.end();
   });
 
   await t.test(`with url argument`, async t => {
     await t.test(`without conflict`, async t => {
-      const testFiles = await setup(`arg`, false);
+      const { mainRepo, subRepo } = await setup(`arg`, false);
 
       const output = await run(
-        [`update`, subproject.directory, testFiles.sub.path],
-        testFiles.main.path
+        [`update`, subproject.directory, subRepo.path],
+        mainRepo.path
       );
-      await assert(output, testFiles);
 
-      t.end();
+      t.matchSnapshot(cleanSnapshot(output), `output`);
+
+      t.matchSnapshot(await graphLog(mainRepo), `monorepo commits`);
+
+      t.matchSnapshot(await graphLog(subRepo), `subrepo commits`);
+
+      t.matchSnapshot(
+        await fileSnapshot(mainRepo.path, Monorepo.CONFIG_FILE_NAME),
+        `updated config`
+      );
     });
 
     await t.test(`with conflict`, async t => {
-      await t.test(`do nothing`, async t => {
-        const testFiles = await setup(`conflict`, false, true);
+      await t.test(`should pull`, async t => {
+        const { mainRepo, subRepo } = await setup(`conflict`, false, true);
 
         prompts.inject([false]);
 
         const output = await run(
-          [`update`, subproject.directory, testFiles.sub.path],
-          testFiles.main.path
+          [`update`, subproject.directory, subRepo.path],
+          mainRepo.path
         );
 
-        t.matchSnapshot(cleanSnapshot(output), `ouput`);
+        t.matchSnapshot(cleanSnapshot(output), `output`);
+
+        t.matchSnapshot(await graphLog(mainRepo), `monorepo commits`);
+
+        t.matchSnapshot(await graphLog(subRepo), `subrepo commits`);
+
+        t.matchSnapshot(
+          await fileSnapshot(mainRepo.path, Monorepo.CONFIG_FILE_NAME),
+          `updated config`
+        );
       });
 
-      //   await t.test(`--force`, async t => {
-      //     const testFiles = await setup(`force`, false, true);
+      await t.test(`--trust`, async t => {
+        const { mainRepo, subRepo } = await setup(`trust`, false, true);
 
-      //     const output = await run(
-      //       [`update`, subproject.directory, testFiles.sub.path, `--force`],
-      //       testFiles.main.path
-      //     );
+        const output = await run(
+          [`update`, subproject.directory, subRepo.path, `--trust`],
+          mainRepo.path
+        );
 
-      //     t.matchSnapshot(output, `ouput`);
-      //   });
+        t.matchSnapshot(cleanSnapshot(output), `output`);
 
-      //   await t.test(`--trust`, async t => {
-      //     const testFiles = await setup(`trust`, false, true);
+        t.matchSnapshot(await graphLog(mainRepo), `monorepo commits`);
 
-      //     const output = await run(
-      //       [`update`, subproject.directory, testFiles.sub.path, `--trust`],
-      //       testFiles.main.path
-      //     );
+        t.matchSnapshot(await graphLog(subRepo), `subrepo commits`);
 
-      //     t.matchSnapshot(output, `ouput`);
-      //   });
+        t.matchSnapshot(
+          await fileSnapshot(mainRepo.path, Monorepo.CONFIG_FILE_NAME),
+          `updated config`
+        );
+      });
 
-      // await t.test(`new branch`, async t => {
-      //   const testFiles = await setup(`new-branch`, false, true);
+      await t.test(`new branch`, async t => {
+        const { mainRepo, subRepo } = await setup(`new-branch`, false, true);
 
-      //   const output = await run(
-      //     [
-      //       `update`,
-      //       subproject.directory,
-      //       testFiles.sub.path,
-      //       `--branch`,
-      //       `test-branch`
-      //     ],
-      //     testFiles.main.path
-      //   );
+        const output = await run(
+          [`update`, subproject.directory, subRepo.path, `test-branch`],
+          mainRepo.path
+        );
 
-      //   t.matchSnapshot(cleanSnapshot(output), `output`);
-      // });
+        t.matchSnapshot(cleanSnapshot(output), `output`);
+
+        t.matchSnapshot(await graphLog(mainRepo), `monorepo commits`);
+
+        t.matchSnapshot(await graphLog(subRepo), `subrepo commits`);
+
+        t.matchSnapshot(
+          await fileSnapshot(mainRepo.path, Monorepo.CONFIG_FILE_NAME),
+          `updated config`
+        );
+      });
     });
   });
 
   await t.test(`with url in config and argument`, async t => {
-    const testFiles = await setup(`config-arg`, true);
+    const { mainRepo, subRepo } = await setup(`config-arg`, true);
 
     const output = await run(
-      [
-        `update`,
-        subproject.directory,
-        relativeTo(testFiles.sub.path, testFiles.main.path)
-      ],
-      testFiles.main.path
+      [`update`, subproject.directory, relativeTo(subRepo.path, mainRepo.path)],
+      mainRepo.path
     );
-    await assert(output, testFiles);
+    t.matchSnapshot(cleanSnapshot(output), `output`);
 
-    t.end();
+    t.matchSnapshot(await graphLog(mainRepo), `monorepo commits`);
+
+    t.matchSnapshot(await graphLog(subRepo), `subrepo commits`);
+
+    t.matchSnapshot(
+      await fileSnapshot(mainRepo.path, Monorepo.CONFIG_FILE_NAME),
+      `updated config`
+    );
   });
 
   await t.test(`with url in config`, async t => {
-    const testFiles = await setup(`config`, true);
+    const { mainRepo, subRepo } = await setup(`config`, true);
 
-    const output = await run(
-      [`update`, subproject.directory],
-      testFiles.main.path
+    const output = await run([`update`, subproject.directory], mainRepo.path);
+    t.matchSnapshot(cleanSnapshot(output), `output`);
+
+    t.matchSnapshot(await graphLog(mainRepo), `monorepo commits`);
+
+    t.matchSnapshot(await graphLog(subRepo), `subrepo commits`);
+
+    t.matchSnapshot(
+      await fileSnapshot(mainRepo.path, Monorepo.CONFIG_FILE_NAME),
+      `updated config`
     );
-    await assert(output, testFiles);
-
-    t.end();
   });
 });

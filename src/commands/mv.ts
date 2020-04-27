@@ -11,8 +11,7 @@ import {
 import { getProject } from "../utils/config";
 import { SubProjectConfig } from "../models/config";
 import { Monorepo } from "../models/monorepo";
-import { buildCommand } from "../utils/build-command";
-import { SPushCommand } from "./spush";
+import { runCommand } from "../utils/command";
 
 export class MvCommand extends MonorepoCommand {
   protected doc: CommandDocumentation = {
@@ -56,7 +55,7 @@ export class MvCommand extends MonorepoCommand {
 
     let projectConfig: SubProjectConfig | null = null;
     try {
-      const config = await this.monorepo.getConfig();
+      const config = this.monorepo.getConfig();
       projectConfig = getProject(config, `directory`, oldDir);
     } catch (e) {
       notice(``, `no project config available for ${oldDir}`);
@@ -115,7 +114,6 @@ from ${oldDir} to ${newDir}`
 
     // Update subtree remote repository
 
-    const update = buildCommand(`spush`) as SPushCommand;
-    await update.run([newDir, projectConfig.url]);
+    await runCommand(`spush`, [newDir, projectConfig.url]);
   }
 }

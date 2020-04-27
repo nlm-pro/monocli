@@ -53,7 +53,7 @@ useful for release scripts and incremental builds
       const validTags = (
         await this.monorepo.repository.git(`tag`, [`--contains`, latestCommit])
       ).split(`\n`);
-      releaseTags = validTags.filter(tag => tag.match(semver));
+      releaseTags = validTags.filter(tag => semver.exec(tag));
     } else {
       const validTag = await this.monorepo.repository.git(`tag`, [
         tag,

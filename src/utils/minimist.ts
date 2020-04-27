@@ -277,7 +277,7 @@ export function minimist(
           parsing = false;
           continue;
         }
-        if (arg.indexOf(`=`) > -1) {
+        if (arg.includes(`=`)) {
           const tokens = arg.split(`=`);
           args.setFlag(tokens[0].substr(2), tokens[1], arg, true);
         } else if (
@@ -320,7 +320,7 @@ export function minimist(
                 `-` + arg.substr(j, 1)
               );
               break;
-            } else if (j + 1 < arg.length && arg[j + 1].indexOf(`=`) > -1) {
+            } else if (j + 1 < arg.length && arg[j + 1].includes(`=`)) {
               args.setFlag(
                 arg.substr(j, 1),
                 arg.substr(j + 2),

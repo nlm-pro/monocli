@@ -1,11 +1,10 @@
-/* eslint-disable quotes */
-import t = require("tap");
 import * as path from "path";
+import * as t from "tap";
 import * as fs from "fs-extra";
 import { run, testDir, makeGitRepo, runBin } from "../../common";
 import { ExitError } from "../../../src/models/errors";
-/* eslint-enable quotes */
 
+// eslint-disable-next-line @typescript-eslint/no-floating-promises
 t.test(`check command`, async t => {
   await t.test(`released`, async t => {
     const root = path.resolve(testDir, `released`);
@@ -65,7 +64,5 @@ t.test(`check command`, async t => {
     const { stderr } = await runBin(`check`, [project], root);
 
     t.matchSnapshot(stderr, `bin output`);
-
-    t.end();
   });
 });

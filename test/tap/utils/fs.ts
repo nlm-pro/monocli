@@ -4,6 +4,8 @@ import * as fs from "fs-extra";
 import { ensureNotEmptyDir } from "../../../src/utils/fs";
 import { testDir } from "../../common";
 
+/* eslint-disable @typescript-eslint/no-floating-promises */
+
 test(`fs utils`, t => {
   t.test(`ensureNotEmptyDir()`, t => {
     t.test(`empty directory`, t => {

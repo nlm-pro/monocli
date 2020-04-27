@@ -107,7 +107,7 @@ export class Repository {
       submodules.set(path, { name, url });
     }
 
-    return submodules as Map<string, Submodule>;
+    return submodules;
   }
 
   async deleteSubmodule(directory: string): Promise<void> {

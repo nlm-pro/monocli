@@ -1,17 +1,14 @@
 import * as stream from "stream";
 import * as path from "path";
 import * as fs from "fs-extra";
+import * as log from "npmlog";
 import { teardown } from "tap";
 import { spawn, ChildProcessPromise } from "promisify-child-process";
 import { commandName } from "../src/commands";
 import { Repository } from "../src/models/git";
-import { run as runCommand } from "../src/index";
+import { main } from "../src/cli";
 import { chdir } from "../src/utils/fs";
 import * as Logger from "../src/utils/log";
-
-/* eslint-disable quotes */
-import log = require("npmlog");
-/* eslint-enable quotes */
 
 if (typeof require.main === `undefined`) {
   throw new Error(`not a tap test`);
@@ -26,11 +23,11 @@ const debugStream = new stream.Writable({
   }
 });
 
-log.stream = debugStream;
+(log as any).stream = debugStream;
 
-const main = require.main.filename;
-const testName = path.basename(main, `.ts`);
-export const testDir = path.resolve(path.dirname(main), testName);
+const filename = require.main.filename;
+const testName = path.basename(filename, `.ts`);
+export const testDir = path.resolve(path.dirname(filename), testName);
 
 fs.removeSync(testDir);
 fs.mkdirpSync(testDir);
@@ -46,6 +43,7 @@ teardown(() => {
     // work around windows folder locking
     process.chdir(returnCwd);
     try {
+      // eslint-disable-next-line no-process-env
       if (!process.env.NO_TEST_CLEANUP) {
         fs.removeSync(testDir);
       }
@@ -57,6 +55,7 @@ teardown(() => {
   });
 });
 
+// eslint-disable-next-line no-process-env
 export const nodeBin = process.env.NODE || process.execPath;
 
 // eslint-disable-next-line quotes
@@ -79,7 +78,7 @@ export async function run(args: string[], root = testDir): Promise<string> {
     }
   });
 
-  await runCommand(args, root, wStream);
+  await main(args, root, wStream);
 
   return result.join(``).trim();
 }
@@ -111,7 +110,7 @@ export async function makeGitRepo({
   return repo;
 }
 
-export async function cloneRepo(from: string, to: string) {
+export async function cloneRepo(from: string, to: string): Promise<Repository> {
   fs.ensureDirSync(to);
   const repo = new Repository(to);
   await repo.git(`clone`, [`--reference`, from, `--`, from, `.`]);
@@ -148,13 +147,28 @@ export async function commitNewFile(
 }
 
 export function cleanSnapshot(input: string): string {
-  input = input.replace(/[\dabcdef]{7}([\dabcdef]{33})/g, `[[COMMIT HASH]]`);
+  input = input.replace(/[\dabcdef]{40}/g, `[[COMMIT HASH]]`);
   input = input.replace(/\d{13}/g, `[[TIMESTAMP]]`);
+  input = input.replace(/[\dabcdef]{7}/g, `[[COMMIT HASH]]`);
   // FIXME: Windows compatibility
   input = input.replace(/\/[\w-_/]*\/monocli\/test/g, `[[TEST DIRECTORY]]`);
   input = input.replace(/\/tmp\/monocli/g, `[[TMP DIRECTORY]]`);
 
   return input;
+}
+
+export async function fileSnapshot(
+  directory: string,
+  filename: string
+): Promise<string> {
+  const pathToFile = path.resolve(directory, filename);
+  if (!(await fs.pathExists(pathToFile))) {
+    return cleanSnapshot(`${pathToFile} do not exist`);
+  }
+
+  const content = await fs.readFile(path.resolve(directory, filename), `utf8`);
+
+  return cleanSnapshot(content);
 }
 
 export async function graphLog(repository: Repository): Promise<string> {
@@ -173,6 +187,7 @@ export async function graphLog(repository: Repository): Promise<string> {
   return cleanSnapshot(commits);
 }
 
+// TODO: remove
 export interface TestRepo {
   repo: Repository;
   path: string;

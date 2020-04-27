@@ -103,8 +103,9 @@ async function assert(output: string, testFiles: TestFiles): Promise<void> {
   );
 }
 
+// eslint-disable-next-line @typescript-eslint/no-floating-promises
 t.test(`spush command`, async t => {
-  await t.test(`without remote url`, async t => {
+  await t.test(`without remote url`, async () => {
     const testFiles = await setup(`remote`, false);
 
     const output = await run(
@@ -112,12 +113,10 @@ t.test(`spush command`, async t => {
       testFiles.main.path
     );
     await assert(output, testFiles);
-
-    t.end();
   });
 
   await t.test(`with url argument`, async t => {
-    await t.test(`without conflict`, async t => {
+    await t.test(`without conflict`, async () => {
       const testFiles = await setup(`arg`, false);
 
       const output = await run(
@@ -125,8 +124,6 @@ t.test(`spush command`, async t => {
         testFiles.main.path
       );
       await assert(output, testFiles);
-
-      t.end();
     });
 
     await t.test(`with conflict`, async t => {
@@ -147,13 +144,7 @@ t.test(`spush command`, async t => {
         const testFiles = await setup(`new-branch`, false, true);
 
         const output = await run(
-          [
-            `spush`,
-            subproject.directory,
-            testFiles.sub.path,
-            `--branch`,
-            `test-branch`
-          ],
+          [`spush`, subproject.directory, testFiles.sub.path, `test-branch`],
           testFiles.main.path
         );
 
@@ -162,7 +153,7 @@ t.test(`spush command`, async t => {
     });
   });
 
-  await t.test(`with url in config and argument`, async t => {
+  await t.test(`with url in config and argument`, async () => {
     const testFiles = await setup(`config-arg`, true);
 
     const output = await run(
@@ -174,11 +165,9 @@ t.test(`spush command`, async t => {
       testFiles.main.path
     );
     await assert(output, testFiles);
-
-    t.end();
   });
 
-  await t.test(`with url in config`, async t => {
+  await t.test(`with url in config`, async () => {
     const testFiles = await setup(`config`, true);
 
     const output = await run(
@@ -186,7 +175,5 @@ t.test(`spush command`, async t => {
       testFiles.main.path
     );
     await assert(output, testFiles);
-
-    t.end();
   });
 });

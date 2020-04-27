@@ -10,7 +10,7 @@ import {
   cleanSnapshot
 } from "../../common";
 import { AddCommand } from "../../../src/commands";
-import { buildCommand } from "../../../src/utils/build-command";
+import { buildCommand } from "../../../src/utils/command";
 import { Repository } from "../../../src/models/git";
 import { CommandOptionError } from "../../../src/models/errors";
 import { SubProjectConfig } from "../../../src/models/config";
@@ -21,7 +21,7 @@ async function setupMonorepo(id: string): Promise<Repository> {
   const root = path.resolve(testDir, `prepare-submodule`, id);
   const monoDir = path.resolve(root, `mono`);
   await fs.mkdirp(monoDir);
-  fs.createFile(path.resolve(monoDir, `README.md`));
+  await fs.createFile(path.resolve(monoDir, `README.md`));
   const monorepo = await makeGitRepo({
     root: monoDir,
     added: [`README.md`]
@@ -70,10 +70,11 @@ async function setupSubmodule(
   return directory;
 }
 
+// eslint-disable-next-line @typescript-eslint/no-floating-promises
 t.test(`add command`, async t => {
   await t.test(`prepareSubmodule()`, async t => {
-    t.test(`with submodule`, async t => {
-      t.test(`without url option`, async t => {
+    await t.test(`with submodule`, async t => {
+      await t.test(`without url option`, async t => {
         const monorepo = await setupMonorepo(`sub-no-url`);
         const remoteRepo = await setupRemoteProject(monorepo);
         const submoduleDirectory = await setupSubmodule(
@@ -106,7 +107,7 @@ t.test(`add command`, async t => {
         );
       });
 
-      t.test(`with url option`, async t => {
+      await t.test(`with url option`, async t => {
         const monorepo = await setupMonorepo(`sub-with-url`);
         const remoteRepo = await setupRemoteProject(monorepo);
         const submoduleDirectory = await setupSubmodule(
@@ -129,8 +130,8 @@ t.test(`add command`, async t => {
       });
     });
 
-    t.test(`without submodule`, async t => {
-      t.test(`without url option`, async t => {
+    await t.test(`without submodule`, async t => {
+      await t.test(`without url option`, async t => {
         const monorepo = await setupMonorepo(`no-url`);
         const directory = path.join(`packages`, `subproject`);
         const cmd = buildCommand(`add`, monorepo.path) as AddCommand;
@@ -144,7 +145,7 @@ t.test(`add command`, async t => {
         );
       });
 
-      t.test(`with url option`, async t => {
+      await t.test(`with url option`, async t => {
         const monorepo = await setupMonorepo(`with-url`);
 
         const directory = path.join(`packages`, `subproject`);
@@ -177,8 +178,8 @@ t.test(`add command`, async t => {
     await monorepo.addProjectConfig(config);
     const cmd = buildCommand(`add`, repo.path) as AddCommand;
 
-    t.rejects(
-      cmd.checkProject(config.directory),
+    t.throw(
+      () => cmd.checkProject(config.directory),
       new CommandOptionError(
         `directory`,
         `a project was already added for this directory`

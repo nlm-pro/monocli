@@ -6,7 +6,7 @@ import * as Logging from "./utils/log";
 import { chdir } from "./utils/fs";
 import * as prompt from "./utils/prompt";
 
-export async function run(
+export async function main(
   argv: string[],
   directory?: string,
   output?: Writable
@@ -17,7 +17,7 @@ export async function run(
     Logging.init(args[1].get(`debug`) ? `silly` : `notice`, output);
     prompt.setOutput(output || process.stdout);
 
-    const main = new MainCommand();
+    const main = new MainCommand(true);
     await main.run(...args);
   } catch (e) {
     errorsGlobalHandler(e);

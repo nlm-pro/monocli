@@ -1,5 +1,5 @@
 import { resolve, basename } from "path";
-import { existsSync, mkdirp, ensureDirSync, rmdir, rmdirSync } from "fs-extra";
+import { existsSync, mkdirp, rmdirSync } from "fs-extra";
 import * as log from "npmlog";
 import { MonorepoCommand } from "../models/monorepo-command";
 import { CommandDocumentation } from "../models/documentation";
@@ -78,7 +78,7 @@ Behavior depends on what the <path> directory contains and if you provided an [u
   ): Promise<void> {
     const directory = relativeTo(path, this.monorepo.root.path);
 
-    await this.checkProject(directory);
+    this.checkProject(directory);
 
     const { urls, isSubmodule } = await this.prepareSubmodule(
       directory,
@@ -104,7 +104,7 @@ Behavior depends on what the <path> directory contains and if you provided an [u
         await this.rewriteHistory(
           cloneRepo,
           scope,
-          !options.get(`trust`),
+          options.get(`trust`) === true,
           subprojectBranch
         );
       } else {
@@ -120,8 +120,12 @@ Behavior depends on what the <path> directory contains and if you provided an [u
           `git`,
           `push from ${cloneRepo.path} to ${urls.remote}/${subprojectBranch} failed`
         );
-        const forcePush =
-          options.get(`trust`) || confirm(`Force push to ${subprojectBranch}?`);
+        let forcePush = options.get(`trust`);
+
+        if (!options.get(`trust`) && this.isInteractive) {
+          forcePush = await confirm(`Force push to ${subprojectBranch}?`);
+        }
+
         if (forcePush) {
           log.notice(`git`, `force push to ${urls.remote}/${subprojectBranch}`);
           await cloneRepo.git(`push`, [`subrepo`, subprojectBranch, `--force`]);
@@ -212,8 +216,8 @@ Behavior depends on what the <path> directory contains and if you provided an [u
     };
   }
 
-  async checkProject(directory: string): Promise<void> {
-    const config = await this.monorepo.getConfig();
+  checkProject(directory: string): void {
+    const config = this.monorepo.getConfig();
 
     let project: SubProjectConfig | null = null;
 
@@ -256,7 +260,7 @@ Behavior depends on what the <path> directory contains and if you provided an [u
   async rewriteHistory(
     repo: Repository,
     scope: string,
-    interactive: boolean,
+    trust: boolean,
     branch: string
   ): Promise<void> {
     const commits = (await repo.git(`rev-list`, [`--all`, `--reverse`])).split(
@@ -281,7 +285,7 @@ Behavior depends on what the <path> directory contains and if you provided an [u
           commit
         ]);
       } catch (e) {
-        if (interactive) {
+        if (!trust && this.isInteractive) {
           log.error(`rewrite`, e);
 
           log.info(
@@ -320,7 +324,7 @@ Behavior depends on what the <path> directory contains and if you provided an [u
 
       await repo.git(`commit`, [`-m`, message, `--allow-empty`]);
 
-      if (interactive) {
+      if (!trust && this.isInteractive) {
         output(message);
 
         const isMsgOk = await confirm(

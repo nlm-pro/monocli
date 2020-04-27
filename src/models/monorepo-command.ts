@@ -38,14 +38,11 @@ export abstract class MonorepoCommand extends Command {
    *
    * @throws {@link CommandOptionError} if `url` conflicts with the monocli config or no url can be used
    */
-  async getProjectRemote(
-    directory: string,
-    url: string
-  ): Promise<ProjectRemoteInformation> {
+  getProjectRemote(directory: string, url: string): ProjectRemoteInformation {
     let projectConfig: SubProjectConfig | null = null;
 
     try {
-      const config = await this.monorepo.getConfig();
+      const config = this.monorepo.getConfig();
       projectConfig = getProject(config, `directory`, directory);
       if (projectConfig) {
         silly(`config`, `project: %s`, projectConfig);
@@ -69,7 +66,7 @@ export abstract class MonorepoCommand extends Command {
     }
 
     let remoteUrl = projectConfig?.url || url;
-    if (remoteUrl.match(/^\.\.?\/?/)) {
+    if (/^\.\.?\/?/.exec(remoteUrl)) {
       remoteUrl = absolute(remoteUrl);
     }
 

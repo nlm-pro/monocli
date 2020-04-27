@@ -8,6 +8,7 @@ function setup(): void {
   chdir(testDir);
 }
 
+// eslint-disable-next-line @typescript-eslint/no-floating-promises
 test(`relativeTo()`, t => {
   setup();
   t.equal(relativeTo(`/foo`, `/bar`), `../foo`, `two absolutes`);
@@ -20,6 +21,7 @@ test(`relativeTo()`, t => {
   t.end();
 });
 
+// eslint-disable-next-line @typescript-eslint/no-floating-promises
 test(`absolute()`, t => {
   setup();
   t.equal(absolute(`/foo`), `/foo`, `absolute doesn't change`);

@@ -11,42 +11,37 @@ import { confirm } from "../utils/prompt";
 export class SPushCommand extends MonorepoCommand {
   protected doc: CommandDocumentation = {
     name: `spush`,
-    usage: `<directory> [url]`,
+    usage: `<directory> [url] [branch]`,
     description: `update (push to) the remote "subtree" repo associated to <directory>`,
-    details: ``,
+    details: `
+url: url of the subtree remote (default: from config if exists)
+branch: name of the destination branch in the subtree remote (default: master)
+    `,
     options: new Map<string, CommandOptionConfig>([
       [
         `force`,
         {
           type: `boolean`,
-          description: `Force push to the remote repository. Use with caution!`
-        }
-      ],
-      [
-        `branch`,
-        {
-          type: `string`,
-          description: `name of the remote branch you would want to push to`,
-          defaultValue: `master`
+          description: `Force push (with lease) to the remote repository. Use with caution!`
         }
       ]
     ])
   };
 
   async run(
-    [directory, url]: [string, string],
+    [directory, url, branch]: [string, string, string],
     options: Map<string, cmdOption> = new Map()
   ): Promise<string | void> {
     this.validateDirectory(directory);
 
     silly(`path`, directory);
 
-    const config = await this.getProjectRemote(directory, url);
+    const config = this.getProjectRemote(directory, url);
 
     await this.pushSubtree(
       config,
       directory,
-      (options.get(`branch`) as string) || `master`,
+      branch || `master`,
       options.get(`trust`) !== true,
       options.get(`force`) === true
     );
@@ -83,7 +78,7 @@ export class SPushCommand extends MonorepoCommand {
     config: { id: string; remoteUrl: string },
     directory: string,
     branch: string,
-    interactive: boolean,
+    trust: boolean,
     force: boolean
   ): Promise<void> {
     const splitBranch = `monocli-spush-${config.id}`;
@@ -107,25 +102,23 @@ export class SPushCommand extends MonorepoCommand {
       await cloneRepo.git(`push`, [`origin`, branch]);
       notice(``, `remote subrepo successfully updated`);
     } catch (e) {
-      error(`git`, `Push to ${config.remoteUrl} ${branch} branch failed!`);
-      error(`git`, e.message);
+      if (this.isInteractive) {
+        error(`git`, `Push to ${config.remoteUrl} ${branch} branch failed!`);
+        error(`git`, e.message);
+      }
 
       let forcePush = force;
 
-      if (interactive) {
+      if (!trust && !force && this.isInteractive) {
         forcePush = await confirm(`Force push?`);
-      } else {
-        // "interactive" only reflects the --trust option here
-        forcePush = true;
       }
 
       if (forcePush) {
         await cloneRepo.git(`push`, [`origin`, branch, `--force-with-lease`]);
         notice(``, `remote subrepo successfully updated`);
       } else {
-        notice(
-          `git`,
-          `Go to ${cloneRepo.path} in order to resolve this conflict, or re-run this command with the --force option.`
+        throw Error(
+          `Push to ${config.remoteUrl} ${branch} branch failed! Go to ${cloneRepo.path} in order to resolve this conflict.`
         );
       }
     }

@@ -11,10 +11,10 @@ try {
   process.title = "monocli";
 }
 
-const monocli = require("../dist/index");
+const monocli = require("../dist/cli");
 const { ExitError } = require("../dist/models/errors");
 
-monocli.run(process.argv.slice(2)).catch(e => {
+monocli.main(process.argv.slice(2)).catch(e => {
   if (e instanceof ExitError) {
     console.error(e.message);
     console.error();

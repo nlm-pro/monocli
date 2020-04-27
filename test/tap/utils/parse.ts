@@ -1,6 +1,7 @@
 import { test } from "tap";
 import { parse } from "../../../src/utils/parse";
 
+// eslint-disable-next-line @typescript-eslint/no-floating-promises
 test(`parse()`, t => {
   const parsed = parse([`cmd`, `--foo=bar`, `-b`, `--baz`, `--num=42`]);
   t.same(parsed[0], [`cmd`], `command name`);
