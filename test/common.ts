@@ -157,6 +157,20 @@ export function cleanSnapshot(input: string): string {
   return input;
 }
 
+export async function fileSnapshot(
+  directory: string,
+  filename: string
+): Promise<string> {
+  const pathToFile = path.resolve(directory, filename);
+  if (!(await fs.pathExists(pathToFile))) {
+    return cleanSnapshot(`${pathToFile} do not exist`);
+  }
+
+  const content = await fs.readFile(path.resolve(directory, filename), `utf8`);
+
+  return cleanSnapshot(content);
+}
+
 export async function graphLog(repository: Repository): Promise<string> {
   let commits = `NONE`;
   try {
@@ -173,6 +187,7 @@ export async function graphLog(repository: Repository): Promise<string> {
   return cleanSnapshot(commits);
 }
 
+// TODO: remove
 export interface TestRepo {
   repo: Repository;
   path: string;
