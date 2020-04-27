@@ -1,5 +1,5 @@
 import { resolve, basename } from "path";
-import { existsSync, mkdirp, ensureDirSync, rmdir, rmdirSync } from "fs-extra";
+import { existsSync, mkdirp, rmdirSync } from "fs-extra";
 import * as log from "npmlog";
 import { MonorepoCommand } from "../models/monorepo-command";
 import { CommandDocumentation } from "../models/documentation";
@@ -78,7 +78,7 @@ Behavior depends on what the <path> directory contains and if you provided an [u
   ): Promise<void> {
     const directory = relativeTo(path, this.monorepo.root.path);
 
-    await this.checkProject(directory);
+    this.checkProject(directory);
 
     const { urls, isSubmodule } = await this.prepareSubmodule(
       directory,
@@ -212,8 +212,8 @@ Behavior depends on what the <path> directory contains and if you provided an [u
     };
   }
 
-  async checkProject(directory: string): Promise<void> {
-    const config = await this.monorepo.getConfig();
+  checkProject(directory: string): void {
+    const config = this.monorepo.getConfig();
 
     let project: SubProjectConfig | null = null;
 

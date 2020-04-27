@@ -55,7 +55,7 @@ export class MvCommand extends MonorepoCommand {
 
     let projectConfig: SubProjectConfig | null = null;
     try {
-      const config = await this.monorepo.getConfig();
+      const config = this.monorepo.getConfig();
       projectConfig = getProject(config, `directory`, oldDir);
     } catch (e) {
       notice(``, `no project config available for ${oldDir}`);

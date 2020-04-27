@@ -178,8 +178,8 @@ t.test(`add command`, async t => {
     await monorepo.addProjectConfig(config);
     const cmd = buildCommand(`add`, repo.path) as AddCommand;
 
-    t.rejects(
-      cmd.checkProject(config.directory),
+    t.throw(
+      () => cmd.checkProject(config.directory),
       new CommandOptionError(
         `directory`,
         `a project was already added for this directory`

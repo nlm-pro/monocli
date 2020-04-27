@@ -3,7 +3,7 @@ import * as NPrompt from "prompts";
 
 let stdout: Writable;
 
-export function setOutput(stream: Writable) {
+export function setOutput(stream: Writable): void {
   stdout = stream;
 }
 

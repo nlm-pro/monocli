@@ -1,7 +1,7 @@
 import * as log from "npmlog";
 import { MonorepoCommand } from "../models/monorepo-command";
 import { CommandDocumentation } from "../models/documentation";
-import { cmdOption, CommandOptionConfig } from "../models/options";
+import { CommandOptionConfig } from "../models/options";
 
 export class SPullCommand extends MonorepoCommand {
   protected doc: CommandDocumentation = {
@@ -13,12 +13,11 @@ export class SPullCommand extends MonorepoCommand {
     options: new Map<string, CommandOptionConfig>()
   };
 
-  async run(
-    [directory, urlOption, branch]: [string, string, string],
-    options: Map<string, cmdOption> = new Map()
-  ): Promise<string | void> {
+  async run([directory, urlOption, branch]: [string, string, string]): Promise<
+    string | void
+  > {
     branch = branch || `master`;
-    const { remoteUrl } = await this.getProjectRemote(directory, urlOption);
+    const { remoteUrl } = this.getProjectRemote(directory, urlOption);
     // TODO: check for existing remote
     try {
       await this.monorepo.repository.git(`subtree`, [

@@ -18,6 +18,7 @@ If the command name is not provided, or does not exist, then show the main docum
     options: new Map()
   };
 
+  // eslint-disable-next-line @typescript-eslint/require-await
   async run([cmdName]: [commandName]): Promise<void> {
     let message = `no help available for this`;
     log.silly(`help`, cmdName || `none`);

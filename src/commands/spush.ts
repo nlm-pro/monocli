@@ -36,7 +36,7 @@ branch: name of the destination branch in the subtree remote (default: master)
 
     silly(`path`, directory);
 
-    const config = await this.getProjectRemote(directory, url);
+    const config = this.getProjectRemote(directory, url);
 
     await this.pushSubtree(
       config,

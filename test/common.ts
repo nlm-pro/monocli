@@ -1,6 +1,7 @@
 import * as stream from "stream";
 import * as path from "path";
 import * as fs from "fs-extra";
+import * as log from "npmlog";
 import { teardown } from "tap";
 import { spawn, ChildProcessPromise } from "promisify-child-process";
 import { commandName } from "../src/commands";
@@ -8,10 +9,6 @@ import { Repository } from "../src/models/git";
 import { main } from "../src/index";
 import { chdir } from "../src/utils/fs";
 import * as Logger from "../src/utils/log";
-
-/* eslint-disable quotes */
-import log = require("npmlog");
-/* eslint-enable quotes */
 
 if (typeof require.main === `undefined`) {
   throw new Error(`not a tap test`);
@@ -26,7 +23,7 @@ const debugStream = new stream.Writable({
   }
 });
 
-log.stream = debugStream;
+(log as any).stream = debugStream;
 
 const filename = require.main.filename;
 const testName = path.basename(filename, `.ts`);
@@ -113,7 +110,7 @@ export async function makeGitRepo({
   return repo;
 }
 
-export async function cloneRepo(from: string, to: string) {
+export async function cloneRepo(from: string, to: string): Promise<Repository> {
   fs.ensureDirSync(to);
   const repo = new Repository(to);
   await repo.git(`clone`, [`--reference`, from, `--`, from, `.`]);
