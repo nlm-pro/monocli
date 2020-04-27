@@ -1,6 +1,6 @@
 # Changelog
 
-All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
+All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines. For more details, see the associated [releases](https://github.com/noelmace/monocli/releases) on GitHub.
 
 ## [0.5.0-beta.1](https://github.com/noelmace/monocli/compare/v0.4.4...v0.5.0-beta.1) (2020-04-27)
 
