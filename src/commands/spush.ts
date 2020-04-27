@@ -11,30 +11,25 @@ import { confirm } from "../utils/prompt";
 export class SPushCommand extends MonorepoCommand {
   protected doc: CommandDocumentation = {
     name: `spush`,
-    usage: `<directory> [url]`,
+    usage: `<directory> [url] [branch]`,
     description: `update (push to) the remote "subtree" repo associated to <directory>`,
-    details: ``,
+    details: `
+url: url of the subtree remote (default: from config if exists)
+branch: name of the destination branch in the subtree remote (default: master)
+    `,
     options: new Map<string, CommandOptionConfig>([
       [
         `force`,
         {
           type: `boolean`,
-          description: `Force push to the remote repository. Use with caution!`
-        }
-      ],
-      [
-        `branch`,
-        {
-          type: `string`,
-          description: `name of the remote branch you would want to push to`,
-          defaultValue: `master`
+          description: `Force push (with lease) to the remote repository. Use with caution!`
         }
       ]
     ])
   };
 
   async run(
-    [directory, url]: [string, string],
+    [directory, url, branch]: [string, string, string],
     options: Map<string, cmdOption> = new Map()
   ): Promise<string | void> {
     this.validateDirectory(directory);
@@ -46,7 +41,7 @@ export class SPushCommand extends MonorepoCommand {
     await this.pushSubtree(
       config,
       directory,
-      (options.get(`branch`) as string) || `master`,
+      branch || `master`,
       options.get(`trust`) !== true,
       options.get(`force`) === true
     );

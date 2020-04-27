@@ -80,14 +80,16 @@ update (pull) <directory> subtree from a remote repo
 `
 
 exports[`test/tap/commands/help.ts TAP > spush 1`] = `
-Usage: monocli spush <directory> [url] [options]
+Usage: monocli spush <directory> [url] [branch] [options]
 
 update (push to) the remote "subtree" repo associated to <directory>
 
+url: url of the subtree remote (default: from config if exists)
+branch: name of the destination branch in the subtree remote (default: master)
+    
 
 Options:
-  --force       <boolean>  Force push to the remote repository. Use with caution!  (default: false)
-  --branch      <string>   name of the remote branch you would want to push to  (default: "master")
+  --force       <boolean>  Force push (with lease) to the remote repository. Use with caution!  (default: false)
 `
 
 exports[`test/tap/commands/help.ts TAP > status 1`] = `

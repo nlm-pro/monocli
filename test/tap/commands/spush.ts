@@ -147,13 +147,7 @@ t.test(`spush command`, async t => {
         const testFiles = await setup(`new-branch`, false, true);
 
         const output = await run(
-          [
-            `spush`,
-            subproject.directory,
-            testFiles.sub.path,
-            `--branch`,
-            `test-branch`
-          ],
+          [`spush`, subproject.directory, testFiles.sub.path, `test-branch`],
           testFiles.main.path
         );
 

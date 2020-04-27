@@ -5,6 +5,22 @@
  * Make sure to inspect the output below.  Do not ignore changes!
  */
 'use strict'
+exports[`test/tap/commands/mv.ts TAP mv command with remote > must match snapshot 1`] = `
+*    (HEAD -> monocli-mv-one) Merge commit [[COMMIT HASH]] into monocli-mv-one
+|\\  
+| *  Squashed new-one/ changes from [[COMMIT HASH]]..[[COMMIT HASH]]
+* |  Split new-one/ into commit [[COMMIT HASH]]
+|\\| 
+* |  build: mv one via monocli
+* |  (master) feat(two): bar.txt
+* |  feat(one): foo.txt
+* |  stub repo
+ /  
+| *  (monocli-spush-one-[[TIMESTAMP]]) Merge commit [[COMMIT HASH]] into monocli-mv-one
+|/| 
+| *  (monocli-spush-one-[[TIMESTAMP]]) feat(one): foo.txt
+*  build: mv one via monocli
+`
 
 exports[`test/tap/commands/mv.ts TAP mv command with remote > output 1`] = `
 monocli notice files moved
