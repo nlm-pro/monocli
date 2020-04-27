@@ -2,6 +2,37 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.5.0-beta.1](https://github.com/noelmace/monocli/compare/v0.4.4...v0.5.0-beta.1) (2020-04-27)
+
+
+### ⚠ BREAKING CHANGES
+
+* **add:** the `add` command is now interactive.
+You need to use the `--trust` option in order to force push by default
+as before, or you'll get a confirm prompt if there is any conflict.
+* when using the `add` command, you should now use
+a `--trust` option instead of `--yes`
+
+before: `monocli add myproj --rewrite --yes`
+
+after: `monocli add myproj --rewrite --trust`
+
+### Features
+
+* **add:** new branch option ([c352e81](https://github.com/noelmace/monocli/commit/c352e813f341776f3822a1185f86eb0e9762519d))
+* **spush:** save branch before force push ([b78cd75](https://github.com/noelmace/monocli/commit/b78cd759233eef3fa76bbf17814e76f0ee26ed66))
+* **update:** pull if push failed ([c2ae3cf](https://github.com/noelmace/monocli/commit/c2ae3cf786e06caa309efdeb04aa13d4dc91195e))
+* new spush and spull commands ([6e6a0cf](https://github.com/noelmace/monocli/commit/6e6a0cf15a501a21da52e65abcdfdc89f0be6508))
+
+
+### Bug Fixes
+
+* **add:** do not force push by default ([4467db9](https://github.com/noelmace/monocli/commit/4467db94b15085d097b5a3db6cf81e7112014056))
+* **spush:** options consistency with spull ([2843b37](https://github.com/noelmace/monocli/commit/2843b37a7174f9cff49e828ad5d66030a7611309))
+
+
+* global --trust option ([4b840c3](https://github.com/noelmace/monocli/commit/4b840c3cf2be8a9763000596e4f29903c3d7f5fd))
+
 ### [0.4.4](https://github.com/noelmace/monocli/compare/v0.4.3...v0.4.4) (2020-04-26)
 
 
