@@ -1,5 +1,5 @@
 import { remove, ensureDir } from "fs-extra";
-import { buildCommand } from "../utils/build-command";
+import { buildCommand } from "../utils/command";
 import { commandName, commandsMap } from "../commands";
 import { CommandDocumentation } from "./documentation";
 import { cmdOption } from "./options";

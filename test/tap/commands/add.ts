@@ -10,7 +10,7 @@ import {
   cleanSnapshot
 } from "../../common";
 import { AddCommand } from "../../../src/commands";
-import { buildCommand } from "../../../src/utils/build-command";
+import { buildCommand } from "../../../src/utils/command";
 import { Repository } from "../../../src/models/git";
 import { CommandOptionError } from "../../../src/models/errors";
 import { SubProjectConfig } from "../../../src/models/config";

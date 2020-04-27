@@ -5,7 +5,7 @@ import { teardown } from "tap";
 import { spawn, ChildProcessPromise } from "promisify-child-process";
 import { commandName } from "../src/commands";
 import { Repository } from "../src/models/git";
-import { run as runCommand } from "../src/index";
+import { main } from "../src/index";
 import { chdir } from "../src/utils/fs";
 import * as Logger from "../src/utils/log";
 
@@ -28,9 +28,9 @@ const debugStream = new stream.Writable({
 
 log.stream = debugStream;
 
-const main = require.main.filename;
-const testName = path.basename(main, `.ts`);
-export const testDir = path.resolve(path.dirname(main), testName);
+const filename = require.main.filename;
+const testName = path.basename(filename, `.ts`);
+export const testDir = path.resolve(path.dirname(filename), testName);
 
 fs.removeSync(testDir);
 fs.mkdirpSync(testDir);
@@ -79,7 +79,7 @@ export async function run(args: string[], root = testDir): Promise<string> {
     }
   });
 
-  await runCommand(args, root, wStream);
+  await main(args, root, wStream);
 
   return result.join(``).trim();
 }

@@ -6,7 +6,7 @@ import * as Logging from "./utils/log";
 import { chdir } from "./utils/fs";
 import * as prompt from "./utils/prompt";
 
-export async function run(
+export async function main(
   argv: string[],
   directory?: string,
   output?: Writable

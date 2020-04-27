@@ -1,8 +1,7 @@
 import { MonorepoCommand } from "../models/monorepo-command";
 import { CommandDocumentation } from "../models/documentation";
 import { cmdOption, CommandOptionConfig } from "../models/options";
-import { buildCommand } from "../utils/build-command";
-import { SPushCommand } from "./spush";
+import { runCommand } from "../utils/command";
 
 export class UpdateCommand extends MonorepoCommand {
   protected doc: CommandDocumentation = {
@@ -18,10 +17,8 @@ export class UpdateCommand extends MonorepoCommand {
     [directory, url]: [string, string],
     options: Map<string, cmdOption> = new Map()
   ): Promise<string | void> {
-    const spush = buildCommand(`spush`) as SPushCommand;
-    const spushOptions = await spush.validate([directory, url], options);
-    spushOptions.set(`force`, true);
-    spushOptions.set(`branch`, `master`);
-    await spush.run([directory, url], spushOptions);
+    options.set(`force`, true);
+    options.set(`branch`, `master`);
+    await runCommand(`spush`, [directory, url], options);
   }
 }
