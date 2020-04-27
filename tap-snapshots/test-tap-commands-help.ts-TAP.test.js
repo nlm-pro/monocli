@@ -116,7 +116,7 @@ Options:
 `
 
 exports[`test/tap/commands/help.ts TAP > update 1`] = `
-Usage: monocli update <directory> [url] 
+Usage: monocli update <directory> [url] [branch] 
 
 update (push) the subtree associated to <directory>
 alias of the spush command with --force and --branch=master

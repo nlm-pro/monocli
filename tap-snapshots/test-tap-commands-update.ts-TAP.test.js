@@ -38,19 +38,25 @@ stub repo
 `
 
 exports[`test/tap/commands/update.ts TAP > output 1`] = `
+monocli WARN spush push to subtree remote failed
+monocli notice spull pulling from subtree remote
+
 monocli ERR! url no remote url was given for subproj
 `
 
 exports[`test/tap/commands/update.ts TAP > output 2`] = `
 monocli notice remote subrepo successfully updated
+monocli notice subproj updated
 `
 
 exports[`test/tap/commands/update.ts TAP > output 3`] = `
 monocli notice remote subrepo successfully updated
+monocli notice subproj updated
 `
 
 exports[`test/tap/commands/update.ts TAP > output 4`] = `
 monocli notice remote subrepo successfully updated
+monocli notice subproj updated
 `
 
 exports[`test/tap/commands/update.ts TAP > subrepo commits 1`] = `
@@ -117,15 +123,19 @@ exports[`test/tap/commands/update.ts TAP > updated config 4`] = `
 }
 `
 
-exports[`test/tap/commands/update.ts TAP update command with url argument with conflict do nothing > ouput 1`] = `
-monocli ERR! git Push to [[TEST DIRECTORY]]/tap/commands/update/conflict/sub master branch failed!
-monocli ERR! git To [[TMP DIRECTORY]]/[[TIMESTAMP]]
-monocli ERR! git  ! [rejected]        monocli-spush-proj-[[TIMESTAMP]] -> master (fetch first)
-monocli ERR! git error: failed to push some refs to '[[TMP DIRECTORY]]/[[TIMESTAMP]]'
-monocli ERR! git hint: Updates were rejected because the remote contains work that you do
-monocli ERR! git hint: not have locally. This is usually caused by another repository pushing
-monocli ERR! git hint: to the same ref. You may want to first integrate the remote changes
-monocli ERR! git hint: (e.g., 'git pull ...') before pushing again.
-monocli ERR! git hint: See the 'Note about fast-forwards' in 'git push --help' for details.
-monocli notice git Go to [[TMP DIRECTORY]]/[[TIMESTAMP]] in order to resolve this conflict, or re-run this command with the --force option.
+exports[`test/tap/commands/update.ts TAP update command with url argument with conflict --trust > output 1`] = `
+SHOULD FAIL
+`
+
+exports[`test/tap/commands/update.ts TAP update command with url argument with conflict new branch > output 1`] = `
+monocli notice remote subrepo successfully updated
+monocli notice subproj updated
+`
+
+exports[`test/tap/commands/update.ts TAP update command with url argument with conflict should pull > commits 1`] = `
+SHOULD FAIL
+`
+
+exports[`test/tap/commands/update.ts TAP update command with url argument with conflict should pull > output 1`] = `
+SHOULD FAIL
 `

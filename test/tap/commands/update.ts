@@ -8,7 +8,8 @@ import {
   run,
   TestRepo,
   commitNewFile,
-  cleanSnapshot
+  cleanSnapshot,
+  graphLog
 } from "../../common";
 import { Config, SubProjectConfig } from "../../../src/models/config";
 import { relativeTo } from "../../../src/utils/path";
@@ -127,7 +128,7 @@ t.test(`update command`, async t => {
     });
 
     await t.test(`with conflict`, async t => {
-      await t.test(`do nothing`, async t => {
+      await t.test(`should pull`, async t => {
         const testFiles = await setup(`conflict`, false, true);
 
         prompts.inject([false]);
@@ -137,47 +138,31 @@ t.test(`update command`, async t => {
           testFiles.main.path
         );
 
-        t.matchSnapshot(cleanSnapshot(output), `ouput`);
+        t.matchSnapshot(cleanSnapshot(output), `output`);
+        t.matchSnapshot(await graphLog(testFiles.main.repo), `commits`);
       });
 
-      //   await t.test(`--force`, async t => {
-      //     const testFiles = await setup(`force`, false, true);
+      await t.test(`--trust`, async t => {
+        const testFiles = await setup(`trust`, false, true);
 
-      //     const output = await run(
-      //       [`update`, subproject.directory, testFiles.sub.path, `--force`],
-      //       testFiles.main.path
-      //     );
+        const output = await run(
+          [`update`, subproject.directory, testFiles.sub.path, `--trust`],
+          testFiles.main.path
+        );
 
-      //     t.matchSnapshot(output, `ouput`);
-      //   });
+        t.matchSnapshot(output, `output`);
+      });
 
-      //   await t.test(`--trust`, async t => {
-      //     const testFiles = await setup(`trust`, false, true);
+      await t.test(`new branch`, async t => {
+        const testFiles = await setup(`new-branch`, false, true);
 
-      //     const output = await run(
-      //       [`update`, subproject.directory, testFiles.sub.path, `--trust`],
-      //       testFiles.main.path
-      //     );
+        const output = await run(
+          [`update`, subproject.directory, testFiles.sub.path, `test-branch`],
+          testFiles.main.path
+        );
 
-      //     t.matchSnapshot(output, `ouput`);
-      //   });
-
-      // await t.test(`new branch`, async t => {
-      //   const testFiles = await setup(`new-branch`, false, true);
-
-      //   const output = await run(
-      //     [
-      //       `update`,
-      //       subproject.directory,
-      //       testFiles.sub.path,
-      //       `--branch`,
-      //       `test-branch`
-      //     ],
-      //     testFiles.main.path
-      //   );
-
-      //   t.matchSnapshot(cleanSnapshot(output), `output`);
-      // });
+        t.matchSnapshot(cleanSnapshot(output), `output`);
+      });
     });
   });
 
