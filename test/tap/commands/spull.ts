@@ -20,7 +20,7 @@ async function setup(
   });
   await commitNewFile(remote, `README.md`, `docs: add README before add`);
   const monodir = path.resolve(testDir, `mono`);
-  fs.mkdirp(monodir);
+  await fs.mkdirp(monodir);
   fs.createFileSync(path.resolve(monodir, `mono.cool`));
   const monorepo = await makeGitRepo({
     root: path.resolve(testDir, `mono`),
@@ -36,6 +36,7 @@ async function setup(
   };
 }
 
+// eslint-disable-next-line @typescript-eslint/no-floating-promises
 t.test(`spull command`, async t => {
   const directory = `packages/foo`;
   const { monorepo, remote: remoteRepo } = await setup(directory);

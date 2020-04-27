@@ -1,6 +1,0 @@
-{
-  "rules": {
-    "@typescript-eslint/no-floating-promises": "off",
-    "no-process-env": "off"
-  }
-}

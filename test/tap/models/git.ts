@@ -62,6 +62,7 @@ async function setupSubmodules(
   };
 }
 
+// eslint-disable-next-line @typescript-eslint/no-floating-promises
 test(`git`, async t => {
   await t.test(`Repository`, async t => {
     await t.test(`getSubmodules()`, async t => {

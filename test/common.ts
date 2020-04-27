@@ -46,6 +46,7 @@ teardown(() => {
     // work around windows folder locking
     process.chdir(returnCwd);
     try {
+      // eslint-disable-next-line no-process-env
       if (!process.env.NO_TEST_CLEANUP) {
         fs.removeSync(testDir);
       }
@@ -57,6 +58,7 @@ teardown(() => {
   });
 });
 
+// eslint-disable-next-line no-process-env
 export const nodeBin = process.env.NODE || process.execPath;
 
 // eslint-disable-next-line quotes
@@ -148,8 +150,9 @@ export async function commitNewFile(
 }
 
 export function cleanSnapshot(input: string): string {
-  input = input.replace(/[\dabcdef]{7}([\dabcdef]{33})/g, `[[COMMIT HASH]]`);
+  input = input.replace(/[\dabcdef]{40}/g, `[[COMMIT HASH]]`);
   input = input.replace(/\d{13}/g, `[[TIMESTAMP]]`);
+  input = input.replace(/[\dabcdef]{7}/g, `[[COMMIT HASH]]`);
   // FIXME: Windows compatibility
   input = input.replace(/\/[\w-_/]*\/monocli\/test/g, `[[TEST DIRECTORY]]`);
   input = input.replace(/\/tmp\/monocli/g, `[[TMP DIRECTORY]]`);

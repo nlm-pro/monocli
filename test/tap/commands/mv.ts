@@ -1,12 +1,9 @@
 import * as path from "path";
 import * as fs from "fs-extra";
-import { makeGitRepo, testDir, run, TestRepo } from "../../common";
+import * as t from "tap";
+import { makeGitRepo, testDir, run, TestRepo, graphLog } from "../../common";
 import { Config } from "../../../src/models/config";
 import { Monorepo } from "../../../src/models/monorepo";
-
-/* eslint-disable quotes */
-import t = require("tap");
-/* eslint-enable quotes */
 
 const config: Config = {
   projects: [
@@ -23,7 +20,7 @@ const config: Config = {
 
 async function setup(id: string, remoteUrl?: string): Promise<TestRepo> {
   const root = path.resolve(testDir, id);
-  fs.mkdir(root);
+  await fs.mkdir(root);
 
   if (remoteUrl) {
     config.projects[0].url = remoteUrl;
@@ -46,8 +43,9 @@ async function setup(id: string, remoteUrl?: string): Promise<TestRepo> {
   return { repo, path: root };
 }
 
+// eslint-disable-next-line @typescript-eslint/no-floating-promises
 t.test(`mv command`, async t => {
-  t.test(`without remote`, async t => {
+  await t.test(`without remote`, async t => {
     const testRepo = await setup(`no-remote`);
 
     const output = await run([`mv`, `one`, `three`], testRepo.path);
@@ -72,13 +70,11 @@ t.test(`mv command`, async t => {
       ),
       `updated config`
     );
-
-    t.end();
   });
 
-  t.test(`with remote`, async t => {
+  await t.test(`with remote`, async t => {
     const remote = path.resolve(testDir, `push-remote`);
-    fs.mkdir(remote);
+    await fs.mkdir(remote);
 
     await makeGitRepo({ root: remote, bare: true });
     const testRepo = await setup(`push`, remote);
@@ -94,6 +90,6 @@ t.test(`mv command`, async t => {
     );
     t.matchSnapshot(output, `output`);
 
-    // TODO: commits snapshot (after cleaning commits messages)
+    t.matchSnapshot(await graphLog(testRepo.repo));
   });
 });
