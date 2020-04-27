@@ -1,5 +1,5 @@
 import { existsSync, statSync } from "fs-extra";
-import { notice, silly, error } from "npmlog";
+import { notice, silly, warn, info } from "npmlog";
 import { MonorepoCommand } from "../models/monorepo-command";
 import { CommandDocumentation } from "../models/documentation";
 import { absolute } from "../utils/path";
@@ -90,8 +90,26 @@ branch: name of the destination branch in the subtree remote (default: master)
       splitBranch
     ]);
 
+    // TODO: simplify, maybe
     const cloneRepo = new Repository();
-    await cloneRepo.git(`clone`, [`--bare`, config.remoteUrl, `.`]);
+    const remoteHead = await cloneRepo.git(`ls-remote`, [
+      `--heads`,
+      config.remoteUrl,
+      branch
+    ]);
+    const remoteBranchExist = !!remoteHead;
+
+    const cloneBranchOpt = remoteBranchExist ? [`--branch`, branch] : [];
+    await cloneRepo.git(`clone`, [
+      `--bare`,
+      ...cloneBranchOpt,
+      config.remoteUrl,
+      `.`
+    ]);
+
+    if (remoteBranchExist) {
+      await cloneRepo.git(`branch`, [`save-${branch}`, branch]);
+    }
 
     try {
       await this.monorepo.repository.git(`push`, [
@@ -103,24 +121,43 @@ branch: name of the destination branch in the subtree remote (default: master)
       notice(``, `remote subrepo successfully updated`);
     } catch (e) {
       if (this.isInteractive) {
-        error(`git`, `Push to ${config.remoteUrl} ${branch} branch failed!`);
-        error(`git`, e.message);
+        warn(`git`, `Push to ${config.remoteUrl} ${branch} branch failed!`);
+        info(`git error`, e.message);
+      }
+
+      if (!remoteBranchExist) {
+        throw e;
       }
 
       let forcePush = force;
 
       if (!trust && !force && this.isInteractive) {
-        forcePush = await confirm(`Force push?`);
+        forcePush = await confirm(`Force push? (remote branch will be saved)`);
       }
 
-      if (forcePush) {
-        await cloneRepo.git(`push`, [`origin`, branch, `--force-with-lease`]);
-        notice(``, `remote subrepo successfully updated`);
-      } else {
+      if (!forcePush) {
         throw Error(
-          `Push to ${config.remoteUrl} ${branch} branch failed! Go to ${cloneRepo.path} in order to resolve this conflict.`
+          `Go to ${cloneRepo.path} in order to resolve this conflict.`
         );
       }
+
+      await cloneRepo.git(`push`, [`origin`, `save-${branch}`]);
+      notice(
+        ``,
+        `branch ${branch} saved on ${config.remoteUrl} as save-${branch}`
+      );
+
+      try {
+        await cloneRepo.git(`push`, [`origin`, branch, `--force-with-lease`]);
+      } catch (e) {
+        warn(`git`, `failed to push with --force-with-lease`);
+        info(`git error`, e.message);
+        await cloneRepo.git(`push`, [`origin`, branch, `--force`]);
+      }
+      notice(
+        ``,
+        `local changes successfully pushed to ${config.remoteUrl}/${branch}`
+      );
     }
   }
 }
