@@ -28,6 +28,8 @@ export abstract class Command {
 
   protected abstract readonly doc: CommandDocumentation;
 
+  constructor(protected isInteractive: boolean = false) {}
+
   protected get mandatoryOptions(): Map<string, CommandOptionConfig> {
     if (!this.singleMandatoryOptions) {
       this.singleMandatoryOptions = new Map(

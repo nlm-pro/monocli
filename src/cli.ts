@@ -17,7 +17,7 @@ export async function main(
     Logging.init(args[1].get(`debug`) ? `silly` : `notice`, output);
     prompt.setOutput(output || process.stdout);
 
-    const main = new MainCommand();
+    const main = new MainCommand(true);
     await main.run(...args);
   } catch (e) {
     errorsGlobalHandler(e);

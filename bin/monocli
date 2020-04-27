@@ -11,7 +11,7 @@ try {
   process.title = "monocli";
 }
 
-const monocli = require("../dist/index");
+const monocli = require("../dist/cli");
 const { ExitError } = require("../dist/models/errors");
 
 monocli.main(process.argv.slice(2)).catch(e => {

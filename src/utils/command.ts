@@ -9,18 +9,18 @@ import { InternalError } from "../models/errors";
 export function buildCommand(
   cmdName: commandName,
   from?: string,
-  strict = false
+  isInteractive = false
 ): Command {
   let possibleCommand = commandsMap.get(cmdName);
   if (!possibleCommand) {
-    if (strict) {
+    if (!isInteractive) {
       throw new InternalError(`could not find command ${cmdName}`);
     }
 
     log.warn(cmdName, `unknown command`);
     possibleCommand = HelpCommand;
   }
-  const command = new possibleCommand();
+  const command = new possibleCommand(isInteractive);
   if (command instanceof MonorepoCommand) {
     command.setMonorepo(new Monorepo(from));
   }
@@ -35,7 +35,7 @@ export async function runCommand(
   options: Map<string, cmdOption> = new Map(),
   from?: string
 ): Promise<string | void> {
-  const cmd = buildCommand(cmdName, from, true);
+  const cmd = buildCommand(cmdName, from, false);
   const cmdOptions = cmd.validate(params, options);
 
   return cmd.run(params, cmdOptions);

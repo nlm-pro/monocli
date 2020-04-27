@@ -1,6 +1,7 @@
 import { remove, ensureDir } from "fs-extra";
 import { buildCommand } from "../utils/command";
 import { commandName, commandsMap } from "../commands";
+import { cwd } from "../utils/fs";
 import { CommandDocumentation } from "./documentation";
 import { cmdOption } from "./options";
 import { Command } from "./command";
@@ -40,7 +41,7 @@ Use 'monocli help <command name>' for more information about one of these comman
   ): Promise<string | void> {
     const cmdName = params[0] as commandName;
     const subCommandParams = params.slice(1);
-    const command = buildCommand(cmdName);
+    const command = buildCommand(cmdName, cwd(), true);
     const mainCommandOptions = this.validate(params, options);
 
     let subCommandOptions = new Map([...options]);

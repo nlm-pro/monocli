@@ -78,7 +78,7 @@ branch: name of the destination branch in the subtree remote (default: master)
     config: { id: string; remoteUrl: string },
     directory: string,
     branch: string,
-    interactive: boolean,
+    trust: boolean,
     force: boolean
   ): Promise<void> {
     const splitBranch = `monocli-spush-${config.id}`;
@@ -107,11 +107,8 @@ branch: name of the destination branch in the subtree remote (default: master)
 
       let forcePush = force;
 
-      if (interactive) {
+      if (!trust && !force && this.isInteractive) {
         forcePush = await confirm(`Force push?`);
-      } else {
-        // "interactive" only reflects the --trust option here
-        forcePush = true;
       }
 
       if (forcePush) {

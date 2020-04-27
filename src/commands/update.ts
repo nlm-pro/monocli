@@ -32,8 +32,13 @@ export class UpdateCommand extends MonorepoCommand {
         await runCommand(`spush`, [directory, url, remoteBranch], spushOptions);
       } catch (e) {
         log.error(`spush`, `push to subtree remote failed again`);
-        const forcePush =
-          options.get(`trust`) === true || (await confirm(`Force push?`));
+        let forcePush;
+        const trust = (forcePush = options.get(`trust`) === true);
+
+        if (!trust && this.isInteractive) {
+          forcePush = await confirm(`Force push?`);
+        }
+
         if (forcePush) {
           spushOptions.set(`force`, true);
           await runCommand(

@@ -6,7 +6,7 @@ import { teardown } from "tap";
 import { spawn, ChildProcessPromise } from "promisify-child-process";
 import { commandName } from "../src/commands";
 import { Repository } from "../src/models/git";
-import { main } from "../src/index";
+import { main } from "../src/cli";
 import { chdir } from "../src/utils/fs";
 import * as Logger from "../src/utils/log";
 
