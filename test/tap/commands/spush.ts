@@ -83,7 +83,7 @@ async function setup(
 }
 
 async function assert(
-  x: Test,
+  t: Test,
   output: string,
   testFiles: TestFiles
 ): Promise<void> {
