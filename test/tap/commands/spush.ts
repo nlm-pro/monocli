@@ -2,6 +2,7 @@ import * as path from "path";
 import * as fs from "fs-extra";
 import * as t from "tap";
 import * as prompts from "prompts";
+import { Test } from "tap/types/test";
 import {
   makeGitRepo,
   testDir,
@@ -13,6 +14,7 @@ import {
 import { Config, SubProjectConfig } from "../../../src/models/config";
 import { relativeTo } from "../../../src/utils/path";
 import { Monorepo } from "../../../src/models/monorepo";
+import { Repository } from "../../../src/models/git";
 
 interface TestFiles {
   main: TestRepo;
@@ -80,7 +82,11 @@ async function setup(
   };
 }
 
-async function assert(output: string, testFiles: TestFiles): Promise<void> {
+async function assert(
+  x: Test,
+  output: string,
+  testFiles: TestFiles
+): Promise<void> {
   t.matchSnapshot(output, `output`);
   t.matchSnapshot(
     await testFiles.main.repo.git(`log`, [`--format=%B`]),
@@ -105,25 +111,25 @@ async function assert(output: string, testFiles: TestFiles): Promise<void> {
 
 // eslint-disable-next-line @typescript-eslint/no-floating-promises
 t.test(`spush command`, async t => {
-  await t.test(`without remote url`, async () => {
+  await t.test(`without remote url`, async t => {
     const testFiles = await setup(`remote`, false);
 
     const output = await run(
       [`spush`, subproject.directory],
       testFiles.main.path
     );
-    await assert(output, testFiles);
+    await assert(t, output, testFiles);
   });
 
   await t.test(`with url argument`, async t => {
-    await t.test(`without conflict`, async () => {
+    await t.test(`without conflict`, async t => {
       const testFiles = await setup(`arg`, false);
 
       const output = await run(
         [`spush`, subproject.directory, testFiles.sub.path],
         testFiles.main.path
       );
-      await assert(output, testFiles);
+      await assert(t, output, testFiles);
     });
 
     await t.test(`with conflict`, async t => {
@@ -150,10 +156,28 @@ t.test(`spush command`, async t => {
 
         t.matchSnapshot(cleanSnapshot(output), `output`);
       });
+
+      await t.test(`--force`, async t => {
+        const testFiles = await setup(`force`, false, true);
+
+        const output = await run(
+          [`spush`, subproject.directory, testFiles.sub.path, `--force`],
+          testFiles.main.path
+        );
+
+        t.matchSnapshot(cleanSnapshot(output), `output`);
+        t.true(
+          new Repository().git(`ls-remote`, [
+            `--heads`,
+            testFiles.sub.path,
+            `save-master`
+          ])
+        );
+      });
     });
   });
 
-  await t.test(`with url in config and argument`, async () => {
+  await t.test(`with url in config and argument`, async t => {
     const testFiles = await setup(`config-arg`, true);
 
     const output = await run(
@@ -164,16 +188,16 @@ t.test(`spush command`, async t => {
       ],
       testFiles.main.path
     );
-    await assert(output, testFiles);
+    await assert(t, output, testFiles);
   });
 
-  await t.test(`with url in config`, async () => {
+  await t.test(`with url in config`, async t => {
     const testFiles = await setup(`config`, true);
 
     const output = await run(
       [`spush`, subproject.directory],
       testFiles.main.path
     );
-    await assert(output, testFiles);
+    await assert(t, output, testFiles);
   });
 });

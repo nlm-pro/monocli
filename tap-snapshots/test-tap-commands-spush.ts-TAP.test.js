@@ -117,18 +117,16 @@ exports[`test/tap/commands/spush.ts TAP > updated config 4`] = `
 }
 `
 
-exports[`test/tap/commands/spush.ts TAP spush command with url argument with conflict do nothing > ouput 1`] = `
-monocli ERR! git Push to [[TEST DIRECTORY]]/tap/commands/spush/conflict/sub master branch failed!
-monocli ERR! git To [[TMP DIRECTORY]]/[[TIMESTAMP]]
-monocli ERR! git  ! [rejected]        monocli-spush-proj-[[TIMESTAMP]] -> master (fetch first)
-monocli ERR! git error: failed to push some refs to '[[TMP DIRECTORY]]/[[TIMESTAMP]]'
-monocli ERR! git hint: Updates were rejected because the remote contains work that you do
-monocli ERR! git hint: not have locally. This is usually caused by another repository pushing
-monocli ERR! git hint: to the same ref. You may want to first integrate the remote changes
-monocli ERR! git hint: (e.g., 'git pull ...') before pushing again.
-monocli ERR! git hint: See the 'Note about fast-forwards' in 'git push --help' for details.
+exports[`test/tap/commands/spush.ts TAP spush command with url argument with conflict --force > output 1`] = `
+monocli WARN git Push to [[TEST DIRECTORY]]/tap/commands/spush/force/sub master branch failed!
+monocli notice branch master saved on [[TEST DIRECTORY]]/tap/commands/spush/force/sub as save-master
+monocli notice local changes successfully pushed to [[TEST DIRECTORY]]/tap/commands/spush/force/sub/master
+`
 
-monocli ERR! Push to [[TEST DIRECTORY]]/tap/commands/spush/conflict/sub master branch failed! Go to [[TMP DIRECTORY]]/[[TIMESTAMP]] in order to resolve this conflict.
+exports[`test/tap/commands/spush.ts TAP spush command with url argument with conflict do nothing > ouput 1`] = `
+monocli WARN git Push to [[TEST DIRECTORY]]/tap/commands/spush/conflict/sub master branch failed!
+
+monocli ERR! Go to [[TMP DIRECTORY]]/[[TIMESTAMP]] in order to resolve this conflict.
 `
 
 exports[`test/tap/commands/spush.ts TAP spush command with url argument with conflict new branch > output 1`] = `
