@@ -46,16 +46,16 @@ async function setup(
     config.projects[0].url = relativeTo(subRepoDir, mainRepoDir);
   }
 
-  await fs.writeFile(
-    path.resolve(mainRepoDir, Monorepo.CONFIG_FILE_NAME),
-    JSON.stringify(config, null, 2)
+  const mainRepo = await makeGitRepo({
+    root: mainRepoDir
+  });
+
+  await commitNewFile(
+    mainRepo,
+    `one.txt`,
+    `feat(root): initial commit before add`
   );
 
-  const mainRepo = await makeGitRepo({
-    root: mainRepoDir,
-    added: [Monorepo.CONFIG_FILE_NAME],
-    message: `feat(root): initial commit before add`
-  });
   const subRepo = await makeGitRepo({ root: subRepoDir, bare: true });
 
   await commitNewFile(
@@ -68,7 +68,7 @@ async function setup(
 
   await commitNewFile(
     mainRepo,
-    path.join(subproject.directory, `foo.txt`),
+    path.join(subproject.directory, `two.txt`),
     `feat(${subproject.scope}): in root after add`
   );
 

@@ -127,7 +127,8 @@ monocli ERR! git hint: not have locally. This is usually caused by another repos
 monocli ERR! git hint: to the same ref. You may want to first integrate the remote changes
 monocli ERR! git hint: (e.g., 'git pull ...') before pushing again.
 monocli ERR! git hint: See the 'Note about fast-forwards' in 'git push --help' for details.
-monocli notice git Go to [[TMP DIRECTORY]]/[[TIMESTAMP]] in order to resolve this conflict, or re-run this command with the --force option.
+
+monocli ERR! Push to [[TEST DIRECTORY]]/tap/commands/spush/conflict/sub master branch failed! Go to [[TMP DIRECTORY]]/[[TIMESTAMP]] in order to resolve this conflict.
 `
 
 exports[`test/tap/commands/spush.ts TAP spush command with url argument with conflict new branch > output 1`] = `

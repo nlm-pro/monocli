@@ -32,9 +32,8 @@ export class SPullCommand extends MonorepoCommand {
         `local directory ${directory} successfully updated from ${remoteUrl}`
       );
     } catch (e) {
-      log.error(
-        `git`,
-        `can't pull the subtree. Did you forget to add this subproject before?`
+      throw new Error(
+        `Pull failed. Did you forget to add this subproject before?`
       );
     }
   }

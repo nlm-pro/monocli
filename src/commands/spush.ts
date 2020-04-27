@@ -102,8 +102,10 @@ branch: name of the destination branch in the subtree remote (default: master)
       await cloneRepo.git(`push`, [`origin`, branch]);
       notice(``, `remote subrepo successfully updated`);
     } catch (e) {
-      error(`git`, `Push to ${config.remoteUrl} ${branch} branch failed!`);
-      error(`git`, e.message);
+      if (this.isInteractive) {
+        error(`git`, `Push to ${config.remoteUrl} ${branch} branch failed!`);
+        error(`git`, e.message);
+      }
 
       let forcePush = force;
 
@@ -115,9 +117,8 @@ branch: name of the destination branch in the subtree remote (default: master)
         await cloneRepo.git(`push`, [`origin`, branch, `--force-with-lease`]);
         notice(``, `remote subrepo successfully updated`);
       } else {
-        notice(
-          `git`,
-          `Go to ${cloneRepo.path} in order to resolve this conflict, or re-run this command with the --force option.`
+        throw Error(
+          `Push to ${config.remoteUrl} ${branch} branch failed! Go to ${cloneRepo.path} in order to resolve this conflict.`
         );
       }
     }

@@ -3,7 +3,6 @@ import { MonorepoCommand } from "../models/monorepo-command";
 import { CommandDocumentation } from "../models/documentation";
 import { cmdOption, CommandOptionConfig } from "../models/options";
 import { runCommand } from "../utils/command";
-import { confirm } from "../utils/prompt";
 
 export class UpdateCommand extends MonorepoCommand {
   protected doc: CommandDocumentation = {
@@ -28,26 +27,7 @@ export class UpdateCommand extends MonorepoCommand {
       log.warn(`spush`, `push to subtree remote failed`);
       log.notice(`spull`, `pulling from subtree remote`);
       await runCommand(`spull`, [directory, url, remoteBranch]);
-      try {
-        await runCommand(`spush`, [directory, url, remoteBranch], spushOptions);
-      } catch (e) {
-        log.error(`spush`, `push to subtree remote failed again`);
-        let forcePush;
-        const trust = (forcePush = options.get(`trust`) === true);
-
-        if (!trust && this.isInteractive) {
-          forcePush = await confirm(`Force push?`);
-        }
-
-        if (forcePush) {
-          spushOptions.set(`force`, true);
-          await runCommand(
-            `spush`,
-            [directory, url, remoteBranch],
-            spushOptions
-          );
-        }
-      }
+      await runCommand(`spush`, [directory, url, remoteBranch], spushOptions);
     }
     log.notice(directory, `updated`);
   }
