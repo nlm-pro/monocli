@@ -18,23 +18,16 @@ export class SPullCommand extends MonorepoCommand {
   > {
     branch = branch || `master`;
     const { remoteUrl } = this.getProjectRemote(directory, urlOption);
-    // TODO: check for existing remote
-    try {
-      await this.monorepo.repository.git(`subtree`, [
-        `pull`,
-        `--prefix`,
-        directory,
-        remoteUrl,
-        branch
-      ]);
-      log.notice(
-        `success`,
-        `local directory ${directory} successfully updated from ${remoteUrl}`
-      );
-    } catch (e) {
-      throw new Error(
-        `Pull failed. Did you forget to add this subproject before?`
-      );
-    }
+    await this.monorepo.repository.git(`subtree`, [
+      `pull`,
+      `--prefix`,
+      directory,
+      remoteUrl,
+      branch
+    ]);
+    log.notice(
+      `success`,
+      `local directory ${directory} successfully updated from ${remoteUrl}`
+    );
   }
 }
