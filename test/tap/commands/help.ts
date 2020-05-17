@@ -13,5 +13,6 @@ t.test(`help command`, async () => {
   t.matchSnapshot(await run([`help`, `help`]), `help`);
   t.matchSnapshot(await run([`help`, `check`]), `check`);
   t.matchSnapshot(await run([`help`, `add`]), `add`);
+  t.matchSnapshot(await run([`help`, `rm`]), `rm`);
   t.matchSnapshot(await run([`help`, `foo`]), `unknown command name`);
 });

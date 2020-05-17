@@ -46,7 +46,7 @@ Run `monocli help` and `monocli help <command>` for more information.
 
 Use subtrees and follow [conventionnal commits](https://www.conventionalcommits.org) with ease.
 
-#### Add
+#### add
 
 Add, convert or import a "subproject" in a monorepo.
 
@@ -58,7 +58,7 @@ Convert the `packages/awesome` submodule to a subtree and add the `awesome` scop
 monocli add ./packages/awesome --scope awesome --rewrite
 ```
 
-#### Check
+#### check
 
 Check if a directory has changed since a given release.
 
@@ -72,7 +72,7 @@ Build a project only if it changed since the last release:
 monocli check packages/awesome && ./build-awesome
 ```
 
-#### Spush
+#### spush
 
 Push new subtree commits *to* a remote repository.
 
@@ -82,7 +82,7 @@ Push new subtree commits *to* a remote repository.
 monocli spush packages/awesome git@github.com:me/awesome.git
 ```
 
-#### Spull
+#### spull
 
 Pull new subtree commits *from* a remote repository, and merge them to the current branch
 
@@ -92,7 +92,7 @@ Pull new subtree commits *from* a remote repository, and merge them to the curre
 monocli spull packages/awesome git@github.com:me/awesome.git
 ```
 
-#### Update
+#### update
 
 Update (push) the subtree associated to `<directory>`
 
@@ -104,7 +104,7 @@ Update (push) the subtree associated to `<directory>`
 monocli update packages/awesome git@github.com:me/awesome.git
 ```
 
-#### Mv
+#### mv
 
 Change a subtree prefix
 
@@ -112,6 +112,14 @@ Change a subtree prefix
 
 ```
 monocli mv packages/awesome projects/awesome
+```
+
+#### rm
+
+Delete a subproject
+
+```
+monocli rm <path>
 ```
 
 #### Status
