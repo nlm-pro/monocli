@@ -1,6 +1,13 @@
 # Changelog
 
-All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines. For more details, see the associated [releases](https://github.com/noelmace/monocli/releases) on GitHub.
+All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
+
+## [0.5.0-beta.2](https://github.com/noelmace/monocli/compare/v0.5.0-beta.1...v0.5.0-beta.2) (2020-05-17)
+
+
+### Features
+
+* new rm command ([8aa8a47](https://github.com/noelmace/monocli/commit/8aa8a47d5d56d641a42949d2b40cf11053202a6e))
 
 ## [0.5.0-beta.1](https://github.com/noelmace/monocli/compare/v0.4.4...v0.5.0-beta.1) (2020-04-27)
 
