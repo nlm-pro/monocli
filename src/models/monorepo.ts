@@ -39,6 +39,22 @@ export class Monorepo {
     await this.saveConfig(config);
   }
 
+  async rmProjectConfig(
+    key: keyof SubProjectConfig,
+    value: string
+  ): Promise<SubProjectConfig | null> {
+    const config = this.getConfig();
+    const index = config.projects.findIndex(project => project[key] === value);
+    if (index >= 0) {
+      const projectConfig = config.projects.splice(index, 1)[0];
+      await this.saveConfig(config);
+
+      return projectConfig;
+    }
+
+    return null;
+  }
+
   async addProjectConfig(project: SubProjectConfig): Promise<void> {
     const config = this.getConfig();
     let conflict: `directory` | `scope` | null = null;

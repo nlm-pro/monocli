@@ -55,7 +55,7 @@ One CLI to rule them all.
 
 Easy monorepos management, and more.
 
-Commands: status, mv, help, update, spush, spull, check, add
+Commands: status, mv, help, update, spush, spull, check, add, rm
 
 Use 'monocli help <command name>' for more information about one of these commands.
 
@@ -71,6 +71,13 @@ change a subtree prefix
 This command requires that <path> is associated with a existing project.
 
 ⚠️  Experimental command  ⚠️
+`
+
+exports[`test/tap/commands/help.ts TAP > rm 1`] = `
+Usage: monocli rm <path> 
+
+delete a subproject
+delete the <path> directory along with the related submodule and the monocli subproject configurations if needed
 `
 
 exports[`test/tap/commands/help.ts TAP > spull 1`] = `
@@ -106,7 +113,7 @@ One CLI to rule them all.
 
 Easy monorepos management, and more.
 
-Commands: status, mv, help, update, spush, spull, check, add
+Commands: status, mv, help, update, spush, spull, check, add, rm
 
 Use 'monocli help <command name>' for more information about one of these commands.
 

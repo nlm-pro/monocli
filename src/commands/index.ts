@@ -6,6 +6,7 @@ import { SPushCommand } from "./spush";
 import { CheckCommand } from "./check";
 import { AddCommand } from "./add";
 import { SPullCommand } from "./spull";
+import { RmCommand } from "./rm";
 
 export type commandName =
   | `status`
@@ -15,7 +16,8 @@ export type commandName =
   | `spush`
   | `update`
   | `check`
-  | `add`;
+  | `add`
+  | `rm`;
 
 export type typesOfCommand =
   | typeof StatusCommand
@@ -25,7 +27,8 @@ export type typesOfCommand =
   | typeof SPushCommand
   | typeof SPullCommand
   | typeof CheckCommand
-  | typeof AddCommand;
+  | typeof AddCommand
+  | typeof RmCommand;
 
 export const commandsMap: Map<commandName, typesOfCommand> = new Map([
   [`status`, StatusCommand],
@@ -35,7 +38,8 @@ export const commandsMap: Map<commandName, typesOfCommand> = new Map([
   [`spush`, SPushCommand],
   [`spull`, SPullCommand],
   [`check`, CheckCommand],
-  [`add`, AddCommand]
+  [`add`, AddCommand],
+  [`rm`, RmCommand]
 ] as [commandName, typesOfCommand][]);
 
 export {
@@ -46,5 +50,6 @@ export {
   SPushCommand,
   SPullCommand,
   CheckCommand,
-  AddCommand
+  AddCommand,
+  RmCommand
 };
