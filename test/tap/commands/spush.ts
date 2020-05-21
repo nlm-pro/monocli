@@ -126,7 +126,7 @@ t.test(`spush command`, async t => {
       const testFiles = await setup(`arg`, false);
 
       const output = await run(
-        [`spush`, subproject.directory, testFiles.sub.path],
+        [`spush`, subproject.directory, `--url`, testFiles.sub.path],
         testFiles.main.path
       );
       await assert(t, output, testFiles);
@@ -139,7 +139,7 @@ t.test(`spush command`, async t => {
         prompts.inject([false]);
 
         const output = await run(
-          [`spush`, subproject.directory, testFiles.sub.path],
+          [`spush`, subproject.directory, `--url`, testFiles.sub.path],
           testFiles.main.path
         );
 
@@ -150,7 +150,14 @@ t.test(`spush command`, async t => {
         const testFiles = await setup(`new-branch`, false, true);
 
         const output = await run(
-          [`spush`, subproject.directory, testFiles.sub.path, `test-branch`],
+          [
+            `spush`,
+            subproject.directory,
+            `--url`,
+            testFiles.sub.path,
+            `--branch`,
+            `test-branch`
+          ],
           testFiles.main.path
         );
 
@@ -161,7 +168,13 @@ t.test(`spush command`, async t => {
         const testFiles = await setup(`force`, false, true);
 
         const output = await run(
-          [`spush`, subproject.directory, testFiles.sub.path, `--force`],
+          [
+            `spush`,
+            subproject.directory,
+            `--url`,
+            testFiles.sub.path,
+            `--force`
+          ],
           testFiles.main.path
         );
 
@@ -184,6 +197,7 @@ t.test(`spush command`, async t => {
       [
         `spush`,
         subproject.directory,
+        `--url`,
         relativeTo(testFiles.sub.path, testFiles.main.path)
       ],
       testFiles.main.path

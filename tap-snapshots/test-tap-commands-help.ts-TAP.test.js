@@ -6,22 +6,22 @@
  */
 'use strict'
 exports[`test/tap/commands/help.ts TAP > add 1`] = `
-Usage: monocli add <path> [url] [...options] [options]
+Usage: monocli add <path> [options]
 
 add, convert or import a project
 
 <path>   path to the project directory
-[url]    subrepo origin url (default: from submodule)
 
 Behavior depends on what the <path> directory contains and if you provided an [url] or not:
   - if <path> is a submodule, it will be converted to a "subproject"
-  - if [url] is provided, the associated repository will be imported (overriding any pre-existing submodule)
+  - if --url is provided, the associated repository will be imported (overriding any pre-existing submodule)
   - finally, the project's data will be added to the configuration
 
 Options:
   --scope       <string>   conventional commit scope  (default: path basename)
   --rewrite     <boolean>  rewrite subproject history before merge  (default: false)
   --branch      <string>   name of the branch were all modifications to the remote subtree repository will be made and push  (default: monocli-add-<scope>)
+  --url         <string>   subrepo origin url  (default: from submodule)
 `
 
 exports[`test/tap/commands/help.ts TAP > check 1`] = `
@@ -81,22 +81,26 @@ delete the <path> directory along with the related submodule and the monocli sub
 `
 
 exports[`test/tap/commands/help.ts TAP > spull 1`] = `
-Usage: monocli spull <directory> [url] [branch] 
+Usage: monocli spull <directory> [options]
 
 update (pull) <directory> subtree from a remote repo
+
+
+Options:
+  --url         <string>   url of the subtree remote  (default: from config if exists)
+  --branch      <string>   name of the destination branch in the subtree remote  (default: "master")
 `
 
 exports[`test/tap/commands/help.ts TAP > spush 1`] = `
-Usage: monocli spush <directory> [url] [branch] [options]
+Usage: monocli spush <directory> [options]
 
 update (push to) the remote "subtree" repo associated to <directory>
 
-url: url of the subtree remote (default: from config if exists)
-branch: name of the destination branch in the subtree remote (default: master)
-    
 
 Options:
   --force       <boolean>  Force push (with lease) to the remote repository. Use with caution!  (default: false)
+  --url         <string>   url of the subtree remote  (default: from config if exists)
+  --branch      <string>   name of the destination branch in the subtree remote  (default: "master")
 `
 
 exports[`test/tap/commands/help.ts TAP > status 1`] = `
@@ -123,8 +127,12 @@ Options:
 `
 
 exports[`test/tap/commands/help.ts TAP > update 1`] = `
-Usage: monocli update <directory> [url] [branch] 
+Usage: monocli update <directory> [options]
 
-update (push) the subtree associated to <directory>
-alias of the spush command with --force and --branch=master
+update the subtree associated to <directory>
+try to run the spush command, and retry after a spull if it failed
+
+Options:
+  --url         <string>   url of the subtree remote  (default: from config if exists)
+  --branch      <string>   name of the destination branch in the subtree remote  (default: "master")
 `

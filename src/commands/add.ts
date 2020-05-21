@@ -26,16 +26,15 @@ export type AddCmdUrls = {
 export class AddCommand extends MonorepoCommand {
   protected doc: CommandDocumentation = {
     name: `add`,
-    usage: `<path> [url] [...options]`,
+    usage: `<path>`,
     description: `add, convert or import a project`,
     // TODO
     details: `
 <path>   path to the project directory
-[url]    subrepo origin url (default: from submodule)
 
 Behavior depends on what the <path> directory contains and if you provided an [url] or not:
   - if <path> is a submodule, it will be converted to a "subproject"
-  - if [url] is provided, the associated repository will be imported (overriding any pre-existing submodule)
+  - if --url is provided, the associated repository will be imported (overriding any pre-existing submodule)
   - finally, the project's data will be added to the configuration`,
     options: new Map<string, CommandOptionConfig>([
       [
@@ -68,21 +67,27 @@ Behavior depends on what the <path> directory contains and if you provided an [u
           },
           defaultDescription: `monocli-add-<scope>`
         }
+      ],
+      [
+        `url`,
+        {
+          type: `string`,
+          description: `subrepo origin url`,
+          defaultDescription: `from submodule`,
+          defaultValue: ``
+        }
       ]
     ])
   };
 
-  async run(
-    [path, urlOption]: [string, string],
-    options: Map<string, cmdOption>
-  ): Promise<void> {
+  async run([path]: [string], options: Map<string, cmdOption>): Promise<void> {
     const directory = relativeTo(path, this.monorepo.root.path);
 
     this.checkProject(directory);
 
     const { urls, isSubmodule } = await this.prepareSubmodule(
       directory,
-      urlOption
+      options.get(`url`) as string
     );
 
     const scope = options.get(`scope`) as string;

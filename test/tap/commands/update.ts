@@ -64,7 +64,10 @@ async function setup(
     `feat(${subproject.scope}): in remote before add`
   );
 
-  await run([`add`, subproject.directory, subRepo.path], mainRepo.path);
+  await run(
+    [`add`, subproject.directory, `--url`, subRepo.path],
+    mainRepo.path
+  );
 
   await commitNewFile(
     mainRepo,
@@ -112,7 +115,7 @@ t.test(`update command`, async t => {
       const { mainRepo, subRepo } = await setup(`arg`, false);
 
       const output = await run(
-        [`update`, subproject.directory, subRepo.path],
+        [`update`, subproject.directory, `--url`, subRepo.path],
         mainRepo.path
       );
 
@@ -135,7 +138,7 @@ t.test(`update command`, async t => {
         prompts.inject([false]);
 
         const output = await run(
-          [`update`, subproject.directory, subRepo.path],
+          [`update`, subproject.directory, `--url`, subRepo.path],
           mainRepo.path
         );
 
@@ -155,7 +158,7 @@ t.test(`update command`, async t => {
         const { mainRepo, subRepo } = await setup(`trust`, false, true);
 
         const output = await run(
-          [`update`, subproject.directory, subRepo.path, `--trust`],
+          [`update`, subproject.directory, `--url`, subRepo.path, `--trust`],
           mainRepo.path
         );
 
@@ -175,7 +178,14 @@ t.test(`update command`, async t => {
         const { mainRepo, subRepo } = await setup(`new-branch`, false, true);
 
         const output = await run(
-          [`update`, subproject.directory, subRepo.path, `test-branch`],
+          [
+            `update`,
+            subproject.directory,
+            `--url`,
+            subRepo.path,
+            `--branch`,
+            `test-branch`
+          ],
           mainRepo.path
         );
 
@@ -197,7 +207,12 @@ t.test(`update command`, async t => {
     const { mainRepo, subRepo } = await setup(`config-arg`, true);
 
     const output = await run(
-      [`update`, subproject.directory, relativeTo(subRepo.path, mainRepo.path)],
+      [
+        `update`,
+        subproject.directory,
+        `--url`,
+        relativeTo(subRepo.path, mainRepo.path)
+      ],
       mainRepo.path
     );
     t.matchSnapshot(cleanSnapshot(output), `output`);

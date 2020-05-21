@@ -212,7 +212,7 @@ t.test(`add command`, async t => {
           remoteRepo.path
         );
         const output = await run(
-          [`add`, submoduleDirectory, remoteRepo.path],
+          [`add`, submoduleDirectory, `--url`, remoteRepo.path],
           monorepo.path
         );
         t.matchSnapshot(cleanSnapshot(output), `output`);
@@ -257,6 +257,7 @@ t.test(`add command`, async t => {
         [
           `add`,
           config.directory,
+          `--url`,
           config.url,
           `--scope`,
           config.scope,
@@ -336,6 +337,7 @@ t.test(`add command`, async t => {
           [
             `add`,
             config.directory,
+            `--url`,
             config.url as string,
             `--scope`,
             config.scope,
@@ -359,6 +361,7 @@ t.test(`add command`, async t => {
           [
             `add`,
             config.directory,
+            `--url`,
             config.url as string,
             `--scope`,
             config.scope,

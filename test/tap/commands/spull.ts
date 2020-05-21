@@ -27,7 +27,7 @@ async function setup(
     added: [`mono.cool`],
     message: `initial commit`
   });
-  await run([`add`, directory, remote.path], monorepo.path);
+  await run([`add`, directory, `--url`, remote.path], monorepo.path);
   await commitNewFile(remote, `foo.txt`, `feat: add file after add`);
 
   return {
@@ -41,7 +41,7 @@ t.test(`spull command`, async t => {
   const directory = `packages/foo`;
   const { monorepo, remote: remoteRepo } = await setup(directory);
   const output = await run(
-    [`spull`, directory, remoteRepo.path],
+    [`spull`, directory, `--url`, remoteRepo.path],
     monorepo.path
   );
 
