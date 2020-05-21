@@ -58,6 +58,7 @@ async function setup(
     root: mainRepoDir,
     added: [Monorepo.CONFIG_FILE_NAME]
   });
+
   const subRepo = await makeGitRepo({ root: subRepoDir, bare: true });
 
   if (conflict) {
@@ -120,6 +121,8 @@ t.test(`spush command`, async t => {
     );
     await assert(t, output, testFiles);
   });
+
+  // FIXME: test when no directory is given
 
   await t.test(`with url argument`, async t => {
     await t.test(`without conflict`, async t => {

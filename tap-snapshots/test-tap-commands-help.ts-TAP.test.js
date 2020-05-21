@@ -81,10 +81,10 @@ delete the <path> directory along with the related submodule and the monocli sub
 `
 
 exports[`test/tap/commands/help.ts TAP > spull 1`] = `
-Usage: monocli spull <directory> [options]
+Usage: monocli spull [directory] [options]
 
-update (pull) <directory> subtree from a remote repo
-
+update (pull) [directory] subtree from a remote repo
+To run this command on every project defined in monocli.json with a remote url, just leave the [directory] argument blank (the --url option will be ignored in this case)
 
 Options:
   --url         <string>   url of the subtree remote  (default: from config if exists)
@@ -92,10 +92,10 @@ Options:
 `
 
 exports[`test/tap/commands/help.ts TAP > spush 1`] = `
-Usage: monocli spush <directory> [options]
+Usage: monocli spush [directory] [options]
 
-update (push to) the remote "subtree" repo associated to <directory>
-
+update (push to) the remote "subtree" repo associated to [directory]
+To run this command on every project defined in monocli.json with a remote url, just leave the [directory] argument blank (the --url option will be ignored in this case)
 
 Options:
   --force       <boolean>  Force push (with lease) to the remote repository. Use with caution!  (default: false)
@@ -127,10 +127,12 @@ Options:
 `
 
 exports[`test/tap/commands/help.ts TAP > update 1`] = `
-Usage: monocli update <directory> [options]
+Usage: monocli update [directory] [options]
 
-update the subtree associated to <directory>
-try to run the spush command, and retry after a spull if it failed
+update the subtree associated to [directory]
+Tries to run the spush command, and retry after a spull if it failed.
+
+To run this command on every project defined in monocli.json with a remote url, just leave the [directory] argument blank (the --url option will be ignored in this case)
 
 Options:
   --url         <string>   url of the subtree remote  (default: from config if exists)
