@@ -2,6 +2,36 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.5.0-beta.3](https://github.com/noelmace/monocli/compare/v0.5.0-beta.2...v0.5.0-beta.3) (2020-05-22)
+
+
+### ⚠ BREAKING CHANGES
+
+* **spush,spull,update:** spush, spull and update commands now uses
+options instead of arguments in order to define the remote url and
+branch
+
+**before**
+```
+monocli spush my-project/ git@github.com:me/my-project.git my-branch
+monocli spull my-project/ git@github.com:me/my-project.git my-branch
+monocli update my-project/ git@github.com:me/my-project.git my-branch
+```
+
+**after**
+```
+monocli spush my-project/ --url git@github.com:me/my-project.git --branch my-branch
+monocli spull my-project/ --url git@github.com:me/my-project.git --branch my-branch
+monocli update my-project/ --url git@github.com:me/my-project.git --branch my-branch
+```
+
+### Features
+
+* **spush,spull,update:** every defined projects ([27fa53e](https://github.com/noelmace/monocli/commit/27fa53ec104408da34c757266a74b7820aebc9b4))
+
+
+* **spush,spull,update:** only keep directory arg ([c7096c1](https://github.com/noelmace/monocli/commit/c7096c1e7454c11aa3b3b8568ae8d5efc668ec12))
+
 ## [0.5.0-beta.2](https://github.com/noelmace/monocli/compare/v0.5.0-beta.1...v0.5.0-beta.2) (2020-05-17)
 
 
