@@ -66,7 +66,7 @@ t.test(`rm command`, async t => {
   await t.test(`given a subproject`, async t => {
     const { monorepo, subremote, directory } = await setup(`subproject`);
 
-    await run([`add`, directory, subremote.path], monorepo.path);
+    await run([`add`, directory, `--url`, subremote.path], monorepo.path);
 
     const output = await run([`rm`, directory], monorepo.path);
 

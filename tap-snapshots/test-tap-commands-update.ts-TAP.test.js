@@ -29,7 +29,7 @@ exports[`test/tap/commands/update.ts TAP update command with url argument with c
 exports[`test/tap/commands/update.ts TAP update command with url argument with conflict --trust > output 1`] = `
 monocli WARN spush push to subtree remote failed
 monocli notice spull pulling from subtree remote
-monocli notice success local directory subproj successfully updated from [[TEST DIRECTORY]]/tap/commands/update/trust/sub
+monocli notice success local directory subproj successfully updated from [[TEST DIRECTORY]]/tap/commands/update/trust/proj
 monocli notice remote subrepo successfully updated
 monocli notice subproj updated
 `
@@ -49,7 +49,7 @@ exports[`test/tap/commands/update.ts TAP update command with url argument with c
     {
       "scope": "subproj",
       "directory": "subproj",
-      "url": "[[TEST DIRECTORY]]/tap/commands/update/trust/sub"
+      "url": "[[TEST DIRECTORY]]/tap/commands/update/trust/proj"
     }
   ]
 }
@@ -86,7 +86,7 @@ exports[`test/tap/commands/update.ts TAP update command with url argument with c
     {
       "scope": "subproj",
       "directory": "subproj",
-      "url": "[[TEST DIRECTORY]]/tap/commands/update/new-branch/sub"
+      "url": "[[TEST DIRECTORY]]/tap/commands/update/new-branch/proj"
     }
   ]
 }
@@ -116,7 +116,7 @@ exports[`test/tap/commands/update.ts TAP update command with url argument with c
 exports[`test/tap/commands/update.ts TAP update command with url argument with conflict should pull > output 1`] = `
 monocli WARN spush push to subtree remote failed
 monocli notice spull pulling from subtree remote
-monocli notice success local directory subproj successfully updated from [[TEST DIRECTORY]]/tap/commands/update/conflict/sub
+monocli notice success local directory subproj successfully updated from [[TEST DIRECTORY]]/tap/commands/update/conflict/proj
 monocli notice remote subrepo successfully updated
 monocli notice subproj updated
 `
@@ -136,7 +136,7 @@ exports[`test/tap/commands/update.ts TAP update command with url argument with c
     {
       "scope": "subproj",
       "directory": "subproj",
-      "url": "[[TEST DIRECTORY]]/tap/commands/update/conflict/sub"
+      "url": "[[TEST DIRECTORY]]/tap/commands/update/conflict/proj"
     }
   ]
 }
@@ -171,7 +171,7 @@ exports[`test/tap/commands/update.ts TAP update command with url argument withou
     {
       "scope": "subproj",
       "directory": "subproj",
-      "url": "[[TEST DIRECTORY]]/tap/commands/update/arg/sub"
+      "url": "[[TEST DIRECTORY]]/tap/commands/update/arg/proj"
     }
   ]
 }
@@ -206,7 +206,7 @@ exports[`test/tap/commands/update.ts TAP update command with url in config > upd
     {
       "scope": "subproj",
       "directory": "subproj",
-      "url": "[[TEST DIRECTORY]]/tap/commands/update/config/sub"
+      "url": "[[TEST DIRECTORY]]/tap/commands/update/config/proj"
     }
   ]
 }
@@ -226,7 +226,7 @@ exports[`test/tap/commands/update.ts TAP update command with url in config and a
 monocli WARN spush push to subtree remote failed
 monocli notice spull pulling from subtree remote
 
-monocli ERR! url a different url is defined for subproj in monocli.json: [[TEST DIRECTORY]]/tap/commands/update/config-arg/sub
+monocli ERR! url a different url is defined for subproj in monocli.json: [[TEST DIRECTORY]]/tap/commands/update/config-arg/proj
 `
 
 exports[`test/tap/commands/update.ts TAP update command with url in config and argument > subrepo commits 1`] = `
@@ -239,10 +239,61 @@ exports[`test/tap/commands/update.ts TAP update command with url in config and a
     {
       "scope": "subproj",
       "directory": "subproj",
-      "url": "[[TEST DIRECTORY]]/tap/commands/update/config-arg/sub"
+      "url": "[[TEST DIRECTORY]]/tap/commands/update/config-arg/proj"
     }
   ]
 }
+`
+
+exports[`test/tap/commands/update.ts TAP update command without directory argument > monorepo commits 1`] = `
+*  (HEAD -> master) docs(root): README after add
+*  feat(sub3): in root after add
+*  build: add monocli config for sub3
+*    Add sub3/ from commit [[COMMIT HASH]]
+|\\  
+* |  feat(sub2): in root after add
+* |  build: add monocli config for sub2
+* |    Add sub2/ from commit [[COMMIT HASH]]
+|\\ \\  
+* | |  feat(sub1): in root after add
+* | |  build: add monocli config for sub1
+* | |    Add sub1/ from commit [[COMMIT HASH]]
+|\\ \\ \\  
+* | | |  feat(root): initial commit before add
+ / / /  
+| | | *  (monocli-spush-sub3-[[TIMESTAMP]]) feat(sub3): in root after add
+| | |/  
+| | *  (sub3/monocli-add-sub3, sub3/master) feat(sub3): in remote before add
+| | *  (monocli-spush-sub2-[[TIMESTAMP]]) feat(sub2): in root after add
+| |/  
+| *  (sub2/monocli-add-sub2, sub2/master) feat(sub2): in remote before add
+| *  (monocli-spush-sub1-[[TIMESTAMP]]) feat(sub1): in root after add
+|/  
+*  (sub1/monocli-add-sub1, sub1/master) feat(sub1): in remote before add
+`
+
+exports[`test/tap/commands/update.ts TAP update command without directory argument > output 1`] = `
+monocli notice remote subrepo successfully updated
+monocli notice updated
+monocli notice remote subrepo successfully updated
+monocli notice updated
+monocli notice remote subrepo successfully updated
+monocli notice updated
+`
+
+exports[`test/tap/commands/update.ts TAP update command without directory argument > subrepo sub1 commits 1`] = `
+*  (HEAD -> master) feat(sub1): in root after add
+*  (monocli-add-sub1) feat(sub1): in remote before add
+`
+
+exports[`test/tap/commands/update.ts TAP update command without directory argument > subrepo sub2 commits 1`] = `
+*  (HEAD -> master) feat(sub2): in root after add
+*  (monocli-add-sub2) feat(sub2): in remote before add
+`
+
+exports[`test/tap/commands/update.ts TAP update command without directory argument > subrepo sub3 commits 1`] = `
+*  (HEAD -> master) feat(sub3): in root after add
+*  (monocli-add-sub3) feat(sub3): in remote before add
 `
 
 exports[`test/tap/commands/update.ts TAP update command without remote url > monorepo commits 1`] = `
@@ -274,7 +325,7 @@ exports[`test/tap/commands/update.ts TAP update command without remote url > upd
     {
       "scope": "subproj",
       "directory": "subproj",
-      "url": "[[TEST DIRECTORY]]/tap/commands/update/remote/sub"
+      "url": "[[TEST DIRECTORY]]/tap/commands/update/remote/proj"
     }
   ]
 }

@@ -7,16 +7,14 @@ import { CommandOptionError } from "../models/errors";
 import { Repository } from "../models/git";
 import { cmdOption, CommandOptionConfig } from "../models/options";
 import { confirm } from "../utils/prompt";
+import { Monorepo } from "../models/monorepo";
 
 export class SPushCommand extends MonorepoCommand {
   protected doc: CommandDocumentation = {
     name: `spush`,
-    usage: `<directory> [url] [branch]`,
-    description: `update (push to) the remote "subtree" repo associated to <directory>`,
-    details: `
-url: url of the subtree remote (default: from config if exists)
-branch: name of the destination branch in the subtree remote (default: master)
-    `,
+    usage: `[directory]`,
+    description: `update (push to) the remote "subtree" repo associated to [directory]`,
+    details: `To run this command on every project defined in ${Monorepo.CONFIG_FILE_NAME} with a remote url, just leave the [directory] argument blank (the --url option will be ignored in this case)`,
     options: new Map<string, CommandOptionConfig>([
       [
         `force`,
@@ -24,27 +22,57 @@ branch: name of the destination branch in the subtree remote (default: master)
           type: `boolean`,
           description: `Force push (with lease) to the remote repository. Use with caution!`
         }
+      ],
+      [
+        `url`,
+        {
+          type: `string`,
+          description: `url of the subtree remote`,
+          defaultDescription: `from config if exists`,
+          defaultValue: ``
+        }
+      ],
+      [
+        `branch`,
+        {
+          type: `string`,
+          description: `name of the destination branch in the subtree remote`,
+          defaultValue: `master`
+        }
       ]
     ])
   };
 
+  private trust: boolean;
+  private force: boolean;
+
   async run(
-    [directory, url, branch]: [string, string, string],
+    [directory]: [string],
     options: Map<string, cmdOption> = new Map()
   ): Promise<string | void> {
+    this.trust = options.get(`trust`) === true;
+    this.force = options.get(`force`) === true;
+
+    const projects = directory
+      ? [{ directory, url: options.get(`url`) as string }]
+      : this.monorepo.getConfig().projects.filter(project => project.url);
+    for (const project of projects) {
+      await this.spushDir(
+        project.directory,
+        project.url as string,
+        options.get(`branch`) as string
+      );
+    }
+  }
+
+  async spushDir(directory: string, url: string, branch: string) {
     this.validateDirectory(directory);
 
     silly(`path`, directory);
 
     const config = this.getProjectRemote(directory, url);
 
-    await this.pushSubtree(
-      config,
-      directory,
-      branch || `master`,
-      options.get(`trust`) !== true,
-      options.get(`force`) === true
-    );
+    await this.pushSubtree(config, directory, branch);
   }
 
   // TODO: doc and move to Command
@@ -77,9 +105,7 @@ branch: name of the destination branch in the subtree remote (default: master)
   async pushSubtree(
     config: { id: string; remoteUrl: string },
     directory: string,
-    branch: string,
-    trust: boolean,
-    force: boolean
+    branch: string
   ): Promise<void> {
     const splitBranch = `monocli-spush-${config.id}`;
 
@@ -129,9 +155,9 @@ branch: name of the destination branch in the subtree remote (default: master)
         throw e;
       }
 
-      let forcePush = force;
+      let forcePush = this.force;
 
-      if (!trust && !force && this.isInteractive) {
+      if (!this.trust && !this.force && this.isInteractive) {
         forcePush = await confirm(`Force push? (remote branch will be saved)`);
       }
 

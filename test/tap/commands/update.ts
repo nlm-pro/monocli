@@ -26,25 +26,15 @@ prompts.inject([false]);
 async function setup(
   dir: string,
   withUrl: boolean,
-  conflict = false
-): Promise<{ mainRepo: Repository; subRepo: Repository }> {
+  conflict = false,
+  multipleSubrepo = false
+): Promise<{ mainRepo: Repository; subRepos: Repository[] }> {
   const root = path.resolve(testDir, dir);
   await fs.mkdir(root);
 
-  const subRepoDir = path.resolve(root, `sub`);
   const mainRepoDir = path.resolve(root, `main`);
 
-  await fs.mkdir(subRepoDir);
-
   await fs.mkdir(mainRepoDir);
-
-  const config: Config = {
-    projects: [subproject]
-  };
-
-  if (withUrl) {
-    config.projects[0].url = relativeTo(subRepoDir, mainRepoDir);
-  }
 
   const mainRepo = await makeGitRepo({
     root: mainRepoDir
@@ -56,42 +46,63 @@ async function setup(
     `feat(root): initial commit before add`
   );
 
-  const subRepo = await makeGitRepo({ root: subRepoDir, bare: true });
+  const config: Config = {
+    projects: multipleSubrepo
+      ? [`sub1`, `sub2`, `sub3`].map(name => ({ directory: name, scope: name }))
+      : [subproject]
+  };
 
-  await commitNewFile(
-    subRepo,
-    `README.md`,
-    `feat(${subproject.scope}): in remote before add`
-  );
+  const subRepos = [];
+  for (const project of config.projects) {
+    const subRepoDir = path.resolve(root, project.scope);
+    await fs.mkdir(subRepoDir);
 
-  await run([`add`, subproject.directory, subRepo.path], mainRepo.path);
+    if (withUrl && !multipleSubrepo) {
+      config.projects[0].url = relativeTo(subRepoDir, mainRepoDir);
+    }
 
-  await commitNewFile(
-    mainRepo,
-    path.join(subproject.directory, `two.txt`),
-    `feat(${subproject.scope}): in root after add`
-  );
+    const subRepo = await makeGitRepo({ root: subRepoDir, bare: true });
+
+    await commitNewFile(
+      subRepo,
+      `README.md`,
+      `feat(${project.scope}): in remote before add`
+    );
+
+    await run([`add`, project.directory, `--url`, subRepo.path], mainRepo.path);
+
+    await commitNewFile(
+      mainRepo,
+      path.join(project.directory, `two.txt`),
+      `feat(${project.scope}): in root after add`
+    );
+
+    if (conflict) {
+      await commitNewFile(
+        subRepo,
+        `test.txt`,
+        `feat(${project.scope}): in remote after add`
+      );
+    }
+
+    subRepos.push(subRepo);
+  }
 
   await commitNewFile(mainRepo, `README.md`, `docs(root): README after add`);
 
-  if (conflict) {
-    await commitNewFile(
-      subRepo,
-      `test.txt`,
-      `feat(${subproject.scope}): in remote after add`
-    );
-  }
-
   return {
     mainRepo,
-    subRepo
+    subRepos
   };
 }
 
 // eslint-disable-next-line @typescript-eslint/no-floating-promises
 t.test(`update command`, async t => {
   await t.test(`without remote url`, async t => {
-    const { mainRepo, subRepo } = await setup(`remote`, false);
+    const {
+      mainRepo,
+      subRepos: [subRepo]
+    } = await setup(`remote`, false);
 
     const output = await run([`update`, subproject.directory], mainRepo.path);
 
@@ -107,12 +118,32 @@ t.test(`update command`, async t => {
     );
   });
 
+  await t.test(`without directory argument`, async t => {
+    const { mainRepo, subRepos } = await setup(`nodir`, false, false, true);
+
+    const output = await run([`update`], mainRepo.path);
+
+    t.matchSnapshot(cleanSnapshot(output), `output`);
+
+    t.matchSnapshot(await graphLog(mainRepo), `monorepo commits`);
+
+    for (const subRepo of subRepos) {
+      t.matchSnapshot(
+        await graphLog(subRepo),
+        `subrepo ${path.basename(subRepo.path)} commits`
+      );
+    }
+  });
+
   await t.test(`with url argument`, async t => {
     await t.test(`without conflict`, async t => {
-      const { mainRepo, subRepo } = await setup(`arg`, false);
+      const {
+        mainRepo,
+        subRepos: [subRepo]
+      } = await setup(`arg`, false);
 
       const output = await run(
-        [`update`, subproject.directory, subRepo.path],
+        [`update`, subproject.directory, `--url`, subRepo.path],
         mainRepo.path
       );
 
@@ -130,12 +161,15 @@ t.test(`update command`, async t => {
 
     await t.test(`with conflict`, async t => {
       await t.test(`should pull`, async t => {
-        const { mainRepo, subRepo } = await setup(`conflict`, false, true);
+        const {
+          mainRepo,
+          subRepos: [subRepo]
+        } = await setup(`conflict`, false, true);
 
         prompts.inject([false]);
 
         const output = await run(
-          [`update`, subproject.directory, subRepo.path],
+          [`update`, subproject.directory, `--url`, subRepo.path],
           mainRepo.path
         );
 
@@ -152,10 +186,13 @@ t.test(`update command`, async t => {
       });
 
       await t.test(`--trust`, async t => {
-        const { mainRepo, subRepo } = await setup(`trust`, false, true);
+        const {
+          mainRepo,
+          subRepos: [subRepo]
+        } = await setup(`trust`, false, true);
 
         const output = await run(
-          [`update`, subproject.directory, subRepo.path, `--trust`],
+          [`update`, subproject.directory, `--url`, subRepo.path, `--trust`],
           mainRepo.path
         );
 
@@ -172,10 +209,20 @@ t.test(`update command`, async t => {
       });
 
       await t.test(`new branch`, async t => {
-        const { mainRepo, subRepo } = await setup(`new-branch`, false, true);
+        const {
+          mainRepo,
+          subRepos: [subRepo]
+        } = await setup(`new-branch`, false, true);
 
         const output = await run(
-          [`update`, subproject.directory, subRepo.path, `test-branch`],
+          [
+            `update`,
+            subproject.directory,
+            `--url`,
+            subRepo.path,
+            `--branch`,
+            `test-branch`
+          ],
           mainRepo.path
         );
 
@@ -194,10 +241,18 @@ t.test(`update command`, async t => {
   });
 
   await t.test(`with url in config and argument`, async t => {
-    const { mainRepo, subRepo } = await setup(`config-arg`, true);
+    const {
+      mainRepo,
+      subRepos: [subRepo]
+    } = await setup(`config-arg`, true);
 
     const output = await run(
-      [`update`, subproject.directory, relativeTo(subRepo.path, mainRepo.path)],
+      [
+        `update`,
+        subproject.directory,
+        `--url`,
+        relativeTo(subRepo.path, mainRepo.path)
+      ],
       mainRepo.path
     );
     t.matchSnapshot(cleanSnapshot(output), `output`);
@@ -213,7 +268,10 @@ t.test(`update command`, async t => {
   });
 
   await t.test(`with url in config`, async t => {
-    const { mainRepo, subRepo } = await setup(`config`, true);
+    const {
+      mainRepo,
+      subRepos: [subRepo]
+    } = await setup(`config`, true);
 
     const output = await run([`update`, subproject.directory], mainRepo.path);
     t.matchSnapshot(cleanSnapshot(output), `output`);
