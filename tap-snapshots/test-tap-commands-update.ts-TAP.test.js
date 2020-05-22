@@ -29,8 +29,8 @@ exports[`test/tap/commands/update.ts TAP update command with url argument with c
 exports[`test/tap/commands/update.ts TAP update command with url argument with conflict --trust > output 1`] = `
 monocli WARN spush push to subtree remote failed
 monocli notice spull pulling from subtree remote
-monocli notice success local directory subproj successfully updated from [[TEST DIRECTORY]]/tap/commands/update/trust/proj
-monocli notice remote subrepo successfully updated
+monocli notice subproj pulled [[TEST DIRECTORY]]/tap/commands/update/trust/proj
+monocli notice subtree subproj pushed to [[TEST DIRECTORY]]/tap/commands/update/trust/proj
 monocli notice subproj updated
 `
 
@@ -69,7 +69,7 @@ exports[`test/tap/commands/update.ts TAP update command with url argument with c
 `
 
 exports[`test/tap/commands/update.ts TAP update command with url argument with conflict new branch > output 1`] = `
-monocli notice remote subrepo successfully updated
+monocli notice subtree subproj pushed to [[TEST DIRECTORY]]/tap/commands/update/new-branch/proj
 monocli notice subproj updated
 `
 
@@ -116,8 +116,8 @@ exports[`test/tap/commands/update.ts TAP update command with url argument with c
 exports[`test/tap/commands/update.ts TAP update command with url argument with conflict should pull > output 1`] = `
 monocli WARN spush push to subtree remote failed
 monocli notice spull pulling from subtree remote
-monocli notice success local directory subproj successfully updated from [[TEST DIRECTORY]]/tap/commands/update/conflict/proj
-monocli notice remote subrepo successfully updated
+monocli notice subproj pulled [[TEST DIRECTORY]]/tap/commands/update/conflict/proj
+monocli notice subtree subproj pushed to [[TEST DIRECTORY]]/tap/commands/update/conflict/proj
 monocli notice subproj updated
 `
 
@@ -156,7 +156,7 @@ exports[`test/tap/commands/update.ts TAP update command with url argument withou
 `
 
 exports[`test/tap/commands/update.ts TAP update command with url argument without conflict > output 1`] = `
-monocli notice remote subrepo successfully updated
+monocli notice subtree subproj pushed to [[TEST DIRECTORY]]/tap/commands/update/arg/proj
 monocli notice subproj updated
 `
 
@@ -191,7 +191,7 @@ exports[`test/tap/commands/update.ts TAP update command with url in config > mon
 `
 
 exports[`test/tap/commands/update.ts TAP update command with url in config > output 1`] = `
-monocli notice remote subrepo successfully updated
+monocli notice subtree subproj pushed to [[TEST DIRECTORY]]/tap/commands/update/config/proj
 monocli notice subproj updated
 `
 
@@ -273,12 +273,12 @@ exports[`test/tap/commands/update.ts TAP update command without directory argume
 `
 
 exports[`test/tap/commands/update.ts TAP update command without directory argument > output 1`] = `
-monocli notice remote subrepo successfully updated
-monocli notice updated
-monocli notice remote subrepo successfully updated
-monocli notice updated
-monocli notice remote subrepo successfully updated
-monocli notice updated
+monocli notice subtree sub1 pushed to [[TEST DIRECTORY]]/tap/commands/update/nodir/sub1
+monocli notice sub1 updated
+monocli notice subtree sub2 pushed to [[TEST DIRECTORY]]/tap/commands/update/nodir/sub2
+monocli notice sub2 updated
+monocli notice subtree sub3 pushed to [[TEST DIRECTORY]]/tap/commands/update/nodir/sub3
+monocli notice sub3 updated
 `
 
 exports[`test/tap/commands/update.ts TAP update command without directory argument > subrepo sub1 commits 1`] = `
@@ -310,7 +310,7 @@ exports[`test/tap/commands/update.ts TAP update command without remote url > mon
 `
 
 exports[`test/tap/commands/update.ts TAP update command without remote url > output 1`] = `
-monocli notice remote subrepo successfully updated
+monocli notice subtree subproj pushed to [[TEST DIRECTORY]]/tap/commands/update/remote/proj
 monocli notice subproj updated
 `
 

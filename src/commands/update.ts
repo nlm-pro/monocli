@@ -62,7 +62,7 @@ To run this command on every project defined in ${Monorepo.CONFIG_FILE_NAME} wit
         await runCommand(`spull`, [project.directory], spullOptions);
         await runCommand(`spush`, [project.directory], spushOptions);
       }
-      log.notice(directory, `updated`);
+      log.notice(project.directory, `updated`);
     }
   }
 }

@@ -17,7 +17,7 @@ exports[`test/tap/commands/spull.ts TAP spull command with directory and url > c
 `
 
 exports[`test/tap/commands/spull.ts TAP spull command with directory and url > output 1`] = `
-monocli notice success local directory packages/foo successfully updated from [[TEST DIRECTORY]]/tap/commands/spull/opts/remote
+monocli notice packages/foo pulled [[TEST DIRECTORY]]/tap/commands/spull/opts/remote
 `
 
 exports[`test/tap/commands/spull.ts TAP spull command without directory > commits 1`] = `
@@ -42,6 +42,6 @@ exports[`test/tap/commands/spull.ts TAP spull command without directory > commit
 `
 
 exports[`test/tap/commands/spull.ts TAP spull command without directory > output 1`] = `
-monocli notice success local directory packages/foo successfully updated from [[TEST DIRECTORY]]/tap/commands/spull/all/remote-foo
-monocli notice success local directory packages/bar successfully updated from [[TEST DIRECTORY]]/tap/commands/spull/all/remote-bar
+monocli notice packages/foo pulled [[TEST DIRECTORY]]/tap/commands/spull/all/remote-foo
+monocli notice packages/bar pulled [[TEST DIRECTORY]]/tap/commands/spull/all/remote-bar
 `

@@ -144,7 +144,7 @@ export class SPushCommand extends MonorepoCommand {
       ]);
 
       await cloneRepo.git(`push`, [`origin`, branch]);
-      notice(``, `remote subrepo successfully updated`);
+      notice(``, `subtree ${directory} pushed to ${config.remoteUrl}`);
     } catch (e) {
       if (this.isInteractive) {
         warn(`git`, `Push to ${config.remoteUrl} ${branch} branch failed!`);

@@ -55,10 +55,7 @@ export class SPullCommand extends MonorepoCommand {
         project.url as string,
         branch
       ]);
-      log.notice(
-        `success`,
-        `local directory ${project.directory} successfully updated from ${project.url}`
-      );
+      log.notice(`${project.directory}`, `pulled ${project.url}`);
     }
   }
 }

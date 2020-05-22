@@ -18,7 +18,7 @@ monocli ERR! Go to [[TMP DIRECTORY]]/[[TIMESTAMP]] in order to resolve this conf
 `
 
 exports[`test/tap/commands/spush.ts TAP spush command with url argument with conflict new branch > output 1`] = `
-monocli notice remote subrepo successfully updated
+monocli notice subtree subproj pushed to [[TEST DIRECTORY]]/tap/commands/spush/new-branch/sub
 `
 
 exports[`test/tap/commands/spush.ts TAP spush command with url argument without conflict > monorepo commits 1`] = `
@@ -30,7 +30,7 @@ stub repo
 `
 
 exports[`test/tap/commands/spush.ts TAP spush command with url argument without conflict > output 1`] = `
-monocli notice remote subrepo successfully updated
+monocli notice subtree subproj pushed to /home/noel/git/me/monocli/test/tap/commands/spush/arg/sub
 `
 
 exports[`test/tap/commands/spush.ts TAP spush command with url argument without conflict > subrepo commits 1`] = `
@@ -57,7 +57,7 @@ stub repo
 `
 
 exports[`test/tap/commands/spush.ts TAP spush command with url in config > output 1`] = `
-monocli notice remote subrepo successfully updated
+monocli notice subtree subproj pushed to /home/noel/git/me/monocli/test/tap/commands/spush/config/sub
 `
 
 exports[`test/tap/commands/spush.ts TAP spush command with url in config > subrepo commits 1`] = `
@@ -85,7 +85,7 @@ stub repo
 `
 
 exports[`test/tap/commands/spush.ts TAP spush command with url in config and argument > output 1`] = `
-monocli notice remote subrepo successfully updated
+monocli notice subtree subproj pushed to /home/noel/git/me/monocli/test/tap/commands/spush/config-arg/sub
 `
 
 exports[`test/tap/commands/spush.ts TAP spush command with url in config and argument > subrepo commits 1`] = `
