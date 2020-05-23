@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.5.0](https://github.com/noelmace/monocli/compare/v0.5.0-beta.3...v0.5.0) (2020-05-23)
+
+
+### Bug Fixes
+
+* **spull,spush,update:** success log ([862de48](https://github.com/noelmace/monocli/commit/862de484ed80687d4782357c494136816646fa69))
+
 ## [0.5.0-beta.3](https://github.com/noelmace/monocli/compare/v0.5.0-beta.2...v0.5.0-beta.3) (2020-05-22)
 
 
