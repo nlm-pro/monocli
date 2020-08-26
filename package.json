@@ -74,7 +74,7 @@
     "prettier": "^1.19.1",
     "rimraf": "^3.0.2",
     "semver": "^7.3.2",
-    "standard-version": "^7.1.0",
+    "standard-version": "^9.0.0",
     "tap": "^14.10.7",
     "typescript": "^3.7.5"
   }
